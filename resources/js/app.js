@@ -12,8 +12,15 @@ import Notifications from 'notiwind'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
-library.add( faRightFromBracket )
+import { faRightFromBracket, faLink, faEnvelope, 
+    faChartColumn, faPlus, faCalendar, faEllipsisVertical, 
+    faPaperPlane, faPencil, faTrash,  
+} from '@fortawesome/free-solid-svg-icons'
+
+library.add( faRightFromBracket, faLink, faEnvelope, 
+    faChartColumn, faPlus, faCalendar, faEllipsisVertical,
+    faPaperPlane, faPencil, faTrash 
+)
 
 createApp(app)
     .use(router)

@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,13 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::put('/profile/update', [ProfileController::class, 'updateProfile']);
     Route::put('/password/update', [ProfileController::class, 'updatePassword']);
     Route::post('/logout', [LogoutController::class, 'logout']);
+
+    Route::get('/projects', [ProjectController::class, 'index']);
+    Route::group(['prefix' => 'project'], function () {
+        Route::post('/store', [ProjectController::class, 'store']);
+        Route::put('/update/{projectId}', [ProjectController::class, 'update']);
+        Route::delete('/delete/{projectId}', [ProjectController::class, 'delete']);
+    });
 });
 
 Route::post('/register', [RegisterController::class, 'register']);

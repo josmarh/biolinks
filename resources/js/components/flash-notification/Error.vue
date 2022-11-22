@@ -1,6 +1,6 @@
 <template>
     <NotificationGroup group="error" position="top">
-      <div class="fixed inset-0 flex items-start 
+      <div class="fixed inset-0 flex items-start z-20
           justify-end p-6 px-4 py-6 pointer-events-none">
           <div class="w-full max-w-sm">
           <Notification
@@ -13,7 +13,7 @@
               leave-to="opacity-0"
               move="transition duration-500"
               move-delay="delay-300">
-              <div class="flex w-full max-w-sm mx-auto mt-4 
+              <div class="flex w-full max-w-sm mx-auto mt-4
                   overflow-hidden bg-white rounded-lg shadow-md"
               v-for="notification in notifications"
               :key="notification.id">
