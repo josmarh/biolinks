@@ -42,7 +42,6 @@ const store = createStore({
             return axiosClient.post('/logout')
                 .then(response => {
                     commit('logout')
-                    localStorage.clear();
                     return response;
                 })
         },
@@ -73,7 +72,8 @@ const store = createStore({
             localStorage.setItem('userInfo', JSON.stringify(userInfo.user));
         },
         logout: (state, userInfo) => {
-            state.user = null
+            state.user = null;
+            localStorage.clear();
         },
     },
     modules: {}

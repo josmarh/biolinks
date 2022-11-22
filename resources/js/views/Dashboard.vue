@@ -1,5 +1,5 @@
 <template>
-    James
+    
 </template>
 
 <script setup>
