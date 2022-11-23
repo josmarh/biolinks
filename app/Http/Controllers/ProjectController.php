@@ -19,7 +19,7 @@ class ProjectController extends Controller
         return ProjectResource::collection($projects);
     }
 
-    public function memberProjects()
+    public function projectsCollaborate()
     {
 
     }
@@ -67,13 +67,4 @@ class ProjectController extends Controller
         ],200);
     }
 
-    public function sendInvitation(Request $request)
-    {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|email',
-        ]);
-
-        
-    }
 }

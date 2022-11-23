@@ -74,10 +74,12 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { notify } from 'notiwind';
 import project from '../../store/project'
 
+const router = useRouter()
 const props = defineProps({
     showForm: Boolean
 });
@@ -112,6 +114,15 @@ function saveProject() {
                 title: "Success",
                 text: res.message
             }, 4000);
+
+            setTimeout(() => {
+                router.push({
+                    name: 'Project', 
+                    params: {
+                        id: res.project.projectId
+                    }
+                });
+            }, 1200)
         })
         .catch((err) => {
             open.value = false

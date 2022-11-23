@@ -14,12 +14,12 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faRightFromBracket, faLink, faEnvelope, 
     faChartColumn, faPlus, faCalendar, faEllipsisVertical, 
-    faPaperPlane, faPencil, faTrash,  
+    faPaperPlane, faPencil, faTrash, faCircleExclamation,  
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add( faRightFromBracket, faLink, faEnvelope, 
     faChartColumn, faPlus, faCalendar, faEllipsisVertical,
-    faPaperPlane, faPencil, faTrash 
+    faPaperPlane, faPencil, faTrash, faCircleExclamation 
 )
 
 createApp(app)

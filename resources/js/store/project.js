@@ -28,6 +28,18 @@ const project = createStore({
                     return data;
                 })
         },
+        sendProjectinvitation({}, payload) {
+            return axiosClient.post('/project/invitation', payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        deleteProject({}, projectId) {
+            return axiosClient.delete(`/project/delete/${projectId}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setProjects: (state, data) => {

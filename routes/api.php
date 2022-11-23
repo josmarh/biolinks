@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectInvitationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('/store', [ProjectController::class, 'store']);
         Route::put('/update/{projectId}', [ProjectController::class, 'update']);
         Route::delete('/delete/{projectId}', [ProjectController::class, 'delete']);
+        Route::post('/invitation', [ProjectInvitationController::class, 'sendInvitation']);
     });
 });
 

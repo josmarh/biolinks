@@ -33,8 +33,14 @@
         </transition>
     </Menu>
 
-    <invitation-form :show-form="modal.showInvitation" @close-form="sendInvitationForm"/>
+    <invitation-form :data="model" :show-form="modal.showInvitation" @close-form="sendInvitationForm"/>
     <edit-form :data="model" :show-form="modal.showEdit" @close-form="editProjectForm" />
+    <confirm-delete 
+        from="project" 
+        :is-disabled="modal.isDisabled" 
+        :show-delete="modal.showDelete" 
+        @confirm="deleteProject" 
+        @cancel="closeDeleteModal" />
 </template>
 
 <script setup>
@@ -44,6 +50,7 @@ import { notify } from 'notiwind'
 import { useRouter } from 'vue-router'
 import InvitationForm from './InvitationForm.vue';
 import EditForm from './EditForm.vue';
+import ConfirmDelete from '../ConfirmDelete.vue';
 import project from '../../store/project'
 
 const props = defineProps({
@@ -53,7 +60,8 @@ const props = defineProps({
 let modal = ref({
     showInvitation: false,
     showEdit: false,
-    showDelete: false
+    showDelete: false,
+    isDisabled: false
 })
 
 let model = ref({
@@ -69,14 +77,56 @@ function editProjectForm() {
     modal.value.showEdit = !modal.value.showEdit
 }
 
-function deleteProjectForm() {
+function deleteProjectModal() {
+    modal.value.showDelete = !modal.value.showDelete;
+}
 
+function closeDeleteModal() {
+    modal.value.showDelete = false;
+}
+
+function deleteProject() {
+    modal.value.isDisabled = true;
+    project
+        .dispatch('deleteProject', model.value.projectId)
+        .then((res) => {
+            modal.value.isDisabled = false;
+            modal.value.showDelete = false;
+            project.dispatch('getProjects');
+
+            notify({
+                group: "success",
+                title: "Success",
+                text: res.message
+            }, 4000);
+        })
+        .catch((err) => {
+            modal.value.isDisabled = false;
+            modal.value.showDelete = false;
+
+            let errMsg;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message"))
+                        errMsg = err.response.data.message;
+                    else
+                        errMsg = err.response.data.error;
+                }
+            }else{
+                errMsg = err;
+            }
+            notify({
+                group: "error",
+                title: "Error",
+                text: errMsg
+            }, 4000);
+        })
 }
 
 const listOptions = [
     {label: 'Send Invitation', icon: 'fa-solid fa-paper-plane', action: sendInvitationForm },
     {label: 'Edit', icon: 'fa-solid fa-pencil', action: editProjectForm},
-    {label: 'Delete', icon: 'fa-solid fa-trash', action: deleteProjectForm},
+    {label: 'Delete', icon: 'fa-solid fa-trash', action: deleteProjectModal},
 ]
 </script>
 

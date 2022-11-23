@@ -63,6 +63,7 @@
                                                 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" 
                                                 :disabled="isDisabled">
                                                 Send
+                                                <button-spinner v-if="isDisabled" class="pl-2"/>
                                             </button>
                                             <button type="button" 
                                                 class="mt-3 inline-flex w-full justify-center 
@@ -93,17 +94,21 @@
 import { ref, watch } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { notify } from 'notiwind';
+import ButtonSpinner from '../ButtonSpinner.vue';
 import project from '../../store/project'
 
 const props = defineProps({
-    showForm: Boolean
+    showForm: Boolean,
+    data: Object
 });
 const emit = defineEmits(['closeForm'])
 const open = ref(props.showForm)
 
 let model = ref({
     name: '',
-    email: ''
+    email: '',
+    projectName: props.data.name,
+    projectId: props.data.projectId
 })
 let isDisabled = ref(false)
 
@@ -117,8 +122,44 @@ watch(open, (newVal, oldVal) => {
 })
 
 function sendInvitation() {
+    isDisabled.value = true;
     project
-        .dispatch('')
+        .dispatch('sendProjectinvitation', model.value)
+        .then((res) => {
+            open.value = false;
+            emit('closeForm');
+            isDisabled.value = false;
+            model.value.name = '',
+            model.value.email = ''
+
+            notify({
+                group: "success",
+                title: "Success",
+                text: res.message
+            }, 4000);
+        })
+        .catch((err) => {
+            open.value = false
+            emit('closeForm');
+            isDisabled.value = false;
+
+            let errMsg;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message"))
+                        errMsg = err.response.data.message;
+                    else
+                        errMsg = err.response.data.error;
+                }
+            }else{
+                errMsg = err;
+            }
+            notify({
+                group: "error",
+                title: "Error",
+                text: errMsg
+            }, 4000);
+        })
 
 }
 </script>

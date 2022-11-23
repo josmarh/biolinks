@@ -16,14 +16,13 @@
                 new project
             </button>
         </div>
-        <p v-if="isProjectSet==3" 
-            class="font-normal text-gray-700 dark:text-gray-400">
+        <p class="font-normal text-gray-700 dark:text-gray-400">
             A project can contain multiple Biolink Pages or Shortened links.
         </p>
         <!-- Project list -->
         <div class="mt-6">
             <div v-if="isProjectSet==1">
-
+                <round-loader />
             </div>
             <div v-if="isProjectSet==2">
                 <div v-for="item in projects.data" :key="item.projectId"
@@ -32,12 +31,13 @@
                     dark:border-gray-700 dark:hover:bg-gray-700 
                     text-center">
                     <div class="md:grid grid-cols-12">
-                        <div class="col-span-6">
-                            <h5 class="mb-2 text-lg font-bold 
+                        <div class="col-span-6 text-start">
+                            <router-link :to="{name: 'Project', params: {id: item.projectId}}"
+                                class="mb-2 text-lg font-bold 
                                 tracking-tight text-gray-700 
-                                dark:text-white text-start">
+                                dark:text-white">
                                 {{item.name}}
-                            </h5>
+                            </router-link>
                             <p class="flex gap-2 text-gray-500 text-sm">
                                 <font-awesome-icon icon="fa-solid fa-calendar" class="mt-0.5" />
                                 {{item.createdAt}}
@@ -68,16 +68,18 @@
                 </div>
             </div>
             <div v-if="isProjectSet==3">
-
+                <no-project-content />
             </div>
         </div>
     </div>
-    <project-form :show-form="showForm" @close-form="showFormModal"/>
+    <project-form :show-form="showForm" @close-form="showFormModal" />
 </template>
 
 <script setup>
 import { onMounted, computed, ref } from 'vue'
 import { notify } from 'notiwind';
+import RoundLoader from '../RoundLoader.vue';
+import NoProjectContent from '../NoProjectContent.vue';
 import ProjectForm from './ProjectForm.vue';
 import ProjectListOptions from './ProjectListOptions.vue';
 import project from '../../store/project'
