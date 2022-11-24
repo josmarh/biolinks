@@ -45,6 +45,13 @@ class ProjectController extends Controller
         ],201);
     }
 
+    public function show($projectId)
+    {
+        $project = Project::where('custom_id', $projectId)->first();
+
+        return new ProjectResource($project);
+    }
+
     public function update(Request $request, $projectId)
     {
         $project = Project::where('custom_id', $projectId)->first();

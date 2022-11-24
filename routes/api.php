@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectInvitationController;
+use App\Http\Controllers\ProjectLinksController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,9 +35,18 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/projects', [ProjectController::class, 'index']);
     Route::group(['prefix' => 'project'], function () {
         Route::post('/store', [ProjectController::class, 'store']);
+        Route::get('/show/{projectId}', [ProjectController::class, 'show']);
         Route::put('/update/{projectId}', [ProjectController::class, 'update']);
         Route::delete('/delete/{projectId}', [ProjectController::class, 'delete']);
         Route::post('/invitation', [ProjectInvitationController::class, 'sendInvitation']);
+    });
+
+    Route::get('/links', [ProjectLinksController::class, 'index']);
+    Route::group(['prefix' => 'link'], function () {
+        Route::post('/store', [ProjectLinksController::class, 'store']);
+        Route::get('/show/{linkId}', [ProjectLinksController::class, 'show']);
+        Route::put('/update/status/{id}', [ProjectLinksController::class, 'updateStatus']);
+        Route::post('/duplicate/{id}', [ProjectLinksController::class, 'duplicate']);
     });
 });
 

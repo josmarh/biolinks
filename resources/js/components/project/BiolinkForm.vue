@@ -13,27 +13,41 @@
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 px-4 w-full sm:text-left">
                             <DialogTitle as="h3" 
-                                class="text-lg font-medium leading-6 text-gray-900 capitalize">
-                                update project
+                                class="text-lg font-medium leading-6 text-gray-900 capitalize
+                                flex gap-3">
+                                New Biolink Page
                             </DialogTitle>
-                            <div class="mt-6">
-                                <div class="">
-                                    <form @submit.prevent="updateProject">
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    More settings are available after the creation of the biolink.
+                                </p>
+                                <div class="mt-4">
+                                    <form @submit.prevent="createBiolink">
                                         <div class="mb-2">
-                                            <label for="name" 
-                                                class="block mb-2 text-sm font-medium 
-                                                text-gray-900 dark:text-white capitalize">
-                                                project name 
+                                            <label for="biolink" 
+                                                class="block mb-2 text-sm font-normal flex
+                                                text-gray-900 dark:text-white capitalize gap-2">
+                                                <font-awesome-icon icon="fa-solid fa-link" class="mt-0.5" />
+                                                Biolink URL
                                             </label>
-                                            <input v-model="model.name"
-                                            type="text" name="name" id="name" 
-                                            class="bg-gray-50 border border-gray-300 
-                                            text-gray-900 text-sm focus:ring-blue-500 
-                                            focus:border-blue-500 block w-full p-2.5 
-                                            dark:bg-gray-600 dark:border-gray-500 
-                                            dark:placeholder-gray-400 dark:text-white" 
-                                            placeholder="Biolink" required>
+                                            <div class="relative">
+                                                <div class="absolute inset-y-0 left-0 flex 
+                                                    items-center pl-3 pointer-events-none text-sm">
+                                                    {{applink}}
+                                                </div>
+                                                <input v-model="model.linkId"
+                                                type="text" name="biolink" id="biolink" 
+                                                class="bg-gray-50 border border-gray-300 
+                                                text-gray-900 text-sm focus:ring-blue-500 
+                                                focus:border-blue-500 block w-full p-2.5 
+                                                dark:bg-gray-600 dark:border-gray-500 pl-40
+                                                dark:placeholder-gray-400 dark:text-white" 
+                                                placeholder="randomly generated alias">
+                                            </div>
                                         </div>
+                                        <p class="text-sm text-gray-500">
+                                            Leave empty for a random generated one.
+                                        </p>
                                         <div class="bg-gray-50 px-4 py-4 sm:flex sm:flex-row-reverse sm:px-6">
                                             <button type="submit" 
                                                 class="inline-flex w-full justify-center 
@@ -42,7 +56,7 @@
                                                 focus:outline-none focus:ring-0 focus:ring-blue-500 
                                                 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" 
                                                 :disabled="isDisabled">
-                                                Save
+                                                Create Biolink Page
                                                 <button-spinner v-if="isDisabled" class="pl-2"/>
                                             </button>
                                             <button type="button" 
@@ -72,21 +86,26 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { notify } from 'notiwind';
 import ButtonSpinner from '../ButtonSpinner.vue';
-import project from '../../store/project'
+import projectlinks from '../../store/projectlinks'
 
+const route = useRoute();
+const router = useRouter();
 const props = defineProps({
     showForm: Boolean,
     data: Object
 });
 const emit = defineEmits(['closeForm'])
 const open = ref(props.showForm)
+let applink = `${window.location.protocol}//${window.location.host}/`
 
 let model = ref({
-    id: props.data.projectId,
-    name: props.data.name
+    projectId: route.params.id,
+    type: 'biolink',
+    linkId: null
 })
 let isDisabled = ref(false)
 
@@ -99,26 +118,29 @@ watch(open, (newVal, oldVal) => {
         emit('closeForm')
 })
 
-watch(() => props.data, (newVal, oldVal) => {
-    model.value.id = newVal.projectId
-    model.value.name = newVal.name
-}, {deep: true})
-
-function updateProject() {
+function createBiolink() {
     isDisabled.value = true;
-    project
-        .dispatch('updateProject', model.value)
+    projectlinks
+        .dispatch('storeLink', model.value)
         .then((res) => {
             open.value = false;
             emit('closeForm');
             isDisabled.value = false;
-            project.dispatch('getProjects');
+            projectlinks.dispatch('getLinks', route.params.id);
+            model.value.linkid = null
 
             notify({
                 group: "success",
                 title: "Success",
                 text: res.message
             }, 4000);
+
+            // router.push({
+            //     name: 'Link',
+            //     params: {
+            //         id: res.link.id
+            //     }
+            // });
         })
         .catch((err) => {
             open.value = false

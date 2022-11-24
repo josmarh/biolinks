@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div v-if="isProjectSet==3">
-                <no-project-content />
+                <no-project-content notice="No Project Available" />
             </div>
         </div>
     </div>

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('bl_project_invites', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('project_id');
+            $table->integer('project_id')->length(5);;
             $table->string('invitee_name');
             $table->string('invitee_email');
             $table->string('invite_id', 32);

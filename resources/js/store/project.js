@@ -22,6 +22,13 @@ const project = createStore({
                     return data;
                 })
         },
+        getProjectInfo({ commit }, projectId) {
+            return axiosClient.get(`/project/show/${projectId}`)
+                .then(({data}) => {
+                    commit('setProjects', data)
+                    return data;
+                })
+        },
         updateProject({}, payload) {
             return axiosClient.put(`/project/update/${payload.id}`, payload)
                 .then(({data}) => {

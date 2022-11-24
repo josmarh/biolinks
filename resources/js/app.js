@@ -14,12 +14,16 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faRightFromBracket, faLink, faEnvelope, 
     faChartColumn, faPlus, faCalendar, faEllipsisVertical, 
-    faPaperPlane, faPencil, faTrash, faCircleExclamation,  
+    faPaperPlane, faPencil, faTrash, faCircleExclamation, 
+    faGauge, faCircleDot, faHashtag, faCopy, faQrcode, 
+    faArrowUpRightFromSquare, faEarthAfrica,  
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add( faRightFromBracket, faLink, faEnvelope, 
     faChartColumn, faPlus, faCalendar, faEllipsisVertical,
-    faPaperPlane, faPencil, faTrash, faCircleExclamation 
+    faPaperPlane, faPencil, faTrash, faCircleExclamation, 
+    faGauge, faCircleDot, faHashtag, faCopy, faQrcode, 
+    faArrowUpRightFromSquare, faEarthAfrica 
 )
 
 createApp(app)
