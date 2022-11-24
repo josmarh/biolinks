@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/show/{linkId}', [ProjectLinksController::class, 'show']);
         Route::put('/update/status/{id}', [ProjectLinksController::class, 'updateStatus']);
         Route::post('/duplicate/{id}', [ProjectLinksController::class, 'duplicate']);
+        Route::delete('/delete/{id}', [ProjectLinksController::class, 'delete']);
     });
 });
 

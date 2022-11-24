@@ -48,7 +48,9 @@ class ProjectLinksController extends Controller
 
     public function show($linkId)
     {
+        $projectLink = ProjectLink::where('link_id', $linkId)->first();
 
+        return new ProjectLinkResource($projectLink);
     }
 
     public function update()
@@ -74,9 +76,14 @@ class ProjectLinksController extends Controller
         ], 201);
     }
 
-    public function delete()
+    public function delete($id)
     {
+        $projectLink = ProjectLink::findOrFail($id);
 
+        return response([
+            'message' => 'Link deleted.',
+            'status_code' => 204
+        ],200);
     }
 
     public function duplicate(Request $request, $id)

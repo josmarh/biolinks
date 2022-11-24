@@ -7,7 +7,7 @@ const projectlinks = createStore({
             data: [],
             meta: {},
             link: {}
-        }
+        },
     },
     getters: {},
     actions: {
@@ -39,6 +39,12 @@ const projectlinks = createStore({
         },
         duplicateLink({}, id) {
             return axiosClient.post(`/link/duplicate/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        deleteLink({}, id) {
+            return axiosClient.delete(`/link/delete/${id}`)
                 .then(({data}) => {
                     return data;
                 })

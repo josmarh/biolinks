@@ -6,6 +6,8 @@ import AdminLayout from '../components/layouts/AdminLayout.vue'
 import Login from '../views/auth/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Project from '../views/Project.vue'
+import Link from '../views/Link.vue'
+import Qrcode from '../views/Qrcode.vue'
 import store from '../store'
 
 const routes = [
@@ -29,8 +31,10 @@ const routes = [
         children: [
             {path: '/dashboard', name: 'Dashboard', component: Dashboard},
             {path: '/project/:id', name: 'Project', component: Project},
+            {path: '/link/:id', name: 'Link', component: Link},
         ]
     },
+    {path: '/:linkid/qr', name: 'Qrcode', component: Qrcode},
 ];
 
 const router = createRouter({

@@ -43,12 +43,13 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import ConfirmDelete from '../ConfirmDelete.vue';
 import projectlinks from '../../store/projectlinks';
 
 const route = useRoute();
+const router = useRouter();
 const props = defineProps({
     data: Object,
     from: String
@@ -60,7 +61,7 @@ let modal = ref({
 })
 
 function editLinkPage() {
-
+    router.push({name: 'Link', params: {id: props.data.id}})
 }
 
 function duplicateLink() {
@@ -75,17 +76,23 @@ function getLinkStatistics() {
 }
 
 function getLinkQrcode() {
+    let applink = `${window.location.protocol}//${window.location.host}`;
 
+    window.open(`${applink}/${props.data.linkId}/qr`);
 }
 
 function deleteLink() {
     modal.value.isDisabled = true;
     projectlinks
-        .dispatch('', props.data.id)
+        .dispatch('deleteLink', props.data.id)
         .then((res) => {
             modal.value.isDisabled = false;
             modal.value.showDelete = false;
-            projectlinks.dispatch('getLinks', route.params.id)
+
+            if(props.from == 'link-list')
+                projectlinks.dispatch('getLinks', route.params.id)
+            else
+                router.push({name: 'Project', params: {id: props.data.projectId}})
         })
         .catch((err) => {
             modal.value.isDisabled = false;

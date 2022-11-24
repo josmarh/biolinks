@@ -15,10 +15,11 @@
             </div>
             <div v-if="isLinkSet==2">
                 <div v-for="item in links.data" :key="item.id"
-                    class="block w-full px-8 py-6 bg-white mb-2
+                    class="block w-full px-8 py-6 mb-2
                     border border-gray-200 shadow-md dark:bg-gray-800 
                     dark:border-gray-700 dark:hover:bg-gray-700 
-                    text-center">
+                    text-center"
+                    :class="[item.status == 'active' ? 'bg-white' : 'bg-gray-100']">
                     <div class="md:grid grid-cols-12">
                         <div class="text-white mt-2">
                             <span v-if="item.type=='biolink'" 
@@ -30,12 +31,12 @@
                             </span>
                         </div>
                         <div class="col-span-4 text-start">
-                            <div 
+                            <router-link  :to="{name: 'Link', params: {id: item.id}}"
                                 class="mb-2 text-lg font-bold 
                                 tracking-tight text-gray-700 
                                 dark:text-white">
                                 {{item.linkId}}
-                            </div>
+                            </router-link>
                             <p v-if="item.type=='biolink'"
                                 class="flex gap-2 text-gray-500 text-sm">
                                 <font-awesome-icon icon="fa-solid fa-link" class="mt-0.5" />
@@ -99,7 +100,7 @@
                             </label>
                         </div>
                         <div class="col-span-1 flex justify-end">
-                            <link-list-options :data="item" />
+                            <link-list-options :data="item" from="link-list" />
                         </div>
                     </div>
                 </div>
