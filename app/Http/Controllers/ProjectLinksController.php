@@ -53,6 +53,13 @@ class ProjectLinksController extends Controller
         return new ProjectLinkResource($projectLink);
     }
 
+    public function edit($id)
+    {
+        $projectLink = ProjectLink::findOrFail($id);
+
+        return new ProjectLinkResource($projectLink);
+    }
+
     public function update()
     {
 

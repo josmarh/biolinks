@@ -41,7 +41,10 @@
                                 class="flex gap-2 text-gray-500 text-sm">
                                 <font-awesome-icon icon="fa-solid fa-link" class="mt-0.5" />
                                 
-                                <a :href="applink+'/'+item.linkId" target="_blank" rel="noopener noreferrer">
+                                <a :href="applink+'/'+item.linkId" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    class="underline">
                                     {{applink+'/'+item.linkId}}
                                 </a>
                             </p>
@@ -49,7 +52,10 @@
                                 class="flex gap-2 text-gray-500 text-sm">
                                 <font-awesome-icon icon="fa-solid fa-earth-africa" class="mt-0.5" />
                                 
-                                <a :href="item.linkTypeUrl" target="_blank" rel="noopener noreferrer">
+                                <a :href="item.linkTypeUrl" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="underline">
                                     {{item.linkTypeUrl}}
                                 </a>
                             </p>

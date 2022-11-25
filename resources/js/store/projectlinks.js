@@ -31,6 +31,13 @@ const projectlinks = createStore({
                     return data;
                 })
         },
+        getLinkInfoId({ commit }, id) {
+            return axiosClient.get(`/link/edit/${id}`)
+                .then(({data}) => {
+                    commit('setLinks', data)
+                    return data;
+                })
+        },
         updateLinkStatus({}, payload) {
             return axiosClient.put(`/link/update/status/${payload.id}`, payload)
                 .then(({data}) => {

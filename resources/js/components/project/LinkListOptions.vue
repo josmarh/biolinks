@@ -19,6 +19,16 @@
             <MenuItems class="overflow-hidden absolute right-0 
                 mt-2 w-48 bg-white border shadow-lg z-10
                 origin-top-right focus:outline-none text-gray-400">
+                <MenuItem v-if="from === 'link-list'"
+                    v-slot="{active}">
+                    <a @click="duplicateLink" 
+                        :class="{'bg-gray-100': active}" 
+                        class="block py-2 px-4 text-sm text-gray-700 
+                        cursor-pointer inline-flex w-full">
+                        <font-awesome-icon icon="fa-solid fa-copy" class="h-4 w-4 mr-2 mt-0.5" />
+                        Duplicate
+                    </a>
+                </MenuItem>
                 <MenuItem v-for="(item, i) in listOptions" :key="i"
                     v-slot="{active}">
                     <a @click="item.action" 
@@ -127,7 +137,7 @@ function closeDeleteModal() {
 
 const listOptions = [
     {label: 'Edit', icon: 'fa-solid fa-pencil', action: editLinkPage},
-    {label: 'Duplicate', icon: 'fa-solid fa-copy', action: duplicateLink },
+    // {label: 'Duplicate', icon: 'fa-solid fa-copy', action: duplicateLink },
     {label: 'Statistics', icon: 'fa-solid fa-chart-column', action: getLinkStatistics },
     {label: 'QR Code', icon: 'fa-solid fa-qrcode', action: getLinkQrcode },
     {label: 'Delete', icon: 'fa-solid fa-trash', action: deleteLinkModal},
