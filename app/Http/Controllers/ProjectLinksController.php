@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\ProjectLink;
+use App\Models\LinkSetting;
 use App\Http\Resources\ProjectLinkResource;
 
 class ProjectLinksController extends Controller
@@ -60,9 +61,44 @@ class ProjectLinksController extends Controller
         return new ProjectLinkResource($projectLink);
     }
 
-    public function update()
+    public function updateBiolink(Request $request, $id)
     {
+        $projectLink = ProjectLink::findOrFail($id);
 
+        $projectLink->update([
+            'link_id' => $request->linkId,
+        ]);
+    }
+
+    public function updateLink(Request $request, $id)
+    {
+        $projectLink = ProjectLink::findOrFail($id);
+
+        $projectLink->update([
+            'long_url' => $request->linkTypeUrl,
+            'link_id' => $request->linkId,
+        ]);
+        
+        LinkSetting::where('link_id', $id)
+            ->update([
+                'tempurl_schedule' => $request->tempurl_schedule,
+                'tempurl_start_date' => $request->tempurl_start_date,
+                'tempurl_end_date' => $request->tempurl_end_date,
+                'tempurl_click_limit' => $request->tempurl_click_limit,
+                'tempurl_expire_url' => $request->tempurl_expire_url,
+                'protection_password' => $request->protection_password,
+                'protection_consent_warning' => $request->protection_consent_warning,
+                'target_type' => $request->target_type,
+                'target_country' => $request->target_country,
+                'target_device' => $request->target_device,
+                'target_browser_lang' => $request->target_browser_lang,
+                'target_os' => $request->target_os
+            ]);
+
+        return response([
+            'message' => 'Link update.',
+            'status_code' => 201
+        ],201);
     }
 
     public function updateStatus(Request $request, $id)
@@ -86,6 +122,8 @@ class ProjectLinksController extends Controller
     public function delete($id)
     {
         $projectLink = ProjectLink::findOrFail($id);
+
+        $projectLink->delete();
 
         return response([
             'message' => 'Link deleted.',

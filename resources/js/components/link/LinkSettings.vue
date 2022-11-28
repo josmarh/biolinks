@@ -54,15 +54,15 @@
                 <!-- Accrodion -->
                 <div>
                     <link-accordion title="Temporary URL" icon="fa-solid fa-clock">
-                        <TemporaryURL @update-link-setting="updateTempURL" />
+                        <TemporaryURL :data="linkSettings.tempURL" @update-link-setting="updateTempURL" />
                     </link-accordion>
 
                     <link-accordion title="Protection" icon="fa-solid fa-user-shield" class="mt-4">
-                        <protection @update-link-setting="updateProtection" />
+                        <protection :data="linkSettings.protection" @update-link-setting="updateProtection" />
                     </link-accordion>
 
                     <link-accordion title="Targeting" icon="fa-solid fa-bullseye" class="mt-4">
-                        <target @update-link-setting="updateTarget" />
+                        <target :data="linkSettings.target" @update-link-setting="updateTarget" />
                     </link-accordion>
                 </div>
 
@@ -81,22 +81,47 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch, onMounted } from 'vue';
+import { useRoute } from 'vue-router'
+import { notify } from 'notiwind';
 import LinkAccordion from './LinkAccordion.vue'
 import TemporaryURL from './accordion-body/TemporaryURL.vue'
 import Protection from './accordion-body/Protection.vue';
 import Target from './accordion-body/Target.vue'
+import projectlinks from '../../store/projectlinks';
 
+const route = useRoute()
 const props = defineProps({
-    data: Object
-})
+    data: Object,
+});
+const emit = defineEmits(['updateLinkInfo']);
+const now = new Date();
 
 let applink = `${window.location.protocol}//${window.location.host}/`;
 let model = ref(props.data)
 let linkSettings = ref({
-    tempURL: {},
-    protection: {},
-    target: {}
+    tempURL: {
+        scheduleSwitch: 'no',
+        scheduleStart: dformat(now),
+        scheduleEnd: dformat(now),
+        clickLimit: 5,
+        redirectURL: ''
+    },
+    protection: {
+        password: '',
+        contentWarning: 'no'
+    },
+    target: {
+        targetType: '',
+        country: [],
+        device: [],
+        browserLang: [],
+        os: [],
+    }
+});
+
+watch(() => props.data, (newVal, oldVal) => {
+    model.value = newVal
 })
 
 function updateTempURL(data) {
@@ -111,9 +136,102 @@ function updateTarget(data) {
     linkSettings.value.target = data;
 }
 
-function updateLinkSettings() {
-
+function getLinkSettings() {
+    projectlinks
+        .dispatch('getLinkSettings', route.params.id)
+        .then((res) => {
+            linkSettings.value.tempURL.scheduleSwitch = res.data.tempUrlSchedule;
+            linkSettings.value.tempURL.scheduleStart = !res.data.tempUrlStartDate ? dformat(now) : res.data.tempUrlStartDate;
+            linkSettings.value.tempURL.scheduleEnd = !res.data.tempUrlEndDate ? dformat(now) : res.data.tempUrlEndDate;
+            linkSettings.value.tempURL.clickLimit = !res.data.tempUrlClickLimit ? 5 : res.data.tempUrlClickLimit;
+            linkSettings.value.tempURL.redirectURL = res.data.tempUrlExpireUrl;
+            linkSettings.value.protection.password = res.data.protectionPassword;
+            linkSettings.value.protection.contentWarning = res.data.protectionConsentWarning;
+            linkSettings.value.target.targetType = !res.data.targetType ? '' : res.data.targetType;
+            linkSettings.value.target.country = !res.data.targetCountry  ? [] : JSON.parse(res.data.targetCountry);
+            linkSettings.value.target.device = !res.data.targetDevice  ? [] : JSON.parse(res.data.targetDevice);
+            linkSettings.value.target.browserLang = !res.data.targetBrowserLang  ? [] : JSON.parse(res.data.targetBrowserLang);
+            linkSettings.value.target.os = !res.data.targetOS  ? [] : JSON.parse(res.data.targetOS);
+        })
+        .catch((err) => {
+            let errMsg;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message"))
+                        errMsg = err.response.data.message;
+                    else
+                        errMsg = err.response.data.error;
+                }
+            }else{
+                errMsg = err;
+            }
+            notify({
+                group: "error",
+                title: "Error",
+                text: errMsg
+            }, 4000);
+        })
 }
+
+function updateLinkSettings() {
+    projectlinks
+        .dispatch('updateLinkSettings', {
+            id: model.value.id,
+            linkTypeUrl: model.value.linkTypeUrl,
+            linkId: model.value.linkId,
+            tempurl_schedule: linkSettings.value.tempURL.scheduleSwitch,
+            tempurl_start_date: linkSettings.value.tempURL.scheduleStart,
+            tempurl_end_date: linkSettings.value.tempURL.scheduleEnd,
+            tempurl_click_limit: linkSettings.value.tempURL.clickLimit,
+            tempurl_expire_url: linkSettings.value.tempURL.redirectURL,
+            protection_password: linkSettings.value.protection.password,
+            protection_consent_warning: linkSettings.value.protection.contentWarning,
+            target_type: linkSettings.value.target.targetType,
+            target_country: JSON.stringify(linkSettings.value.target.country),
+            target_device: JSON.stringify(linkSettings.value.target.device),
+            target_browser_lang: JSON.stringify(linkSettings.value.target.browserLang),
+            target_os: JSON.stringify(linkSettings.value.target.os),
+        })
+        .then((res) => {
+            emit('updateLinkInfo');
+            notify({
+                group: "success",
+                title: "Success",
+                text: res.message
+            }, 4000);
+        })
+        .catch((err) => {
+            let errMsg;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message"))
+                        errMsg = err.response.data.message;
+                    else
+                        errMsg = err.response.data.error;
+                }
+            }else{
+                errMsg = err;
+            }
+            notify({
+                group: "error",
+                title: "Error",
+                text: errMsg
+            }, 4000);
+        })
+}
+
+function dformat(date) {
+    let d = new Date(date);
+    const day = d.getDate() <= 9 == 1 ? `0${d.getDate()}` : d.getDate();
+    const month = d.getMonth()+1  <= 9 == 1 ? `0${d.getMonth()+1}` : d.getMonth()+1;
+    const year = d.getFullYear();
+    const time = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+    return `${year}-${month}-${day} ${time}`;
+}
+
+onMounted(() => {
+    getLinkSettings();
+})
 </script>
 
 <style>

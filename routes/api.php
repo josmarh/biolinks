@@ -11,6 +11,8 @@ use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectInvitationController;
 use App\Http\Controllers\ProjectLinksController;
+use App\Http\Controllers\LinkSettingController;
+use App\Http\Controllers\HelperController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,9 +49,16 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/show/{linkId}', [ProjectLinksController::class, 'show']);
         Route::get('/edit/{id}', [ProjectLinksController::class, 'edit']);
         Route::put('/update/status/{id}', [ProjectLinksController::class, 'updateStatus']);
+        Route::put('/update/link/{id}', [ProjectLinksController::class, 'updateLink']);
+        Route::put('/update/biolink/{id}', [ProjectLinksController::class, 'updateBiolink']);
         Route::post('/duplicate/{id}', [ProjectLinksController::class, 'duplicate']);
         Route::delete('/delete/{id}', [ProjectLinksController::class, 'delete']);
+
+        Route::get('/link/{id}', [LinkSettingController::class, 'index']);
     });
+
+    Route::get('/countries', [HelperController::class, 'country']);
+    Route::get('/languages', [HelperController::class, 'language']);
 });
 
 Route::post('/register', [RegisterController::class, 'register']);

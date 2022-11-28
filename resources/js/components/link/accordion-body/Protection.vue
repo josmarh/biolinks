@@ -55,10 +55,7 @@ const props = defineProps({
     data: Object
 })
 const emit = defineEmits(['updateLinkSetting']);
-let model = ref({
-    password: '',
-    contentWarning: 'no'
-})
+let model = ref(props.data)
 
 watch(model, (newVal, oldVal) => {
     emit('updateLinkSetting', model.value)

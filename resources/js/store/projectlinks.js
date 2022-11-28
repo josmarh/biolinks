@@ -8,6 +8,9 @@ const projectlinks = createStore({
             meta: {},
             link: {}
         },
+        linkSettings: {
+            data: []
+        }
     },
     getters: {},
     actions: {
@@ -44,6 +47,25 @@ const projectlinks = createStore({
                     return data;
                 })
         },
+        updateLinkSettings({}, payload) {
+            return axiosClient.put(`/link/update/link/${payload.id}`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        updateBiolinkSettings({}, payload) {
+            return axiosClient.put(`/link/update/biolink/${payload.id}`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        getLinkSettings({ commit }, id) {
+            return axiosClient.get(`/link/link/${id}`)
+                .then(({data}) => {
+                    commit('setLinkSettings', data)
+                    return data;
+                })
+        },
         duplicateLink({}, id) {
             return axiosClient.post(`/link/duplicate/${id}`)
                 .then(({data}) => {
@@ -60,6 +82,9 @@ const projectlinks = createStore({
     mutations: {
         setLinks: (state, data) => {
             state.links = data;
+        },
+        setLinkSettings: (state, data) => {
+            state.linkSettings = data;
         },
     },
     modules: {}

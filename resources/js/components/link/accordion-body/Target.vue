@@ -16,54 +16,71 @@
                 <option value="">None</option>
                 <option value="country">Country</option>
                 <option value="device">Device Type</option>
-                <option value="browser-lang">Brwoser Language</option>
+                <option value="blang">Browser Language</option>
                 <option value="OS">Operating System</option>
             </select>
         </div>
         <div class="mt-2">
-            <p v-if="model.targetType == 'country'"
-                class="flex gap-2 text-gray-500 text-sm">
-                Send visitors to different URLs based on their country location.
-            </p>
-            <p v-if="model.targetType == 'device'"
-                class="flex gap-2 text-gray-500 text-sm">
-                Send visitors to different URLs based on the device that they are using.
-            </p>
-            <p v-if="model.targetType == 'browser-lang'"
-                class="flex gap-2 text-gray-500 text-sm">
-                Send visitors to different URLs based on their main browser language.
-            </p>
-            <p v-if="model.targetType == 'OS'"
-                class="flex gap-2 text-gray-500 text-sm">
-                Send visitors to different URLs based on the device operating system that they are using.
-            </p>
-        </div>
-        <div>
-
+            <div v-if="model.targetType == 'country'">
+                <p class="flex gap-2 text-gray-500 text-sm">
+                    Send visitors to different URLs based on their country location.
+                </p>
+                <country class="mt-4" 
+                    :countries="countries"
+                    :added-countries="model.country" 
+                    @add-country="createTargetType" 
+                    @update-country="updateTargetType" />
+            </div>
+            <div v-if="model.targetType == 'device'">
+                <p class="flex gap-2 text-gray-500 text-sm">
+                    Send visitors to different URLs based on the device that they are using.
+                </p>
+                <devices class="mt-4"
+                    :added-devices="model.device"
+                    @add-device="createTargetType"
+                    @update-device="updateTargetType"/>
+            </div>
+            <div v-if="model.targetType == 'blang'">
+                <p class="flex gap-2 text-gray-500 text-sm">
+                    Send visitors to different URLs based on their main browser language.
+                </p>
+                <browser-lang class="mt-4"
+                    :added-blangs="model.browserLang"
+                    :languages="languages"
+                    @addBlang="createTargetType"
+                    @updateBlang="updateTargetType"/>
+            </div>
+            <div v-if="model.targetType == 'OS'">
+                <p class="flex gap-2 text-gray-500 text-sm">
+                    Send visitors to different URLs based on the device operating system that they are using.
+                </p>
+                <OS class="mt-4" :addedOS="model.os" @addOS="createTargetType" @updateOS="updateTargetType" />
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
+import Country from '../target-types/Country.vue';
+import Devices from '../target-types/Devices.vue';
+import BrowserLang from '../target-types/BrowserLang.vue';
+import OS from '../target-types/OS.vue';
+import store from '../../../store';
+import helper from '../../../helpers';
 
+const countries = computed(() => store.state.countries)
+const languages = computed(() => store.state.languages)
 const props = defineProps({
     data: Object
 })
 const emit = defineEmits(['updateLinkSetting']);
 
-let model = ref({
-    targetType: '',
-    country: [],
-    device: [],
-    browserLang: [],
-    os: [],
-})
+let model = ref(props.data)
 
-watch(model, (newVal, oldVal) => {
-    emit('updateLinkSetting', model.value)
-}, {deep: true});
-
+watch(() => props.data, (newVal, oldVal) => {
+    model.value = newVal
+}, {deep:true})
 
 function createTargetType() {
     switch (model.value.targetType) {
@@ -72,20 +89,49 @@ function createTargetType() {
             break;
 
         case 'device':
-            model.value.device.push({device: 'Desktop', url: ''});
+            model.value.device.push({device: 'desktop', url: ''});
             break;
 
-        case 'browser-lang':
+        case 'blang':
             model.value.browserLang.push({lang: 'en', url: ''});
             break;
 
         case 'OS':
-            model.value.os.push({os: 'ios', url: ''});
+            model.value.os.push({os: 'iOS', url: ''});
+            break;
+    
+        default:
+            break;
+    };
+    emit('updateLinkSetting', model.value)
+}
+
+function updateTargetType(data) {
+    switch (model.value.targetType) {
+        case 'country':
+            model.value.country = data;
+            break;
+
+        case 'device':
+            model.value.device = data;
+            break;
+
+        case 'blang':
+            model.value.browserLang = data;
+            break;
+
+        case 'OS':
+            model.value.os = data;
             break;
     
         default:
             break;
     }
+    emit('updateLinkSetting', model.value)
 }
 
+onMounted(() => {
+    helper.getCountries();
+    helper.getLanguages();
+})
 </script>

@@ -1,5 +1,11 @@
 <template>
     <Header :data="content.data" />
+
+    <!-- Page settings view -->
+    <biolink-settings v-if="content.data.type == 'biolink'" />
+
+    <link-settings v-else :data="content.data" @update-link-info="getLinkInfo" />
+
 </template>
 
 <script setup>
@@ -8,16 +14,16 @@ import { onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router';
 import { notify } from 'notiwind';
 import projectlinks from '../store/projectlinks';
+import LinkSettings from '../components/link/LinkSettings.vue'
+import BiolinkSettings from '../components/link/BiolinkSettings.vue'
 
 const route = useRoute();
-const content = computed(() => projectlinks.state.links)
+const content = computed(() => projectlinks.state.links);
 
 function getLinkInfo() {
     projectlinks
         .dispatch('getLinkInfoId', route.params.id)
-        .then((res) => {
-
-        })
+        .then((res) => {})
         .catch((err) => {
             let errMsg;
             if(err.response) {

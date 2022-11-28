@@ -8,6 +8,8 @@ const store = createStore({
             token: localStorage.getItem('TOKEN'),
             permissions: localStorage.getItem('can'),
         },
+        countries: [],
+        languages: [],
     },
     getters: {},
     actions: {
@@ -57,6 +59,20 @@ const store = createStore({
                     return data;
                 })
         },
+        getCountries({ commit }) {
+            return axiosClient.get('/countries')
+                .then(({data}) => {
+                    commit('setCountries', data)
+                    return data;
+                })
+        },
+        getLanguages({ commit }) {
+            return axiosClient.get('/languages')
+                .then(({data}) => {
+                    commit('setLanguages', data)
+                    return data;
+                })
+        },
     },
     mutations: {
         setUser: (state, userData) => {
@@ -74,6 +90,12 @@ const store = createStore({
         logout: (state, userInfo) => {
             state.user = null;
             localStorage.clear();
+        },
+        setCountries: (state, data) => {
+            state.countries = data;
+        },
+        setLanguages: (state, data) => {
+            state.languages = data;
         },
     },
     modules: {}

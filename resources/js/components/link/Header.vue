@@ -136,13 +136,6 @@
                 </button>
             </div>
         </div>
-        <!-- Page settings view -->
-        <div v-if="model.type == 'biolink'">
-            <biolink-settings />
-        </div>
-        <div v-if="model.type == 'link'">
-            <link-settings :data="model" />
-        </div>
     </div>
 </template>
 
@@ -150,8 +143,6 @@
 import { ref, watch } from 'vue';
 import LinkListOptions from '../project/LinkListOptions.vue';
 import projectlinks from '../../store/projectlinks';
-import BiolinkSettings from './BiolinkSettings.vue';
-import LinkSettings from './LinkSettings.vue';
 
 const props = defineProps({
     data: Object

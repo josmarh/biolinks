@@ -107,15 +107,8 @@ const props = defineProps({
     data: Object
 })
 const emit = defineEmits(['updateLinkSetting']);
-const now = new Date();
 
-let model = ref({
-    scheduleSwitch: 'no',
-    scheduleStart: dformat(now),
-    scheduleEnd: dformat(now),
-    clickLimit: 5,
-    redirectURL: ''
-})
+let model = ref(props.data)
 
 watch(model, (newVal, oldVal) => {
     model.value.scheduleStart = dformat(model.value.scheduleStart);
@@ -130,15 +123,6 @@ function updateScheduleURL(ev) {
         model.value.scheduleSwitch = 'yes';
     else
         model.value.scheduleSwitch = 'no';
-}
-
-function format_date(date) {
-    let d = new Date(date);
-    const day = d.getDate();
-    const month = d.getMonth() + 1;
-    const year = d.getFullYear();
-    return `${year}-${month}-${day}`;
-    // return d.toLocaleDateString('en-us',{year:"numeric", month:"short", day:"numeric"});
 }
 
 function dformat(date) {
