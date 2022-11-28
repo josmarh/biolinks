@@ -1,5 +1,5 @@
 <template>
-    <Menu as="div" class="relative flex-shrink-0 z-10">
+    <Menu as="div" class="relative flex-shrink-0 ">
         <div>
             <MenuButton class="rounded-full flex items-right 
                 focus:outline-none focus:ring-0 focus:ring-offset-2 focus:ring-blue">
@@ -17,7 +17,7 @@
             leave-from-class="opacity-100 scale-100"
             leave-to-class="opacity-0 scale-90">
             <MenuItems class="overflow-hidden absolute right-0 
-                mt-2 w-48 bg-white border shadow-lg 
+                mt-2 w-48 bg-white border shadow-lg z-10
                 origin-top-right focus:outline-none text-gray-400">
                 <MenuItem v-if="from != 'inner-project'"
                     v-slot="{active}">

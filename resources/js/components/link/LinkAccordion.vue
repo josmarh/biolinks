@@ -1,0 +1,43 @@
+<template>
+    <div class="border-2 p-2 rounded mt-2">
+        <div @click="isOpen = !isOpen" 
+            class="flex justify-between bg-white px-4 
+            rounded cursor-pointer hover:text-blue-500"
+            :class="isOpen ? 'text-blue-500' : 'text-gray-600'">
+            <span class="flex">
+                <font-awesome-icon  
+                    :icon="icon" 
+                    class="mt-1 mr-2"/>
+                {{title}}
+            </span>
+            <span>
+                <font-awesome-icon 
+                    v-if="!isOpen" 
+                    icon="fa-solid fa-plus" 
+                    class="mt-1.5"/>
+                <font-awesome-icon 
+                    v-else 
+                    icon="fa-solid fa-x" 
+                    class="mt-1.5"/>
+            </span>
+        </div>
+        <div class="mt-4 border-2 p-2 rounded transition duration-300 ease-in-out" 
+            :class="isOpen ? 'd-block' : 'hidden'">
+            <slot></slot>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const isOpen = ref(false)
+const props = defineProps({
+    title: String,
+    icon: String
+})
+</script>
+
+<style>
+
+</style>
