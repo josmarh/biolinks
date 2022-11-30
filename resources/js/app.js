@@ -18,7 +18,8 @@ import { faRightFromBracket, faLink, faEnvelope,
     faGauge, faCircleDot, faHashtag, faCopy, faQrcode, 
     faArrowUpRightFromSquare, faEarthAfrica, faClipboardCheck, 
     faClipboard, faX, faClock, faComputerMouse, faHourglassEnd, 
-    faUserShield, faKey, faBullseye,  
+    faUserShield, faKey, faBullseye, faCamera, faEye, faHeading, 
+    faPaintBrush, faPalette,  
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add( faRightFromBracket, faLink, faEnvelope, 
@@ -27,7 +28,8 @@ library.add( faRightFromBracket, faLink, faEnvelope,
     faGauge, faCircleDot, faHashtag, faCopy, faQrcode, 
     faArrowUpRightFromSquare, faEarthAfrica, faClipboardCheck, 
     faClipboard, faX, faClock, faComputerMouse, faHourglassEnd, 
-    faUserShield, faKey, faBullseye
+    faUserShield, faKey, faBullseye, faCamera, faEye, faHeading, 
+    faPaintBrush, faPalette
 )
 
 createApp(app)

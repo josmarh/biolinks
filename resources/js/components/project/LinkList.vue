@@ -110,6 +110,8 @@
                         </div>
                     </div>
                 </div>
+                <!-- pagination -->
+                
             </div>
             <div v-if="isLinkSet==3">
                 <no-project-content notice="No links attached to this project..." />

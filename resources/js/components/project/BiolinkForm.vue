@@ -126,8 +126,8 @@ function createBiolink() {
             open.value = false;
             emit('closeForm');
             isDisabled.value = false;
-            projectlinks.dispatch('getLinks', route.params.id);
-            model.value.linkid = null
+            
+            model.value.linkId = null
 
             notify({
                 group: "success",
@@ -135,12 +135,16 @@ function createBiolink() {
                 text: res.message
             }, 4000);
 
-            // router.push({
-            //     name: 'Link',
-            //     params: {
-            //         id: res.link.id
-            //     }
-            // });
+            setTimeout(() => {
+                router.push({
+                    name: 'Link',
+                    params: {
+                        id: res.link.id
+                    }
+                });
+            }, 1500);
+
+            projectlinks.dispatch('getLinks', route.params.id);
         })
         .catch((err) => {
             open.value = false

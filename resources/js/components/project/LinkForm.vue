@@ -144,7 +144,7 @@ function createLink() {
             open.value = false;
             emit('closeForm');
             isDisabled.value = false;
-            projectlinks.dispatch('getLinks', route.params.id);
+            
             model.value.linkid = null;
             model.value.longUrl = null
 
@@ -154,12 +154,16 @@ function createLink() {
                 text: res.message
             }, 4000);
 
-            // router.push({
-            //     name: 'Link',
-            //     params: {
-            //         id: res.link.id
-            //     }
-            // });
+            projectlinks.dispatch('getLinks', route.params.id);
+           
+            setTimeout(() => {
+                router.push({
+                    name: 'Link',
+                    params: {
+                        id: res.link.id
+                    }
+                });
+            }, 1500);
         })
         .catch((err) => {
             open.value = false

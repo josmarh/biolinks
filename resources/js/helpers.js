@@ -2,6 +2,7 @@ import store from "./store";
 import { notify } from 'notiwind'
 
 const helper = {
+    applink: `${window.location.protocol}//${window.location.host}/`,
     getCountries() {
         store
             .dispatch('getCountries')

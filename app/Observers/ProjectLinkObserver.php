@@ -21,9 +21,9 @@ class ProjectLinkObserver
                 'link_id' => $projectLink->id
             ]);
         }else {
-            BiolinkSetting::create([
-                'link_id' => $projectLink->id
-            ]);
+            // BiolinkSetting::create([
+            //     'link_id' => $projectLink->id
+            // ]);
         }
     }
 
@@ -47,12 +47,12 @@ class ProjectLinkObserver
     public function deleting(ProjectLink $projectLink)
     {
         if($projectLink->type === 'link') {
-            $linkSettings = LinkSetting::findOrFail($projectLink->id);
+            $linkSettings = LinkSetting::where('link_id', $projectLink->id)->first();
         }else {
-            $linkSettings = BiolinkSetting::findOrFail($projectLink->id);
+            // $linkSettings = BiolinkSetting::where('link_id', $projectLink->id)->first();
         }
 
-        $linkSettings->delete();
+        // $linkSettings->delete();
     }
 
     /**
