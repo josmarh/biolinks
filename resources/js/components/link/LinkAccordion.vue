@@ -4,8 +4,9 @@
             class="flex justify-between bg-white px-4 
             rounded cursor-pointer hover:text-blue-500"
             :class="isOpen ? 'text-blue-500' : 'text-gray-600'">
-            <span class="flex">
+            <span class="flex font-medium">
                 <font-awesome-icon  
+                    v-if="icon"
                     :icon="icon" 
                     class="mt-1 mr-2"/>
                 {{title}}

@@ -55,6 +55,8 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::delete('/delete/{id}', [ProjectLinksController::class, 'delete']);
 
         Route::get('/link/{id}', [LinkSettingController::class, 'index']);
+        Route::get('/biolink/custom/{id}', [LinkSettingController::class, 'getCustomSettings']);
+        Route::put('/biolink/custom/{id}', [LinkSettingController::class, 'updateCustomSettings']);
     });
 
     Route::get('/countries', [HelperController::class, 'country']);

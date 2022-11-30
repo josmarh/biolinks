@@ -13,9 +13,26 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('biolink_settings', function (Blueprint $table) {
+        Schema::create('bl_biolink_settings', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('link_id');
+            $table->string('top_logo')->nullable();
+            $table->text('video')->nullable();
+            $table->string('title')->nullable();
+            $table->enum('verified_checkmark', ['yes','no']);
+            $table->text('description')->nullable();
+            $table->string('background_type', 10);
+            $table->text('background_type_content');
+            $table->text('branding')->nullable();
+            $table->text('analytics')->nullable();
+            $table->text('seo')->nullable();
+            $table->text('utm')->nullable();
+            $table->text('socials')->nullable();
+            $table->string('font', 15);
+            $table->text('section')->nullable();
+            $table->text('custom')->nullable();
             $table->timestamps();
+            $table->index(['link_id']);
         });
     }
 
@@ -26,6 +43,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('biolink_settings');
+        Schema::dropIfExists('bl_biolink_settings');
     }
 };

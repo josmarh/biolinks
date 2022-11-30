@@ -12,6 +12,19 @@ class BiolinkSetting extends Model
     protected $table = 'bl_biolink_settings';
     protected $fillable = [
         'link_id',
+        'top_logo',
+        'video',
+        'title',
+        'verified_checkmark',
+        'description',
+        'background_type',
+        'background_type_content',
+        'branding',
+        'analytics',
+        'seo',
+        'utm',
+        'socials',
+        'font',
     ];
 
     public function link()

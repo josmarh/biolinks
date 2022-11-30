@@ -108,6 +108,7 @@ import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } fro
 import { notify } from 'notiwind';
 import ButtonSpinner from '../ButtonSpinner.vue';
 import projectlinks from '../../store/projectlinks'
+import linkDefaultSettings from '../../includes/link-default-settings'
 
 const route = useRoute();
 const router = useRouter();
@@ -139,13 +140,16 @@ watch(open, (newVal, oldVal) => {
 function createLink() {
     isDisabled.value = true;
     projectlinks
-        .dispatch('storeLink', model.value)
+        .dispatch('storeLink', {
+            link: model.value,
+            linkSettings: JSON.stringify(linkDefaultSettings)
+        })
         .then((res) => {
             open.value = false;
             emit('closeForm');
             isDisabled.value = false;
             
-            model.value.linkid = null;
+            model.value.linkId = null;
             model.value.longUrl = null
 
             notify({

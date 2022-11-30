@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\ProjectLink;
 use App\Models\LinkSetting;
 use App\Models\BiolinkSetting;
+use App\Models\BiolinkCustomSetting;
 
 class ProjectLinkObserver
 {
@@ -16,14 +17,10 @@ class ProjectLinkObserver
      */
     public function created(ProjectLink $projectLink)
     {
-        if($projectLink->type === 'link') {
-            LinkSetting::create([
+        if($projectLink->type === 'biolink') {
+            BiolinkCustomSetting::create([
                 'link_id' => $projectLink->id
             ]);
-        }else {
-            // BiolinkSetting::create([
-            //     'link_id' => $projectLink->id
-            // ]);
         }
     }
 
@@ -47,12 +44,11 @@ class ProjectLinkObserver
     public function deleting(ProjectLink $projectLink)
     {
         if($projectLink->type === 'link') {
-            $linkSettings = LinkSetting::where('link_id', $projectLink->id)->first();
+            LinkSetting::where('link_id', $projectLink->id)->delete();
         }else {
-            // $linkSettings = BiolinkSetting::where('link_id', $projectLink->id)->first();
+            BiolinkSetting::where('link_id', $projectLink->id)->delete();
+            BiolinkCustomSetting::where('link_id', $projectLink->id)->delete();
         }
-
-        // $linkSettings->delete();
     }
 
     /**

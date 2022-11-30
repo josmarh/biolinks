@@ -35,18 +35,22 @@
                             </button>
                         </li>
                     </ul>
-                    <!-- Create dropdown -->
+                    <!-- Create section dropdown -->
                     <NewTypeOption />
                 </div>
                 <div id="tabContent" class="mt-4">
                     <div v-if="currentTab==='settings'">
-                        <settings :data="model" :data-settings="biolinkSettings" />
+                        <settings 
+                            :data="model" 
+                            :data-settings="biolinkSettings" 
+                            @update-settings="updateSettings" 
+                        />
                     </div>
                     <div v-if="currentTab==='section'">
                         <section />
                     </div>
                     <div v-if="currentTab==='custom'">
-                        <custom />
+                        <custom :data="customSettings.data" />
                     </div>
                 </div>
             </div>
@@ -58,12 +62,16 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import NewTypeOption from './NewTypeOption.vue';
 import Settings from './biolink-tabcontent/Settings.vue';
 import Section from './biolink-tabcontent/Section.vue';
 import Custom from './biolink-tabcontent/Custom.vue';
+import projectlinks from '../../store/projectlinks';
 
+const route = useRoute()
+const customSettings = computed(() => projectlinks.state.biolinkCustomSettings)
 const props = defineProps({
     data: Object,
 });
@@ -71,26 +79,57 @@ const currentTab = ref('settings');
 
 let model = ref(props.data)
 let biolinkSettings = ref({
-    file: null,
+    topLogo: null,
     video: { type: 'youtube', link: '' },
     title: 'My Featured Links 🔥',
     description: '',
     textColor: '#ffffff',
+    verifiedCheckmark: 'no',
+    bckgdType: 'preset',
     bckgd: {
-        type: 'preset',
         presetbckg: 'background-image: linear-gradient(109.6deg, #ffb418 11.2%, #f73131 91.1%);',
         color: '#808080',
         grad1: '#808080',
         grad2: '#808080',
         image: null
     },
-    branding: {},
-    analytics: {},
-    seo: {},
-    utmParams: {},
-    socials: {},
-    fonts: '',
-    sections: [],
+    branding: {
+        display: 'no',
+        name: '',
+        url: '',
+    },
+    analytics: {
+        googleId: '',
+        fbPixel: ''
+    },
+    seo: {
+        title: '',
+        metaDesc: '',
+        favicon: null
+    },
+    utmParams: {
+        medium: '',
+        source: ''
+    },
+    socials: {
+        buttonColor: '#ffffff',
+        email: '',
+        phone: '',
+        whatsapp: '',
+        facebook: '',
+        fbMessager: '',
+        instagram: '',
+        twitter: '',
+        tiktok: '',
+        youtube: '',
+        soundcloud: '',
+        linkedin: '',
+        spotify: '',
+        pinterest: '',
+        clubhouse: ''
+    },
+    fonts: 'lato',
+    sections: ['lead_generation'],
     custom: {
         header: null,
         footer: null,
@@ -108,6 +147,34 @@ function selectTab(tab) {
 function updateSettings(model, settings) {
     model.value = model
     biolinkSettings.value = settings
+}
+
+function updateBiolinkSettings() {
+
+}
+
+function getBiolinkCustomSettings() {
+    projectlinks
+        .dispatch('getBiolinkCustomSettings', route.params.id)
+        .then((res) => {})
+        .catch((err) => {
+            let errMsg;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message"))
+                        errMsg = err.response.data.message;
+                    else
+                        errMsg = err.response.data.error;
+                }
+            }else{
+                errMsg = err;
+            }
+            notify({
+                group: "error",
+                title: "Error",
+                text: errMsg
+            }, 4000);
+        })
 }
 
 </script>

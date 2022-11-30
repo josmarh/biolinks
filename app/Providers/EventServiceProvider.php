@@ -20,6 +20,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        'App\Events\ProjectLinkCreated' => [
+            'App\Listeners\createBiolinkSettings',
+            'App\Listeners\createLinkSettings'
+        ]
     ];
 
     /**

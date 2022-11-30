@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\ProjectLink;
 use App\Models\LinkSetting;
 use App\Http\Resources\ProjectLinkResource;
+use App\Events\ProjectLinkCreated;
 
 class ProjectLinksController extends Controller
 {
@@ -24,21 +25,29 @@ class ProjectLinksController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'projectId' => 'required|numeric',
-            'type' => 'required|string',
+            'link.projectId' => 'required|numeric',
+            'link.type' => 'required|string',
         ]);
 
         $user = $request->user();
-        $linkId = $request->linkId; 
-        $longUrl = $request->longUrl ?? null;
-
+        $linkId = $request->link['linkId']; 
+        $longUrl = $request->link['longUrl'] ?? null;
+        
         $projectLink = ProjectLink::create([
-            'project_id' => $data['projectId'],
+            'project_id' => $request->link['projectId'],
             'link_id' => $linkId == null ? Str::random(10) : $linkId,
-            'type' => $data['type'],
+            'type' => $request->link['type'],
             'long_url' => $longUrl,
             'user_id' => $user->id
         ]);
+
+        $link = [
+            'linkId' => $projectLink->id,
+            'type' => $request->link['type'],
+            'settings' => $request->linkSettings
+        ];
+        
+        event(new ProjectLinkCreated($link));
 
         return response([
             'message' => 'Link created.',

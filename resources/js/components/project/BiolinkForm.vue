@@ -91,6 +91,7 @@ import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } fro
 import { notify } from 'notiwind';
 import ButtonSpinner from '../ButtonSpinner.vue';
 import projectlinks from '../../store/projectlinks'
+import biolinkDefaultSettings from '../../includes/biolink-default-settings'
 
 const route = useRoute();
 const router = useRouter();
@@ -121,7 +122,10 @@ watch(open, (newVal, oldVal) => {
 function createBiolink() {
     isDisabled.value = true;
     projectlinks
-        .dispatch('storeLink', model.value)
+        .dispatch('storeLink', {
+            link: model.value,
+            linkSettings: JSON.stringify(biolinkDefaultSettings)
+        })
         .then((res) => {
             open.value = false;
             emit('closeForm');

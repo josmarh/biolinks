@@ -3,111 +3,114 @@
         <div class="block p-6 bg-white border 
             border-gray-200 shadow-md dark:bg-gray-800 
             dark:border-gray-700 dark:hover:bg-gray-700">
-            <div>
-                <label for="shortUrl" 
-                    class="block mb-2 text-sm font-medium flex
-                    text-gray-900 dark:text-white capitalize gap-2">
-                    <font-awesome-icon icon="fa-solid fa-link" class="mt-0.5" />
-                    Short Url
-                </label>
-                <div class="flex">
-                    <span class="inline-flex items-center px-3 
-                        text-sm text-gray-900 bg-gray-200 border 
-                        border-r-0 border-gray-300 
-                        dark:bg-gray-600 dark:text-gray-400 
-                        dark:border-gray-600">
-                        {{helper.applink}}
-                    </span>
-                    <input type="text" id="shortUrl" v-model="model.linkId"
-                        class="rounded-none bg-gray-50 
-                        border text-gray-900 focus:ring-blue-500 
-                        focus:border-blue-500 block flex-1 min-w-0 
-                        w-full text-sm border-gray-300 p-2.5 
-                        dark:bg-gray-700 dark:border-gray-600 
-                        dark:placeholder-gray-400 dark:text-white 
-                        dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                        placeholder="alias" required>
-                </div>
-                <p class="text-sm text-gray-500">
-                    Leave empty for a random generated one.
-                </p>
-            </div>
-            <!-- Logo Upload -->
-            <div class="mt-4">
-                <div class="flex items-center justify-center w-full">
-                    <label for="dropzone-file" 
-                        class="flex flex-col items-center justify-center 
-                        w-full border-2 border-gray-300 border-dashed 
-                        rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 
-                        dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 
-                        dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                            <font-awesome-icon icon="fa-solid fa-camera" class="w-10 h-10 mb-3 text-gray-400" />
-                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                <span class="font-semibold">Click to upload</span> or drag and drop
-                            </p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                        </div>
-                        <input id="dropzone-file" type="file" class="hidden" />
-                    </label>
-                </div>
-            </div>
-            <!-- Video link -->
-            <div class="mt-8">
-                <div class="inline-flex gap-3">
-                    <div class="flex items-center">
-                        <input id="ytube" type="radio" value="youtube" name="video" 
-                            v-model="modelSettings.video.type"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 
-                            border-gray-300 focus:ring-blue-500 
-                            dark:focus:ring-blue-600 dark:ring-offset-gray-800 
-                            focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="ytube" 
-                            class="ml-2 text-sm font-medium 
-                            text-gray-900 dark:text-gray-300">
-                            YouTube Video
-                        </label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="vimeo" type="radio" value="vimeo" name="video" 
-                            v-model="modelSettings.video.type"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 
-                            border-gray-300 focus:ring-blue-500 
-                            dark:focus:ring-blue-600 dark:ring-offset-gray-800 
-                            focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="vimeo" 
-                            class="ml-2 text-sm font-medium 
-                            text-gray-900 dark:text-gray-300">
-                            Vimeo Video
-                        </label>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <label for="video-link" 
+            <form @submit.prevent>
+                <!-- Short URL -->
+                <div>
+                    <label for="shortUrl" 
                         class="block mb-2 text-sm font-medium flex
                         text-gray-900 dark:text-white capitalize gap-2">
                         <font-awesome-icon icon="fa-solid fa-link" class="mt-0.5" />
-                        {{modelSettings.video.type === 'youtube' ? 'Add Welcome Video' : 'Add Vimeo Video'}}
+                        Short Url
                     </label>
                     <div class="flex">
-                        <input type="url" id="video-link" v-model="modelSettings.video.link"
-                        class="rounded-none bg-gray-50 
-                        border text-gray-900 focus:ring-blue-500 
-                        focus:border-blue-500 block flex-1 min-w-0 
-                        w-full text-sm border-gray-300 p-2.5 
-                        dark:bg-gray-700 dark:border-gray-600 
-                        dark:placeholder-gray-400 dark:text-white 
-                        dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                        :placeholder="modelSettings.video.type === 'youtube' ? 'https://youtu.be/GgeTnpTkzI0' : 'https://vimeo.com/44437887'">
-                        <button v-if="modelSettings.video.type === 'youtube'"
-                            class="inline-flex items-center px-3 
-                            text-sm text-white bg-[#38B2AC] border 
-                            border-r-0 border-[#38B2AC] 
-                            dark:bg-[#38B2AC] dark:text-white 
-                            dark:border-[#38B2AC]">
-                            <font-awesome-icon icon="fa-solid fa-eye" class="mr-2" />
-                            Preview
-                        </button>
+                        <span class="inline-flex items-center px-3 
+                            text-sm text-gray-900 bg-gray-200 border 
+                            border-r-0 border-gray-300 
+                            dark:bg-gray-600 dark:text-gray-400 
+                            dark:border-gray-600">
+                            {{helper.applink}}
+                        </span>
+                        <input type="text" id="shortUrl" v-model="model.linkId"
+                            class="rounded-none bg-gray-50 
+                            border text-gray-900 focus:ring-blue-500 
+                            focus:border-blue-500 block flex-1 min-w-0 
+                            w-full text-sm border-gray-300 p-2.5 
+                            dark:bg-gray-700 dark:border-gray-600 
+                            dark:placeholder-gray-400 dark:text-white 
+                            dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            placeholder="alias" required>
+                    </div>
+                    <p class="text-sm text-gray-500">
+                        Leave empty for a random generated one.
+                    </p>
+                </div>
+                <!-- Logo Upload -->
+                <div class="mt-4">
+                    <div class="flex items-center justify-center w-full">
+                        <label for="dropzone-file" 
+                            class="flex flex-col items-center justify-center 
+                            w-full border-2 border-gray-300 border-dashed 
+                            rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 
+                            dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 
+                            dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <font-awesome-icon icon="fa-solid fa-camera" class="w-10 h-10 mb-3 text-gray-400" />
+                                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                    <span class="font-semibold">Click to upload</span> or drag and drop
+                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                            </div>
+                            <input id="dropzone-file" type="file" class="hidden" @change="uploadFile($event, 'logo')" />
+                        </label>
+                    </div>
+                </div>
+                <!-- Video link -->
+                <div class="mt-8">
+                    <div class="inline-flex gap-3">
+                        <div class="flex items-center">
+                            <input id="ytube" type="radio" value="youtube" name="video" 
+                                v-model="modelSettings.video.type"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 
+                                border-gray-300 focus:ring-blue-500 
+                                dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                                focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="ytube" 
+                                class="ml-2 text-sm font-medium 
+                                text-gray-900 dark:text-gray-300">
+                                YouTube Video
+                            </label>
+                        </div>
+                        <div class="flex items-center">
+                            <input id="vimeo" type="radio" value="vimeo" name="video" 
+                                v-model="modelSettings.video.type"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 
+                                border-gray-300 focus:ring-blue-500 
+                                dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                                focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="vimeo" 
+                                class="ml-2 text-sm font-medium 
+                                text-gray-900 dark:text-gray-300">
+                                Vimeo Video
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label for="video-link" 
+                            class="block mb-2 text-sm font-medium flex
+                            text-gray-900 dark:text-white capitalize gap-2">
+                            <font-awesome-icon icon="fa-solid fa-link" class="mt-0.5" />
+                            {{modelSettings.video.type === 'youtube' ? 'Add Welcome Video' : 'Add Vimeo Video'}}
+                        </label>
+                        <div class="flex">
+                            <input type="url" id="video-link" v-model="modelSettings.video.link"
+                            class="rounded-none bg-gray-50 
+                            border text-gray-900 focus:ring-blue-500 
+                            focus:border-blue-500 block flex-1 min-w-0 
+                            w-full text-sm border-gray-300 p-2.5 
+                            dark:bg-gray-700 dark:border-gray-600 
+                            dark:placeholder-gray-400 dark:text-white 
+                            dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            :placeholder="modelSettings.video.type === 'youtube' ? 'https://youtu.be/GgeTnpTkzI0' : 'https://vimeo.com/44437887'">
+                            <button v-if="modelSettings.video.type === 'youtube'"
+                                class="inline-flex items-center px-3 
+                                text-sm text-white bg-[#38B2AC] border 
+                                border-r-0 border-[#38B2AC] 
+                                dark:bg-[#38B2AC] dark:text-white 
+                                dark:border-[#38B2AC]">
+                                <font-awesome-icon icon="fa-solid fa-eye" class="mr-2" />
+                                Preview
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <!-- Title -->
@@ -141,7 +144,7 @@
                     <div>
                         <editor 
                             api-key="nz91pgequ1i4nogj6arnwzcz01gd4h5d43gbnj6pdvyfdzzx" 
-                            v-model="modelSettings.description" 
+                            v-model="modelSettings.description" class="z-0"
                         />
                     </div>
                 </div>
@@ -188,7 +191,7 @@
                         <font-awesome-icon icon="fa-solid fa-palette" />
                         Background Type
                     </label>
-                    <select id="target-type" v-model="modelSettings.bckgd.type"
+                    <select id="target-type" v-model="modelSettings.bckgdType"
                         class="bg-gray-50 border border-gray-300 
                         text-gray-900 text-sm focus:ring-blue-500 
                         focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
@@ -201,8 +204,8 @@
                     </select>
                 </div>
                 <!-- Background type content -->
-                <div class="mt-4">
-                    <div v-if="modelSettings.bckgd.type === 'preset'">
+                <div class="mt-4 mb-6">
+                    <div v-if="modelSettings.bckgdType === 'preset'">
                         <div class="grid grid-cols-12 gap-4">
                             <div v-for="(item, i) in biolinkBckgd.preset" :key="i"
                                 class="col-span-4 cursor-pointer">
@@ -215,7 +218,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="modelSettings.bckgd.type === 'gradient'">
+                    <div v-if="modelSettings.bckgdType === 'gradient'">
                         <label for="color-one" 
                             class="block mb-2 text-sm font-normal flex
                             text-gray-900 dark:text-white capitalize gap-2">
@@ -280,7 +283,7 @@
                                 v-show="grad2ColorPicker.show"/>
                         </div>
                     </div>
-                    <div v-if="modelSettings.bckgd.type === 'color'">
+                    <div v-if="modelSettings.bckgdType === 'color'">
                         <label for="custom-color" 
                             class="block mb-2 text-sm font-normal flex
                             text-gray-900 dark:text-white capitalize gap-2">
@@ -313,17 +316,51 @@
                                 v-show="bckgdColorPicker.show"/>
                         </div>
                     </div>
-                    <div v-if="modelSettings.bckgd.type === 'image'">
+                    <div v-if="modelSettings.bckgdType === 'image'">
                         <span class="text-sm font-normal text-gray-700">Custom Image</span>
                         <input class="block w-full mt-3 text-sm 
                             text-gray-900 bg-gray-50 rounded-lg border 
                             border-gray-300 cursor-pointer focus:outline-none"
-                            @change="uploadFile($event)"
+                            @change="uploadFile($event, 'bckgImage')"
                             id="file_input" 
                             type="file">
                     </div>
                 </div>
-            </div>
+                <!-- Branding -->
+                <link-accordion title="Branding">
+                    <brand :data="modelSettings" @update-settings="updateSetting" />
+                </link-accordion>
+                <!-- Analytics -->
+                <link-accordion title="Analytics">
+                    <analytics :data="modelSettings" @update-settings="updateSetting" />
+                </link-accordion>
+                <!-- Seo -->
+                <link-accordion title="SEO">
+                    <SEO :data="modelSettings" @update-settings="updateSetting" />
+                </link-accordion>
+                <!-- UTM Parameters -->
+                <link-accordion title="UTM Parameters">
+                    <utm-params :data="modelSettings" @update-settings="updateSetting" />
+                </link-accordion>
+                <!-- Socials -->
+                <link-accordion title="Socials">
+                    <socials :data="modelSettings" @update-settings="updateSetting" />
+                </link-accordion>
+                <!-- Fonts -->
+                <link-accordion title="Fonts">
+                    <font :data="modelSettings" @update-settings="updateSetting" />
+                </link-accordion>
+                
+                <button type="submit" 
+                    class="w-full text-white bg-blue-700 
+                    hover:bg-blue-800 focus:ring-4 mt-6
+                    focus:outline-none focus:ring-blue-300 
+                    font-medium text-sm px-5 py-2.5 
+                    text-center dark:bg-blue-600 dark:hover:bg-blue-700 
+                    dark:focus:ring-blue-800">
+                    Update
+                </button>
+            </form>
         </div>
     </div>
 </template>
@@ -335,6 +372,14 @@ import { ColorPicker } from 'vue-color-kit';
 import 'vue-color-kit/dist/vue-color-kit.css';
 import helper from '../../../helpers';
 import biolinkBckgd from '../../../includes/biolink-background'
+import LinkAccordion from '../LinkAccordion.vue'
+import Font from '../biolink-accordion-body/Font.vue'
+import Brand from '../biolink-accordion-body/Brand.vue'
+import Analytics from '../biolink-accordion-body/Analytics.vue'
+import SEO from '../biolink-accordion-body/SEO.vue'
+import UtmParams from '../biolink-accordion-body/UtmParams.vue'
+import Socials from '../biolink-accordion-body/Socials.vue'
+
 
 const props = defineProps({
     data: Object,
@@ -393,7 +438,6 @@ watch(model, (newVal, oldVal) => {
 
 watch(modelSettings, (newVal, oldVal) => {
     emit('updateSettings', model.value, modelSettings.value)
-    console.log(modelSettings.value.bckgd.presetbckg)
 }, {deep:true})
 
 function changeTextColor(color) {
@@ -424,14 +468,21 @@ function changeGrad2Color(color) {
     modelSettings.value.bckgd.grad2 = color.hex
 }
 
-function uploadFile(ev) {
+function uploadFile(ev, type) {
     const file = ev.target.files[0];
     const reader = new FileReader();
 
     reader.onload = () => {
-        modelSettings.value.bckgd.image = reader.result;
+        if(type === 'bckgImage')
+            modelSettings.value.bckgd.image = reader.result;
+        else
+            modelSettings.value.topLogo = reader.result;
     }
     reader.readAsDataURL(file);
+}
+
+function updateSetting(data) {
+    modelSettings.value = data;
 }
 
 </script>
