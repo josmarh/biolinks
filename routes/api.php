@@ -12,6 +12,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectInvitationController;
 use App\Http\Controllers\ProjectLinksController;
 use App\Http\Controllers\LinkSettingController;
+use App\Http\Controllers\BiolinkSettingController;
 use App\Http\Controllers\HelperController;
 
 /*
@@ -55,8 +56,11 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::delete('/delete/{id}', [ProjectLinksController::class, 'delete']);
 
         Route::get('/link/{id}', [LinkSettingController::class, 'index']);
-        Route::get('/biolink/custom/{id}', [LinkSettingController::class, 'getCustomSettings']);
-        Route::put('/biolink/custom/{id}', [LinkSettingController::class, 'updateCustomSettings']);
+
+        Route::get('/biolink/settings/{id}', [BiolinkSettingController::class, 'index']);
+        Route::put('/biolink/settings/{id}', [BiolinkSettingController::class, 'updateSettings']);
+        Route::get('/biolink/custom/{id}', [BiolinkSettingController::class, 'getCustomSettings']);
+        Route::put('/biolink/custom/{id}', [BiolinkSettingController::class, 'updateCustomSettings']);
     });
 
     Route::get('/countries', [HelperController::class, 'country']);

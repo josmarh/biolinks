@@ -37,6 +37,7 @@ class createBiolinkSettings
                 'top_logo' => $settings->topLogo,
                 'video' => json_encode($settings->video),
                 'title' => $settings->title,
+                'text_color' => $settings->textColor,
                 'verified_checkmark' => $settings->verifiedCheckmark,
                 'description' => $settings->description,
                 'background_type' => $settings->bckgdType,

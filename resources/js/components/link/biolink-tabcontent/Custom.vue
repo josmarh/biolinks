@@ -37,11 +37,12 @@
             </div>
             <button type="submit" 
                 class="w-full text-white bg-blue-700 
-                hover:bg-blue-800 focus:ring-4 mt-6
+                hover:bg-blue-800 focus:ring-0 mt-6
                 focus:outline-none focus:ring-blue-300 
                 font-medium text-sm px-5 py-2.5 
                 text-center dark:bg-blue-600 dark:hover:bg-blue-700 
-                dark:focus:ring-blue-800">
+                dark:focus:ring-blue-800"
+                :disabled="isDisabled">
                 Update
             </button>
         </form>
@@ -58,10 +59,11 @@ const route = useRoute()
 const props = defineProps({
     data: Object
 })
+const emit = defineEmits(['reloadSettings'])
 
 let model = ref({
-    headerScript: null,
-    footerScript: null,
+    headerScript: props.data.headerScript,
+    footerScript: props.data.footerScript,
     linkId: route.params.id
 })
 let isDisabled = ref(false)
@@ -73,15 +75,21 @@ watch(() => props.data, (newVal, oldVal) => {
 function updateBiolinkCustomSettings() {
     isDisabled.value = true;
     projectlinks
-        .dispatch('updateBiolinkCustomSettings', model.value)
+        .dispatch('updateBiolinkCustomSettings', {
+            linkId: route.params.id,
+            headerScript: model.value.headerScript,
+            footerScript: model.value.footerScript
+        })
         .then((res) => {
             isDisabled.value = false;
-            projectlinks.dispatch('getBiolinkCustomSettings');
+            
             notify({
                 group: "success",
                 title: "Success",
                 text: res.message
             }, 4000);
+
+            emit('reloadSettings')
         })
         .catch((err) => {
             isDisabled.value = false;

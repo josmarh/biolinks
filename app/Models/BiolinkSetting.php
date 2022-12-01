@@ -15,6 +15,7 @@ class BiolinkSetting extends Model
         'top_logo',
         'video',
         'title',
+        'text_color',
         'verified_checkmark',
         'description',
         'background_type',

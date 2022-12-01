@@ -46,6 +46,10 @@ class ProjectLinksController extends Controller
             'type' => $request->link['type'],
             'settings' => $request->linkSettings
         ];
+
+        if($request->link['type'] == 'biolink') {
+            // add custom settings to link object
+        }
         
         event(new ProjectLinkCreated($link));
 

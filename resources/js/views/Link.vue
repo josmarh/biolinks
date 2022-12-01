@@ -2,7 +2,7 @@
     <Header :data="content.data" />
 
     <!-- Page settings view -->
-    <biolink-settings v-if="content.data.type == 'biolink'" :data="content.data" />
+    <biolink-settings v-if="content.data.type == 'biolink'" :data="content.data" @reload-link-info="getLinkInfo" />
 
     <link-settings v-if="content.data.type == 'link'" :data="content.data" @update-link-info="getLinkInfo" />
 </template>

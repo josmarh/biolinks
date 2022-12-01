@@ -11,8 +11,11 @@ const projectlinks = createStore({
         linkSettings: {
             data: []
         },
+        biolinkSettings: {
+            data: {}
+        },
         biolinkCustomSettings: {
-            data: []
+            data: {}
         }
     },
     getters: {},
@@ -81,6 +84,19 @@ const projectlinks = createStore({
                     return data;
                 })
         },
+        getBiolinkSettings({ commit }, id) {
+            return axiosClient.get(`/link/biolink/settings/${id}`)
+                .then(({data}) => {
+                    commit('setBiolinkSettings', data)
+                    return data;
+                })
+        },
+        updateBiolinkSettings({ }, payload) {
+            return axiosClient.put(`/link/biolink/settings/${payload.linkId}`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
         getBiolinkCustomSettings({ commit }, id) {
             return axiosClient.get(`/link/biolink/custom/${id}`)
                 .then(({data}) => {
@@ -101,6 +117,9 @@ const projectlinks = createStore({
         },
         setLinkSettings: (state, data) => {
             state.linkSettings = data;
+        },
+        setBiolinkSettings: (state, data) => {
+            state.biolinkSettings = data;
         },
         setBiolinkCustomSettings: (state, data) => {
             state.biolinkCustomSettings = data;

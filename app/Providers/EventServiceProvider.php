@@ -23,7 +23,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ProjectLinkCreated' => [
             'App\Listeners\createBiolinkSettings',
             'App\Listeners\createLinkSettings'
-        ]
+        ],
+        'App\Events\LinkSettings' => [
+            'App\Listeners\updateProjectLink',
+        ],
     ];
 
     /**

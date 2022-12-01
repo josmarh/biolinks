@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('top_logo')->nullable();
             $table->text('video')->nullable();
             $table->string('title')->nullable();
+            $table->string('text_color', 10)->nullable();
             $table->enum('verified_checkmark', ['yes','no']);
             $table->text('description')->nullable();
             $table->string('background_type', 10);

@@ -3,7 +3,7 @@
         <div class="block p-6 bg-white border 
             border-gray-200 shadow-md dark:bg-gray-800 
             dark:border-gray-700 dark:hover:bg-gray-700">
-            <form @submit.prevent>
+            <form @submit.prevent="updateBiolinkSetting">
                 <!-- Short URL -->
                 <div>
                     <label for="shortUrl" 
@@ -353,11 +353,12 @@
                 
                 <button type="submit" 
                     class="w-full text-white bg-blue-700 
-                    hover:bg-blue-800 focus:ring-4 mt-6
+                    hover:bg-blue-800 focus:ring-0 mt-6
                     focus:outline-none focus:ring-blue-300 
                     font-medium text-sm px-5 py-2.5 
                     text-center dark:bg-blue-600 dark:hover:bg-blue-700 
-                    dark:focus:ring-blue-800">
+                    dark:focus:ring-blue-800"
+                    :disabled="isDisabled">
                     Update
                 </button>
             </form>
@@ -367,9 +368,11 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import Editor from '@tinymce/tinymce-vue'
+import { useRoute } from 'vue-router'
+import { notify } from 'notiwind';
 import { ColorPicker } from 'vue-color-kit';
 import 'vue-color-kit/dist/vue-color-kit.css';
+import Editor from '@tinymce/tinymce-vue'
 import helper from '../../../helpers';
 import biolinkBckgd from '../../../includes/biolink-background'
 import LinkAccordion from '../LinkAccordion.vue'
@@ -379,16 +382,35 @@ import Analytics from '../biolink-accordion-body/Analytics.vue'
 import SEO from '../biolink-accordion-body/SEO.vue'
 import UtmParams from '../biolink-accordion-body/UtmParams.vue'
 import Socials from '../biolink-accordion-body/Socials.vue'
+import projectlinks from '../../../store/projectlinks'
 
 
+const route = useRoute();
 const props = defineProps({
     data: Object,
     dataSettings: Object
 });
-const emit = defineEmits(['updateSettings'])
+const emit = defineEmits(['reloadSettings'])
 
+let isDisabled = ref(false)
 let model = ref(props.data);
-let modelSettings = ref(props.dataSettings);
+let modelSettings = ref({
+    topLogo: props.dataSettings.topLogo,
+    video: props.dataSettings.video,
+    title: props.dataSettings.title,
+    description: props.dataSettings.description,
+    textColor: props.dataSettings.textColor,
+    verifiedCheckmark: props.dataSettings.verifiedCheckmark,
+    bckgdType: props.dataSettings.backgroundType,
+    bckgd: props.dataSettings.backgroundTypeContent,
+    branding: props.dataSettings.branding,
+    analytics: props.dataSettings.analytics,
+    seo: props.dataSettings.seo,
+    utmParams: props.dataSettings.utm,
+    socials: props.dataSettings.socials,
+    fonts: props.dataSettings.font,
+});
+
 let textPicker = ref({
     color: '#f3f3f3',
     colorHex: '#f3f3f3',
@@ -428,17 +450,17 @@ watch(() => props.data, (newVal, oldVal) => {
     model.value = newVal
 }, {deep:true});
 
-watch(() => props.dataSettings, (newVal, oldVal) => {
-    modelSettings.value = newVal
-}, {deep:true});
+// watch(() => props.dataSettings, (newVal, oldVal) => {
+//     modelSettings.value = newVal
+// }, {deep:true});
 
-watch(model, (newVal, oldVal) => {
-    emit('updateSettings', model.value, modelSettings.value)
-}, {deep:true})
+// watch(model, (newVal, oldVal) => {
+//     emit('updateSettings', model.value, modelSettings.value)
+// }, {deep:true})
 
-watch(modelSettings, (newVal, oldVal) => {
-    emit('updateSettings', model.value, modelSettings.value)
-}, {deep:true})
+// watch(modelSettings, (newVal, oldVal) => {
+//     emit('updateSettings', model.value, modelSettings.value)
+// }, {deep:true})
 
 function changeTextColor(color) {
     const { r, g, b, a } = color.rgba
@@ -483,6 +505,45 @@ function uploadFile(ev, type) {
 
 function updateSetting(data) {
     modelSettings.value = data;
+}
+
+function updateBiolinkSetting() {
+    isDisabled.value = true;
+    projectlinks
+        .dispatch('updateBiolinkSettings', {
+            linkId: route.params.id,
+            link: model.value,
+            linkSettings: JSON.stringify(modelSettings.value)
+        })
+        .then((res) => {
+            isDisabled.value = false;
+            notify({
+                group: "success",
+                title: "Success",
+                text: res.message
+            }, 4000);
+            emit('reloadSettings')
+        })
+        .catch((err) => {
+            isDisabled.value = false;
+            let errMsg;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message"))
+                        errMsg = err.response.data.message;
+                    else
+                        errMsg = err.response.data.error;
+                }
+            }else{
+                errMsg = err;
+            }
+            notify({
+                group: "error",
+                title: "Error",
+                text: errMsg
+            }, 4000);
+        })
+
 }
 
 </script>
