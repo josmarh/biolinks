@@ -35,9 +35,9 @@
                     </p>
                 </div>
                 <!-- Logo Upload -->
-                <div class="mt-4">
+                <div class="mt-4" id="logo-fileform">
                     <div class="flex items-center justify-center w-full">
-                        <label for="dropzone-file" 
+                        <label v-if="!modelSettings.topLogo" for="top-logo" 
                             class="flex flex-col items-center justify-center 
                             w-full border-2 border-gray-300 border-dashed 
                             rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 
@@ -48,9 +48,26 @@
                                 <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                                     <span class="font-semibold">Click to upload</span> or drag and drop
                                 </p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                             </div>
-                            <input id="dropzone-file" type="file" class="hidden" @change="uploadFile($event, 'logo')" />
+                            <input id="top-logo"
+                                type="file"
+                                class="hidden"
+                                accept="image/jpeg, image/png"
+                                @change="uploadFile($event, 'logo')"
+                            />
+                        </label>
+                        <label v-else  class="img-contain">
+                            <img :src="modelSettings.topLogo.includes('biolink') 
+                                ? helper.applink + modelSettings.topLogo 
+                                : modelSettings.topLogo"
+                                class="w-32 h-32 object-cover image rounded-full"/>
+                            <div class="middle">
+                                <button @click="removeImage('logo')"
+                                    class="text p-2 bg-gray-300 rounded-full">
+                                    <!-- <XIcon class="w-6 h-6" /> -->
+                                    <font-awesome-icon icon="fa-solid fa-x" />
+                                </button>
+                            </div>
                         </label>
                     </div>
                 </div>
@@ -316,14 +333,30 @@
                                 v-show="bckgdColorPicker.show"/>
                         </div>
                     </div>
-                    <div v-if="modelSettings.bckgdType === 'image'">
+                    <div v-if="modelSettings.bckgdType === 'image'" id="bckgimg-fileform">
                         <span class="text-sm font-normal text-gray-700">Custom Image</span>
-                        <input class="block w-full mt-3 text-sm 
-                            text-gray-900 bg-gray-50 rounded-lg border 
-                            border-gray-300 cursor-pointer focus:outline-none"
-                            @change="uploadFile($event, 'bckgImage')"
-                            id="file_input" 
-                            type="file">
+                        <div v-if="!modelSettings.bckgd.image">
+                            <input class="block w-full mt-3 text-sm 
+                                text-gray-900 bg-gray-50 rounded-lg border 
+                                border-gray-300 cursor-pointer focus:outline-none"
+                                @change="uploadFile($event, 'bckgImage')"
+                                id="bckgImage"
+                                accept="image/jpeg, image/png"
+                                type="file">
+                        </div>
+                        <div v-else  class="img-contain flex items-center justify-center w-full">
+                            <img :src="modelSettings.bckgd.image.includes('biolink') 
+                                ? helper.applink + modelSettings.bckgd.image 
+                                : modelSettings.bckgd.image"
+                                class="w-32 h-32 object-cover image rounded-full"/>
+                            <div class="middle">
+                                <button @click="removeImage('bckgImage')"
+                                    class="text p-2 bg-gray-300 rounded-full">
+                                    <!-- <XIcon class="w-6 h-6" /> -->
+                                    <font-awesome-icon icon="fa-solid fa-x" />
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- Branding -->
@@ -367,7 +400,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router'
 import { notify } from 'notiwind';
 import { ColorPicker } from 'vue-color-kit';
@@ -390,8 +423,9 @@ const props = defineProps({
     data: Object,
     dataSettings: Object
 });
-const emit = defineEmits(['reloadSettings'])
+const emit = defineEmits(['reloadSettings', 'updatePreview'])
 
+let dragAndDropCapable = ref(false)
 let isDisabled = ref(false)
 let model = ref(props.data);
 let modelSettings = ref({
@@ -458,9 +492,9 @@ watch(() => props.data, (newVal, oldVal) => {
 //     emit('updateSettings', model.value, modelSettings.value)
 // }, {deep:true})
 
-// watch(modelSettings, (newVal, oldVal) => {
-//     emit('updateSettings', model.value, modelSettings.value)
-// }, {deep:true})
+watch(modelSettings, (newVal, oldVal) => {
+    emit('updatePreview', modelSettings.value)
+}, {deep:true})
 
 function changeTextColor(color) {
     const { r, g, b, a } = color.rgba
@@ -490,8 +524,23 @@ function changeGrad2Color(color) {
     modelSettings.value.bckgd.grad2 = color.hex
 }
 
+function updateSetting(data) {
+    modelSettings.value = data;
+}
+
+function removeImage(type) {
+    if(type === 'bckgImage')
+        modelSettings.value.bckgd.image = null;
+    else
+        modelSettings.value.topLogo = null;
+}
+
 function uploadFile(ev, type) {
     const file = ev.target.files[0];
+    setImage(file, type)
+}
+
+function setImage(file, type) {
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -503,9 +552,14 @@ function uploadFile(ev, type) {
     reader.readAsDataURL(file);
 }
 
-function updateSetting(data) {
-    modelSettings.value = data;
+function determineDragAndDropCapableImage() {
+  var div = document.createElement('div');
+  return ( ( 'draggable' in div )
+    || ( 'ondragstart' in div && 'ondrop' in div ) )
+    && 'FormData' in window
+    && 'FileReader' in window;
 }
+
 
 function updateBiolinkSetting() {
     isDisabled.value = true;
@@ -546,8 +600,47 @@ function updateBiolinkSetting() {
 
 }
 
+onMounted(() => {
+    dragAndDropCapable.value = determineDragAndDropCapableImage();
+    
+    let former = document.getElementById('logo-fileform');
+    if(dragAndDropCapable.value) {
+        ['drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'].forEach( function( evt ) {
+        former.addEventListener(evt, function(e){
+            e.preventDefault();
+            e.stopPropagation();
+        }.bind(this), false);
+        }.bind(this));
+        former.addEventListener('drop', function(e){
+            setImage(e.dataTransfer.files[0], 'logo')
+        }.bind(this));
+    }
+})
 </script>
 
-<style>
-
+<style scoped>
+.img-contain {
+  position: relative;
+}
+.image {
+  opacity: 1;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+.img-contain:hover .image {
+  opacity: 0.3;
+}
+.img-contain:hover .middle {
+  opacity: 1;
+}
 </style>

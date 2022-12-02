@@ -8,9 +8,12 @@ use App\Models\BiolinkCustomSetting;
 use App\Http\Resources\BiolinkCustomSettingResource;
 use App\Http\Resources\BiolinkSettingResource;
 use App\Events\LinkSettings;
+use App\Services\FileHandler;
 
 class BiolinkSettingController extends Controller
 {
+    use FileHandler;
+
     public function index($id)
     {
         $linkSettings = BiolinkSetting::where('link_id', $id)->first();
@@ -23,6 +26,30 @@ class BiolinkSettingController extends Controller
         $linkSettings = BiolinkSetting::where('link_id', $id)->first();
 
         $settings = json_decode($request->linkSettings);
+        $bgImage = json_decode($linkSettings->background_type_content);
+        $favicon = json_decode($linkSettings->seo);
+
+        if(str_contains($settings->topLogo, 'base64')) {
+            $settings->topLogo = $this->saveFile('biolink-uploads', $settings->topLogo);
+            $this->deleteFile($linkSettings->top_logo);
+        }elseif(!$settings->topLogo) {
+            $this->deleteFile($linkSettings->top_logo);
+        }
+
+        if($settings->bckgdType == 'image' 
+            && str_contains($settings->bckgd->image, 'base64')) {
+            $settings->bckgd->image = $this->saveFile('biolink-uploads', $settings->bckgd->image);
+            $this->deleteFile($bgImage->image);
+        }elseif($settings->bckgdType == 'image' && !$settings->bckgd->image) {
+            $this->deleteFile($bgImage->image);
+        }
+
+        if(str_contains($settings->seo->favicon, 'base64')) {
+            $settings->seo->favicon = $this->saveFile('biolink-uploads', $settings->seo->favicon);
+            $this->deleteFile($favicon->favicon);
+        }elseif(!$settings->seo->favicon) {
+            $this->deleteFile($favicon->favicon);
+        }
 
         $linkSettings->update([
             'top_logo' => $settings->topLogo,

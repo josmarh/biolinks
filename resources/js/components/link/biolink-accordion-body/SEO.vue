@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4">
+    <div class="p-4" id="fileform">
         <!-- Page Title -->
         <div class="">
             <label for="page-title" 
@@ -47,7 +47,7 @@
                 Upload Favicon
             </label>
             <div class="flex items-center justify-center w-full">
-                <label for="dropzone-file" 
+                <label v-if="!model.seo.favicon" for="favicon" 
                     class="flex flex-col items-center justify-center 
                     w-full border-2 border-gray-300 border-dashed 
                     rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 
@@ -58,9 +58,22 @@
                         <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                             <span class="font-semibold">Click to upload</span> or drag and drop
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                     </div>
-                    <input id="dropzone-file" type="file" class="hidden" @change="uploadFile($event)" />
+                    <input id="favicon" type="file" class="hidden" 
+                    accept="image/jpeg, image/png" @change="uploadFavicon($event)" />
+                </label>
+                <label v-else  class="img-contain">
+                    <img :src="model.seo.favicon.includes('biolink') 
+                        ? helper.applink + model.seo.favicon 
+                        : model.seo.favicon"
+                        class="w-32 h-32 object-cover image rounded-full"/>
+                    <div class="middle">
+                        <button @click="removeFavicon()"
+                            class="text p-2 bg-gray-300 rounded-full">
+                            <!-- <XIcon class="w-6 h-6" /> -->
+                            <font-awesome-icon icon="fa-solid fa-x" />
+                        </button>
+                    </div>
                 </label>
             </div>
         </div>
@@ -68,7 +81,8 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
+import helper from '../../../helpers'
 
 const props = defineProps({
     data: Object
@@ -76,6 +90,7 @@ const props = defineProps({
 const emit = defineEmits(['updateSettings'])
 
 let model = ref(props.data)
+let dragAndDropCapable = ref(false)
 
 watch(() => props.data, (newVal, oldVal) => {
     model.value = newVal
@@ -85,8 +100,16 @@ watch(model, (newVal, oldVal) => {
     emit('updateSettings', model.value)
 }, {deep:true})
 
-function uploadFile(ev) {
+function removeFavicon() {
+    model.value.seo.favicon = null;
+}
+
+function uploadFavicon(ev) {
     const file = ev.target.files[0];
+    setFavicon(file);
+}
+
+function setFavicon(file) {
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -94,8 +117,56 @@ function uploadFile(ev) {
     }
     reader.readAsDataURL(file);
 }
+
+function determineDragAndDropCapable() {
+  var div = document.createElement('div');
+  return ( ( 'draggable' in div )
+    || ( 'ondragstart' in div && 'ondrop' in div ) )
+    && 'FormData' in window
+    && 'FileReader' in window;
+}
+
+onMounted(() => {
+    dragAndDropCapable.value = determineDragAndDropCapable();
+    
+    let former = document.getElementById('fileform');
+    if(dragAndDropCapable.value) {
+        ['drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'].forEach( function( evt ) {
+        former.addEventListener(evt, function(e){
+            e.preventDefault();
+            e.stopPropagation();
+        }.bind(this), false);
+        }.bind(this));
+        former.addEventListener('drop', function(e){
+            setFavicon(e.dataTransfer.files[0])
+        }.bind(this));
+    }
+})
 </script>
 
-<style>
-
+<style scoped>
+.img-contain {
+  position: relative;
+}
+.image {
+  opacity: 1;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+.img-contain:hover .image {
+  opacity: 0.3;
+}
+.img-contain:hover .middle {
+  opacity: 1;
+}
 </style>

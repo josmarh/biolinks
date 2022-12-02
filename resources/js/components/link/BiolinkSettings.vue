@@ -43,6 +43,7 @@
                         <settings v-if="Object.keys(settings.data).length"
                             :data="model"
                             :data-settings="settings.data"
+                            @update-preview="updatePreview"
                             @reload-settings="reloadSettings"
                         />
                     </div>
@@ -52,7 +53,7 @@
                     <div v-if="currentTab==='custom'">
                         <custom 
                             :data="customSettings.data" 
-                            @reload-settings="reloadSettings"/>
+                            @reload-settings="reloadSettings" />
                     </div>
                 </div>
             </div>
@@ -84,14 +85,19 @@ const emit = defineEmits(['reloadLinkInfo'])
 const currentTab = ref('settings');
 
 let model = ref(props.data)
+let modelSettings = ref(biolinkDefaultSettings)
 
 watch(() => props.data, (newVal, oldVal) => {
-    model.value = newVal
+    model.value = newVal;
 }, {deep:true});
 
 
 function selectTab(tab) {
     currentTab.value = tab;
+}
+
+function updatePreview(data) {
+    modelSettings.value = data;
 }
 
 function reloadSettings() {
@@ -106,6 +112,21 @@ function getBiolinkSettings() {
     projectlinks
         .dispatch('getBiolinkSettings', route.params.id)
         .then((res) => {
+            modelSettings.value.topLogo = res.data.topLogo
+            modelSettings.value.video = res.data.video
+            modelSettings.value.title = res.data.title
+            modelSettings.value.description = res.data.description
+            modelSettings.value.textColor = res.data.textColor
+            modelSettings.value.verifiedCheckmark = res.data.verifiedCheckmark
+            modelSettings.value.bckgdType = res.data.backgroundType
+            modelSettings.value.bckgd = res.data.backgroundTypeContent
+            modelSettings.value.branding = res.data.branding
+            modelSettings.value.analytics = res.data.analytics
+            modelSettings.value.seo = res.data.seo
+            modelSettings.value.utmParams = res.data.utm
+            modelSettings.value.socials = res.data.socials
+            modelSettings.value.fonts = res.data.font
+
             getBiolinkCustomSettings();
         })
         .catch((err) => {
@@ -156,9 +177,6 @@ onMounted(() => {
     getBiolinkSettings();
 });
 
-// onBeforeMount(() => {
-//     getBiolinkSettings();
-// });
 </script>
 
 <style>
