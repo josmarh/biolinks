@@ -57,8 +57,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-span-5">
-
+            <div class="col-span-5 flex justify-end">
+                <biolink-settings-preview :settings="modelSettings" :custom-settings="customSettings.data"/>
             </div>
         </div>
     </div>
@@ -73,7 +73,8 @@ import Settings from './biolink-tabcontent/Settings.vue';
 import Section from './biolink-tabcontent/Section.vue';
 import Custom from './biolink-tabcontent/Custom.vue';
 import projectlinks from '../../store/projectlinks';
-import biolinkDefaultSettings from '../../includes/biolink-default-settings'
+import biolinkDefaultSettings from '../../includes/biolink-default-settings';
+import BiolinkSettingsPreview from './BiolinkSettingsPreview.vue';
 
 const route = useRoute()
 const settings = computed(() => projectlinks.state.biolinkSettings)

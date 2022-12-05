@@ -12,11 +12,11 @@
             focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
             dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
             dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option value="lato">Lato</option>
+            <option value="Lato">Lato</option>
             <option value="open-sans">Open Sans</option>
-            <option value="montserrat">Montserrat</option>
-            <option value="karla">Karla</option>
-            <option value="inconsolata">Inconsolata</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Karla">Karla</option>
+            <option value="Inconsolata">Inconsolata</option>
         </select>
     </div>
 </template>

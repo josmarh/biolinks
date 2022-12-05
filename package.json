@@ -5,6 +5,7 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@beyonk/google-fonts-webpack-plugin": "^1.7.0",
         "autoprefixer": "^10.4.13",
         "axios": "^1.1.3",
         "laravel-vite-plugin": "^0.6.0",

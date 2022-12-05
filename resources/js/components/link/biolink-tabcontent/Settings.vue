@@ -118,7 +118,7 @@
                             dark:placeholder-gray-400 dark:text-white 
                             dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                             :placeholder="modelSettings.video.type === 'youtube' ? 'https://youtu.be/GgeTnpTkzI0' : 'https://vimeo.com/44437887'">
-                            <button v-if="modelSettings.video.type === 'youtube'"
+                            <!-- <button v-if="modelSettings.video.type === 'youtube'"
                                 class="inline-flex items-center px-3 
                                 text-sm text-white bg-[#38B2AC] border 
                                 border-r-0 border-[#38B2AC] 
@@ -126,7 +126,7 @@
                                 dark:border-[#38B2AC]">
                                 <font-awesome-icon icon="fa-solid fa-eye" class="mr-2" />
                                 Preview
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
@@ -226,11 +226,14 @@
                         <div class="grid grid-cols-12 gap-4">
                             <div v-for="(item, i) in biolinkBckgd.preset" :key="i"
                                 class="col-span-4 cursor-pointer">
-                                <label :for="'background-' + i">
+                                <label :for="'background-' + i" class="cursor-pointer">
                                     <input type="radio" name="biolink-background" :id="'background-' + i"
                                         :value="item.color" v-model="modelSettings.bckgd.presetbckg" 
                                         class="hidden">
-                                    <div class="w-full h-20 rounded-md" :style="item.color"></div>
+                                    <div class="w-full h-20 rounded-md drop-shadow-xl" 
+                                        :class="[modelSettings.bckgd.presetbckg == item.color
+                                        ? 'contrast-50' : '']"
+                                        :style="item.color"></div>
                                 </label>
                             </div>
                         </div>
