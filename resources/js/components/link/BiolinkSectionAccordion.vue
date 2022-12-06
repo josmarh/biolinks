@@ -1,9 +1,8 @@
 <template>
-    <div class="border-2 p-2 rounded mt-2">
+    <div class="border-2 p-2 rounded mt-2 bg-white">
         <div @click="isOpen = !isOpen" 
             class="flex justify-between bg-white px-4 
-            rounded cursor-pointer hover:text-blue-500"
-            :class="isOpen ? 'text-blue-500' : 'text-gray-600'">
+            rounded cursor-pointer text-gray-600 py-2">
             <span class="flex font-medium">
                 <font-awesome-icon  
                     v-if="icon"

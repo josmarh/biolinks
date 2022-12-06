@@ -1,11 +1,22 @@
 <template>
-    
+    <div>
+        <biolink-section-accordion
+            v-for="item in model" :key="item.id"
+            :title="item.section.name">
+            <!-- accordion body -->
+            <lead-generation 
+                v-if="item.section.name == 'Lead Generation'"
+                :data="item"
+                @reload-settings="reloadSettings"
+            />
+        </biolink-section-accordion>
+    </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
-import { notify } from 'notiwind';
-import biolinksection from '../../../store/biolink-section';
+import BiolinkSectionAccordion from '../BiolinkSectionAccordion.vue';
+import LeadGeneration from '../section-accordion-body/LeadGeneration.vue'
 
 const props = defineProps({
     data: Object
@@ -14,46 +25,13 @@ const props = defineProps({
 const emit = defineEmits(['reloadSettings'])
 
 let model = ref(props.data)
-let isDisabled = ref(false)
 
 watch(() => props.data, (newVal, oldVal) => {
     model.value = newVal
 })
 
-function updateSection() {
-    isDisabled.value = true
-    biolinksection
-        .dispatch('updateSection', model.value)
-        .then((res) => {
-            isDisabled.value = false;
-            
-            notify({
-                group: "success",
-                title: "Success",
-                text: res.message
-            }, 4000);
-
-            emit('reloadSettings')
-        })
-        .catch((err) => {
-            isDisabled.value = false;
-            let errMsg;
-            if(err.response) {
-                if (err.response.data) {
-                    if (err.response.data.hasOwnProperty("message"))
-                        errMsg = err.response.data.message;
-                    else
-                        errMsg = err.response.data.error;
-                }
-            }else{
-                errMsg = err;
-            }
-            notify({
-                group: "error",
-                title: "Error",
-                text: errMsg
-            }, 4000);
-        })
+function reloadSettings() {
+    emit('reloadSettings')
 }
 </script>
 

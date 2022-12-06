@@ -69,9 +69,9 @@ watch(() => props.customSettings, (newVal, oldVal) => {
 
 <style scoped>
 /* Biolink preview iframe */
-.biolink-preview-container {
+/* .biolink-preview-container {
 
-}
+} */
 
 .biolink-preview {
 	position: relative;
