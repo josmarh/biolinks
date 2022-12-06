@@ -27,6 +27,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\LinkSettings' => [
             'App\Listeners\updateProjectLink',
         ],
+        'App\Events\BioLinkSectionCreated' => [
+            'App\Listeners\createBiolinkSection',
+        ],
     ];
 
     /**

@@ -29,7 +29,8 @@ library.add( faRightFromBracket, faLink, faEnvelope,
     faArrowUpRightFromSquare, faEarthAfrica, faClipboardCheck, 
     faClipboard, faX, faClock, faComputerMouse, faHourglassEnd, 
     faUserShield, faKey, faBullseye, faCamera, faEye, faHeading, 
-    faPaintBrush, faPalette, faPenNib, faShuffle, faParagraph, faPhone
+    faPaintBrush, faPalette, faPenNib, faShuffle, faParagraph, faPhone,
+    
 )
 
 createApp(app)

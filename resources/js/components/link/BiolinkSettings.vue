@@ -48,12 +48,10 @@
                         />
                     </div>
                     <div v-if="currentTab==='section'">
-                        <section />
+                        <section :data="sectionSettings.data" @reload-settings="reloadSettings" />
                     </div>
                     <div v-if="currentTab==='custom'">
-                        <custom 
-                            :data="customSettings.data" 
-                            @reload-settings="reloadSettings" />
+                        <custom :data="customSettings.data" @reload-settings="reloadSettings" />
                     </div>
                 </div>
             </div>
@@ -72,13 +70,15 @@ import NewTypeOption from './NewTypeOption.vue';
 import Settings from './biolink-tabcontent/Settings.vue';
 import Section from './biolink-tabcontent/Section.vue';
 import Custom from './biolink-tabcontent/Custom.vue';
-import projectlinks from '../../store/projectlinks';
 import biolinkDefaultSettings from '../../includes/biolink-default-settings';
 import BiolinkSettingsPreview from './BiolinkSettingsPreview.vue';
+import projectlinks from '../../store/projectlinks';
+import biolinksection from '../../store/biolink-section';
 
 const route = useRoute()
 const settings = computed(() => projectlinks.state.biolinkSettings)
 const customSettings = computed(() => projectlinks.state.biolinkCustomSettings)
+const sectionSettings = computed(() => biolinksection.state.section)
 const props = defineProps({
     data: Object,
 });
@@ -153,6 +153,32 @@ function getBiolinkSettings() {
 function getBiolinkCustomSettings() {
     projectlinks
         .dispatch('getBiolinkCustomSettings', route.params.id)
+        .then((res) => {
+            getBiolinkSectionSettings();
+        })
+        .catch((err) => {
+            let errMsg;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message"))
+                        errMsg = err.response.data.message;
+                    else
+                        errMsg = err.response.data.error;
+                }
+            }else {
+                errMsg = err;
+            }
+            notify({
+                group: "error",
+                title: "Error",
+                text: errMsg
+            }, 4000);
+        })
+}
+
+function getBiolinkSectionSettings() {
+    biolinksection
+        .dispatch('getSections', route.params.id)
         .then((res) => {})
         .catch((err) => {
             let errMsg;
@@ -173,6 +199,7 @@ function getBiolinkCustomSettings() {
             }, 4000);
         })
 }
+
 
 onMounted(() => {
     getBiolinkSettings();

@@ -12,7 +12,7 @@
         <h5 v-if="settings.title"
             class="mb-0 text-4xl font-bold tracking-tight 
             text-gray-900 dark:text-white text-center mt-4"
-            :style="{'color': setting.textColor}">
+            :style="{'color': setting.textColor, 'font-family': setting.fonts}">
             {{setting.title}}
         </h5>
 

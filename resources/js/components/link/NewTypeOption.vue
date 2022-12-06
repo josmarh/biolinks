@@ -41,24 +41,28 @@
         </transition>
     </Menu>
 
-    <!-- <BiolinkForm :show-form="modal.showBiolinkForm" @close-form="biolinkForm" />
-    <LinkForm :show-form="modal.showLinkForm" @close-form="linkForm" /> -->
+    <lead-generation v-if="modal.type=='lead'" :show-form="modal.showSectionModal" @close-form="closeForm" />
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-// import BiolinkForm from './BiolinkForm.vue';
-// import LinkForm from './LinkForm.vue';
+import LeadGeneration from './biolink-section-modals/LeadGeneration.vue'
 
-// let modal = ref({
-//     showBiolinkForm: false,
-//     showLinkForm: false,
-//     isDisabled: false
-// })
+let modal = ref({
+    type: '',
+    showSectionModal: false,
+    isDisabled: false
+})
+
+function closeForm() {
+    modal.value.showSectionModal = false
+    modal.value.type = ''
+}
 
 function newForm(type) {
-
+    modal.value.showSectionModal = true
+    modal.value.type = type
 }
 
 const listOptions = [

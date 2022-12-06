@@ -14,6 +14,7 @@ use App\Http\Controllers\ProjectLinksController;
 use App\Http\Controllers\LinkSettingController;
 use App\Http\Controllers\BiolinkSettingController;
 use App\Http\Controllers\HelperController;
+use App\Http\Controllers\BiolinkSectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,10 +58,18 @@ Route::middleware('auth:sanctum')->group(function() {
 
         Route::get('/link/{id}', [LinkSettingController::class, 'index']);
 
-        Route::get('/biolink/settings/{id}', [BiolinkSettingController::class, 'index']);
-        Route::put('/biolink/settings/{id}', [BiolinkSettingController::class, 'updateSettings']);
-        Route::get('/biolink/custom/{id}', [BiolinkSettingController::class, 'getCustomSettings']);
-        Route::put('/biolink/custom/{id}', [BiolinkSettingController::class, 'updateCustomSettings']);
+        Route::group(['prefix' => 'biolink'], function () {
+            Route::get('/settings/{id}', [BiolinkSettingController::class, 'index']);
+            Route::put('/settings/{id}', [BiolinkSettingController::class, 'updateSettings']);
+            Route::get('/custom/{id}', [BiolinkSettingController::class, 'getCustomSettings']);
+            Route::put('/custom/{id}', [BiolinkSettingController::class, 'updateCustomSettings']);
+
+            Route::get('/sections/{linkid}', [BiolinkSectionController::class, 'index']);
+            Route::post('/section', [BiolinkSectionController::class, 'store']);
+            Route::put('/section/{id}', [BiolinkSectionController::class, 'update']);
+            Route::get('/section/{id}', [BiolinkSectionController::class, 'show']);
+            Route::delete('/section/{id}', [BiolinkSectionController::class, 'delete']);
+        });
     });
 
     Route::get('/countries', [HelperController::class, 'country']);
