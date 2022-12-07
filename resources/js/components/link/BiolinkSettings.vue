@@ -36,7 +36,7 @@
                         </li>
                     </ul>
                     <!-- Create section dropdown -->
-                    <NewTypeOption />
+                    <NewTypeOption @reload-settings="reloadSettings" />
                 </div>
                 <div id="tabContent" class="mt-4">
                     <div v-if="currentTab==='settings'">
@@ -102,10 +102,12 @@ function updatePreview(data) {
 }
 
 function reloadSettings() {
-    projectlinks
-        .dispatch('getBiolinkSettings', route.params.id)
-    projectlinks
-        .dispatch('getBiolinkCustomSettings', route.params.id)
+    if(currentTab.value == 'settings')
+        projectlinks.dispatch('getBiolinkSettings', route.params.id)
+    else if(currentTab.value == 'custom')
+        projectlinks.dispatch('getBiolinkCustomSettings', route.params.id)
+    else
+        projectlinks.dispatch('getSections', route.params.id)
     emit('reloadLinkInfo')
 }
 
@@ -199,7 +201,6 @@ function getBiolinkSectionSettings() {
             }, 4000);
         })
 }
-
 
 onMounted(() => {
     getBiolinkSettings();

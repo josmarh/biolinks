@@ -35,7 +35,7 @@ class createBiolinkSection
             'button_text' => $section['sectionSetting']['buttonText'],
             'button_text_color' => $section['sectionSetting']['buttonTextColor'],
             'button_bg_color' => $section['sectionSetting']['buttonBckgColor'],
-            'core_section_fields' => $section['sectionSetting']['leadGenField'],
+            'core_section_fields' => $section['sectionSetting']['sectionFields'],
         ]);
     }
 }

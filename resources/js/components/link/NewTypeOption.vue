@@ -42,13 +42,16 @@
     </Menu>
 
     <lead-generation v-if="modal.type=='lead'" :show-form="modal.showSectionModal" @close-form="closeForm" />
+    <Link v-if="modal.type=='link'" :show-form="modal.showSectionModal" @close-form="closeForm" />
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import LeadGeneration from './biolink-section-modals/LeadGeneration.vue'
+import LeadGeneration from './biolink-section-modals/LeadGeneration.vue';
+import Link from './biolink-section-modals/Link.vue'
 
+const emit = defineEmits(['reloadSettings'])
 let modal = ref({
     type: '',
     showSectionModal: false,
@@ -57,7 +60,8 @@ let modal = ref({
 
 function closeForm() {
     modal.value.showSectionModal = false
-    modal.value.type = ''
+    modal.value.type = '';
+    emit('reloadSettings');
 }
 
 function newForm(type) {

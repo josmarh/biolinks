@@ -9,6 +9,11 @@
                 :data="item"
                 @reload-settings="reloadSettings"
             />
+            <Link 
+                v-if="item.section.name == 'Link'"
+                :data="item"
+                @reload-settings="reloadSettings"
+            />
         </biolink-section-accordion>
     </div>
 </template>
@@ -17,6 +22,7 @@
 import { ref, watch } from 'vue'
 import BiolinkSectionAccordion from '../BiolinkSectionAccordion.vue';
 import LeadGeneration from '../section-accordion-body/LeadGeneration.vue'
+import Link from '../section-accordion-body/Link.vue';
 
 const props = defineProps({
     data: Object

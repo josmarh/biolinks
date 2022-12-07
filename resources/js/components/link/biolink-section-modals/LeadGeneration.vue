@@ -34,8 +34,7 @@ import leadgenFields from '../../../includes/leadgen-default-fields'
 
 const route = useRoute();
 const props = defineProps({
-    showForm: Boolean,
-    data: Object
+    showForm: Boolean
 });
 const emit = defineEmits(['closeForm'])
 const open = ref(props.showForm)
@@ -45,9 +44,9 @@ let model = ref({
     linkId: route.params.id,
     sectionName: 'Lead Generation',
     buttonText: 'Sign Up',
-    buttonTextColor: '#FFFFFF',
-    buttonBckgColor: '#0000FF',
-    leadGenField: JSON.stringify(leadgenFields)
+    buttonTextColor: '#000000',
+    buttonBckgColor: '#FFFFFF',
+    sectionFields: JSON.stringify(leadgenFields)
 })
 
 watch(() => props.showForm, (newVal, oldVal) => {

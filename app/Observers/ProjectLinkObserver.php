@@ -6,6 +6,7 @@ use App\Models\ProjectLink;
 use App\Models\LinkSetting;
 use App\Models\BiolinkSetting;
 use App\Models\BiolinkCustomSetting;
+use App\Models\BiolinkSectionSetting;
 
 class ProjectLinkObserver
 {
@@ -48,6 +49,7 @@ class ProjectLinkObserver
         }else {
             BiolinkSetting::where('link_id', $projectLink->id)->delete();
             BiolinkCustomSetting::where('link_id', $projectLink->id)->delete();
+            BiolinkSectionSetting::where('link_id', $projectLink->id)->delete();
         }
     }
 

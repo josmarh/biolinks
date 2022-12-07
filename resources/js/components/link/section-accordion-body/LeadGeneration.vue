@@ -485,17 +485,17 @@ function updateCheckbox(ev, type) {
     let checked = ev.target.checked;
 
     if(checked && type === 'showPhone')
-        model.value.sectionFields.showPhone == 'yes'
+        model.value.sectionFields.showPhone = 'yes'
     else if(!checked && type === 'showPhone')
-        model.value.sectionFields.showPhone == 'no'
+        model.value.sectionFields.showPhone = 'no'
     else if(checked && type === 'requirePhone')
-        model.value.sectionFields.requirePhone == 'yes'
+        model.value.sectionFields.requirePhone = 'yes'
     else if(!checked && type === 'requirePhone')
-        model.value.sectionFields.requirePhone == 'no'
+        model.value.sectionFields.requirePhone = 'no'
     else if(checked && type === 'showAgreement')
-        model.value.sectionFields.showAgreement == 'yes'
+        model.value.sectionFields.showAgreement = 'yes'
     else if(!checked && type === 'showAgreement')
-        model.value.sectionFields.showAgreement == 'no'
+        model.value.sectionFields.showAgreement = 'no'
 }
 
 function updateLeads() {
