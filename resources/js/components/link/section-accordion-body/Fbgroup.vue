@@ -236,8 +236,8 @@ import { ColorPicker } from 'vue-color-kit';
 import 'vue-color-kit/dist/vue-color-kit.css';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-import FileUpload from '../../FileUpload.vue'
-import VideoLinkFields from '../../VideoLinkFields.vue';
+import FileUpload from '../../customfields/FileUpload.vue'
+import VideoLinkFields from '../../customfields/VideoLinkFields.vue';
 import Editor from '@tinymce/tinymce-vue'
 import biolinksection from '../../../store/biolink-section';
 

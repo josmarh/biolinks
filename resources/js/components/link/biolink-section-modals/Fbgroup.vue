@@ -140,8 +140,8 @@ import { notify } from 'notiwind';
 import Editor from '@tinymce/tinymce-vue'
 import ButtonSpinner from '../../ButtonSpinner.vue';
 import ModalLayout from './ModalLayout.vue'
-import FileUpload from '../../FileUpload.vue';
-import VideoLinkFields from '../../VideoLinkFields.vue';
+import FileUpload from '../../customfields/FileUpload.vue';
+import VideoLinkFields from '../../customfields/VideoLinkFields.vue';
 import biolinksection from '../../../store/biolink-section';
 
 const route = useRoute();
