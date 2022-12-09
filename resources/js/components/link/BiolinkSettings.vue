@@ -107,7 +107,7 @@ function reloadSettings() {
     else if(currentTab.value == 'custom')
         projectlinks.dispatch('getBiolinkCustomSettings', route.params.id)
     else
-        projectlinks.dispatch('getSections', route.params.id)
+        biolinksection.dispatch('getSections', route.params.id)
     emit('reloadLinkInfo')
 }
 
@@ -191,6 +191,7 @@ function getBiolinkSectionSettings() {
                     else
                         errMsg = err.response.data.error;
                 }
+                errMsg = err;
             }else {
                 errMsg = err;
             }

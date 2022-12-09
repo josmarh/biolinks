@@ -41,8 +41,9 @@
         </transition>
     </Menu>
 
-    <lead-generation v-if="modal.type=='lead'" :show-form="modal.showSectionModal" @close-form="closeForm" />
+    <LeadGeneration v-if="modal.type=='lead'" :show-form="modal.showSectionModal" @close-form="closeForm" />
     <Link v-if="modal.type=='link'" :show-form="modal.showSectionModal" @close-form="closeForm" />
+    <Fbgroup v-if="modal.type=='fbGroup'" :show-form="modal.showSectionModal" @close-form="closeForm" />
 </template>
 
 <script setup>
@@ -50,6 +51,7 @@ import { ref } from 'vue';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import LeadGeneration from './biolink-section-modals/LeadGeneration.vue';
 import Link from './biolink-section-modals/Link.vue'
+import Fbgroup from './biolink-section-modals/Fbgroup.vue'
 
 const emit = defineEmits(['reloadSettings'])
 let modal = ref({

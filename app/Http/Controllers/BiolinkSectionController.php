@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BiolinkSectionSetting;
 use Illuminate\Http\Request;
-use App\Events\BioLinkSectionCreated;
+use App\Models\BiolinkSectionSetting;
 use App\Models\BioLinkSection;
 use App\Http\Resources\BiolinkSectionResource;
+use App\Events\BioLinkSectionCreated;
+use App\Services\FileHandler;
 
 class BiolinkSectionController extends Controller
 {
+    use FileHandler;
+
     public function index(Request $request, $id)
     {
         $section = BioLinkSection::where('link_id', $id)->with('section')->get();
@@ -28,6 +31,7 @@ class BiolinkSectionController extends Controller
 
         $section = [
             'sectionId' => $sectionSetting->id,
+            'sectionName' => $sectionSetting->section_name,
             'sectionSetting' => $data
         ];
 
@@ -49,12 +53,28 @@ class BiolinkSectionController extends Controller
     public function update(Request $request, $id)
     {
         $section = BioLinkSection::findOrFail($id);
+        $settings = BiolinkSectionSetting::find($section->section_id);
+        $sectionCustomFields = $request->sectionFields;
+
+        if($settings->section_name == 'Facebook Group') {
+            $sectionFields = json_decode($sectionCustomFields);
+            $existingImage = json_decode($section->core_section_fields);
+
+            if($sectionFields->type == 'image' 
+                && str_contains($sectionFields->typeContentImage, 'base64')) {
+                $sectionFields->typeContentImage = $this->saveFile('biolink-uploads', $sectionFields->typeContentImage);
+                $this->deleteFile($existingImage->typeContentImage);
+            }elseif($sectionFields->type == 'image' && !$sectionFields->typeContentImage) {
+                $this->deleteFile($existingImage->typeContentImage);
+            }
+            $sectionCustomFields = json_encode($sectionFields);
+        }
 
         $section->update([
             'button_text' => $request->buttonText,
             'button_text_color' => $request->buttonTextColor,
             'button_bg_color' => $request->buttonBgColor,
-            'core_section_fields' => $request->sectionFields,
+            'core_section_fields' => $sectionCustomFields,
         ]);
 
         return response([

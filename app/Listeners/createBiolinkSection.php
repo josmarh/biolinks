@@ -6,9 +6,11 @@ use App\Events\BioLinkSectionCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\BiolinkSection;
+use App\Services\FileHandler;
 
 class createBiolinkSection
 {
+    use FileHandler;
     /**
      * Create the event listener.
      *
@@ -28,6 +30,16 @@ class createBiolinkSection
     public function handle(BioLinkSectionCreated $event)
     {
         $section = $event->section;
+
+        if($section['sectionName'] == 'Facebook Group') {
+            $sectionFields = json_decode($section['sectionSetting']['sectionFields']);
+
+            if($sectionFields->type == 'image' 
+                && str_contains($sectionFields->typeContentImage, 'base64')) {
+                $sectionFields->typeContentImage = $this->saveFile('biolink-uploads', $sectionFields->typeContentImage);
+                $section['sectionSetting']['sectionFields'] = json_encode($sectionFields);
+            }
+        }
 
         BiolinkSection::create([
             'link_id' => $section['sectionSetting']['linkId'],

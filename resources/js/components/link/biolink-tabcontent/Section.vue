@@ -14,6 +14,11 @@
                 :data="item"
                 @reload-settings="reloadSettings"
             />
+            <Fbgroup 
+                v-if="item.section.name == 'Facebook Group'"
+                :data="item"
+                @reload-settings="reloadSettings"
+            />
         </biolink-section-accordion>
     </div>
 </template>
@@ -23,6 +28,7 @@ import { ref, watch } from 'vue'
 import BiolinkSectionAccordion from '../BiolinkSectionAccordion.vue';
 import LeadGeneration from '../section-accordion-body/LeadGeneration.vue'
 import Link from '../section-accordion-body/Link.vue';
+import Fbgroup from '../section-accordion-body/Fbgroup.vue';
 
 const props = defineProps({
     data: Object
