@@ -13,7 +13,7 @@
             focus:border-blue-500 block w-full p-2.5 
             dark:bg-gray-600 dark:border-gray-500
             dark:placeholder-gray-400 dark:text-white" 
-            placeholder="">
+            :placeholder="placeholder" :required="required">
     </div>
 </template>
 
@@ -22,7 +22,9 @@ import { ref, watch } from 'vue'
 
 const props = defineProps({
     data: String,
-    label: String
+    label: String,
+    required: Boolean,
+    placeholder: String
 })
 const emit = defineEmits(['update'])
 

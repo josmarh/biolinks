@@ -24,6 +24,11 @@
                 :data="item"
                 @reload-settings="reloadSettings"
             />
+            <Soundcloud
+                v-if="item.section.name == 'Soundcloud'"
+                :data="item"
+                @reload-settings="reloadSettings" 
+            />
         </biolink-section-accordion>
     </div>
 </template>
@@ -35,6 +40,7 @@ import LeadGeneration from '../section-accordion-body/LeadGeneration.vue'
 import Link from '../section-accordion-body/Link.vue';
 import Fbgroup from '../section-accordion-body/Fbgroup.vue';
 import TextBlock from '../section-accordion-body/TextBlock.vue'
+import Soundcloud from '../section-accordion-body/Soundcloud.vue'
 
 const props = defineProps({
     data: Object

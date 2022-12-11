@@ -49,7 +49,7 @@
             </div>
             <title-field :data="model.sectionFields.title" @update="updateTitle" />
             <description-field :data="model.sectionFields.description" @update="updateDescription" />
-            <link-field :data="model.sectionFields.link" label="Link" @update="updateLink" />
+            <link-field :data="model.sectionFields.link" label="Link" :required="linkRequired" @update="updateLink" />
             <button-text-field :data="model.buttonText" @update="updateButtonText" />
             <div class="bg-gray-50 px-4 py-4 sm:flex mt-4
                 sm:flex-row-reverse sm:px-6 mb-6 justify-center ">
@@ -89,6 +89,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['closeForm'])
 const open = ref(props.showForm)
+const linkRequired = false
 
 let isDisabled = ref(false)
 let model = ref({

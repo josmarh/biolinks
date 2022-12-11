@@ -45,6 +45,7 @@
     <Link v-if="modal.type=='link'" :show-form="modal.showSectionModal" @close-form="closeForm" />
     <Fbgroup v-if="modal.type=='fbGroup'" :show-form="modal.showSectionModal" @close-form="closeForm" />
     <TextBlock v-if="modal.type=='text'" :show-form="modal.showSectionModal" @close-form="closeForm" />
+    <Soundcloud v-if="modal.type=='scloud'" :show-form="modal.showSectionModal" @close-form="closeForm" />
 </template>
 
 <script setup>
@@ -54,6 +55,7 @@ import LeadGeneration from './biolink-section-modals/LeadGeneration.vue';
 import Link from './biolink-section-modals/Link.vue'
 import Fbgroup from './biolink-section-modals/Fbgroup.vue'
 import TextBlock from './biolink-section-modals/TextBlock.vue'
+import Soundcloud from './biolink-section-modals/Soundcloud.vue'
 
 const emit = defineEmits(['reloadSettings'])
 let modal = ref({

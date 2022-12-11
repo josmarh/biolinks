@@ -68,8 +68,6 @@ function changeColor(color) {
     emit('update', colorp.value, 'btnBgColor')
     
 }
-
-console.log(colorp.value)
 </script>
 
 <style>
