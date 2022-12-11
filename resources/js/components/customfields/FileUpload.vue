@@ -39,7 +39,7 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
-import helper from '../helpers';
+import helper from '../../helpers';
 
 const props = defineProps({
     data: String

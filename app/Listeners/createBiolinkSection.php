@@ -31,7 +31,7 @@ class createBiolinkSection
     {
         $section = $event->section;
 
-        if($section['sectionName'] == 'Facebook Group') {
+        if($section['sectionName'] == 'Facebook Group' || $section['sectionName'] == 'Text Block') {
             $sectionFields = json_decode($section['sectionSetting']['sectionFields']);
 
             if($sectionFields->type == 'image' 

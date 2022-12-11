@@ -311,6 +311,11 @@ function updateVideo(data) {
 
 function updateFbgroup() {
     isDisabled.value = true
+    if(model.value.sectionFields.type == 'video')
+        model.value.sectionFields.typeContentImage == null;
+    else if(model.value.sectionFields.type == 'image')
+        model.value.sectionFields.typeContentVideoUrl = ''
+        
     biolinksection
         .dispatch('updateSection', {
             id: model.value.id,

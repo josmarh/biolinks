@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->biginteger('link_id');
             $table->biginteger('section_id');
-            $table->string('button_text');
-            $table->string('button_text_color', 7);
-            $table->string('button_bg_color', 7);
+            $table->string('button_text')->nullable();
+            $table->string('button_text_color', 7)->nullable();
+            $table->string('button_bg_color', 7)->nullable();
             $table->text('core_section_fields');
             $table->timestamps();
             $table->index(['link_id','section_id']);

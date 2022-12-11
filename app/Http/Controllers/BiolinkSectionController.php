@@ -56,7 +56,8 @@ class BiolinkSectionController extends Controller
         $settings = BiolinkSectionSetting::find($section->section_id);
         $sectionCustomFields = $request->sectionFields;
 
-        if($settings->section_name == 'Facebook Group') {
+        if($settings->section_name == 'Facebook Group' 
+            || $settings->section_name == 'Text Block') {
             $sectionFields = json_decode($sectionCustomFields);
             $existingImage = json_decode($section->core_section_fields);
 
@@ -88,7 +89,7 @@ class BiolinkSectionController extends Controller
     {
         $section = BioLinkSection::findOrFail($id);
 
-        
+        // delete section, settings
 
         return response([
             'message' => 'Section deleted.',

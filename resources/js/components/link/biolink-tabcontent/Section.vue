@@ -19,6 +19,11 @@
                 :data="item"
                 @reload-settings="reloadSettings"
             />
+            <TextBlock 
+                v-if="item.section.name == 'Text Block'"
+                :data="item"
+                @reload-settings="reloadSettings"
+            />
         </biolink-section-accordion>
     </div>
 </template>
@@ -29,6 +34,7 @@ import BiolinkSectionAccordion from '../BiolinkSectionAccordion.vue';
 import LeadGeneration from '../section-accordion-body/LeadGeneration.vue'
 import Link from '../section-accordion-body/Link.vue';
 import Fbgroup from '../section-accordion-body/Fbgroup.vue';
+import TextBlock from '../section-accordion-body/TextBlock.vue'
 
 const props = defineProps({
     data: Object
