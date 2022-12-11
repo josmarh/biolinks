@@ -41,11 +41,15 @@
         </transition>
     </Menu>
 
-    <LeadGeneration v-if="modal.type=='lead'" :show-form="modal.showSectionModal" @close-form="closeForm" />
-    <Link v-if="modal.type=='link'" :show-form="modal.showSectionModal" @close-form="closeForm" />
-    <Fbgroup v-if="modal.type=='fbGroup'" :show-form="modal.showSectionModal" @close-form="closeForm" />
-    <TextBlock v-if="modal.type=='text'" :show-form="modal.showSectionModal" @close-form="closeForm" />
-    <Soundcloud v-if="modal.type=='scloud'" :show-form="modal.showSectionModal" @close-form="closeForm" />
+    <LeadGeneration v-if="modal.type=='lead'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <Link v-if="modal.type=='link'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <Fbgroup v-if="modal.type=='fbGroup'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <TextBlock v-if="modal.type=='text'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <Soundcloud v-if="modal.type=='scloud'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <Youtube v-if="modal.type=='ytube'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <Twitch v-if="modal.type=='twitch'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <Vimeo v-if="modal.type=='vimeo'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <Spotify v-if="modal.type=='spotify'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
 </template>
 
 <script setup>
@@ -56,6 +60,10 @@ import Link from './biolink-section-modals/Link.vue'
 import Fbgroup from './biolink-section-modals/Fbgroup.vue'
 import TextBlock from './biolink-section-modals/TextBlock.vue'
 import Soundcloud from './biolink-section-modals/Soundcloud.vue'
+import Youtube from './biolink-section-modals/Youtube.vue'
+import Twitch from './biolink-section-modals/Twitch.vue'
+import Vimeo from './biolink-section-modals/Vimeo.vue'
+import Spotify from './biolink-section-modals/Spotify.vue'
 
 const emit = defineEmits(['reloadSettings'])
 let modal = ref({
@@ -83,7 +91,7 @@ const listOptions = [
     {label: 'Sound Cloud', type: 'scloud', color:'text-orange-500'},
     {label: 'YouTube', type: 'ytube', color:'text-red-500'},
     {label: 'Twitch', type: 'twitch', color:'text-[#6441A5]'},
-    {label: 'Vimoe', type: 'vimeo', color:'text-[#1AB7EA]'},
+    {label: 'Vimeo', type: 'vimeo', color:'text-[#1AB7EA]'},
     {label: 'Spotify', type: 'spotify', color:'text-[#1DB954]'},
     {label: 'Tik Tok', type: 'tiktok', color:'text-[#FD3E3E]'},
     {label: 'Mail signup', type: 'mail', color:'text-[#C91685]'},

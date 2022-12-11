@@ -29,6 +29,26 @@
                 :data="item"
                 @reload-settings="reloadSettings" 
             />
+            <Youtube
+                v-if="item.section.name == 'Youtube'"
+                :data="item"
+                @reload-settings="reloadSettings" 
+            />
+            <Twitch
+                v-if="item.section.name == 'Twitch'"
+                :data="item"
+                @reload-settings="reloadSettings" 
+            />
+            <Vimeo
+                v-if="item.section.name == 'Vimeo'"
+                :data="item"
+                @reload-settings="reloadSettings" 
+            />
+            <Spotify
+                v-if="item.section.name == 'Spotify'"
+                :data="item"
+                @reload-settings="reloadSettings" 
+            />
         </biolink-section-accordion>
     </div>
 </template>
@@ -41,6 +61,10 @@ import Link from '../section-accordion-body/Link.vue';
 import Fbgroup from '../section-accordion-body/Fbgroup.vue';
 import TextBlock from '../section-accordion-body/TextBlock.vue'
 import Soundcloud from '../section-accordion-body/Soundcloud.vue'
+import Youtube from '../section-accordion-body/Youtube.vue'
+import Twitch from '../section-accordion-body/Twitch.vue';
+import Vimeo from '../section-accordion-body/Vimeo.vue';
+import Spotify from '../section-accordion-body/Spotify.vue'
 
 const props = defineProps({
     data: Object
