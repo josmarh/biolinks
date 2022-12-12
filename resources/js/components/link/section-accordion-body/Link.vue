@@ -153,7 +153,7 @@
                 placeholder="fa-solid fa-house" >
             </div>
             <p class="text-sm text-gray-500 mt-1">
-                <a href="https://fontawesome.com/icons/house?s=solid&f=classic" 
+                <a href="https://fontawesome.com/search?o=r&m=free&s=thin%2Csolid%2Cregular%2Cduotone" 
                     target="_blank" rel="noopener noreferrer" class="underline">
                     FontAwesome
                 </a>
@@ -346,6 +346,10 @@ function updateCheckbox(ev, type) {
         model.value.sectionFields.scheduleSwitch = 'yes'
     else if(!checked && type === 'scheduleSwitch')
         model.value.sectionFields.scheduleSwitch = 'no'
+    else if(checked && type === 'buttonOutline')
+        model.value.sectionFields.buttonOutline = 'yes'
+    else if(!checked && type === 'buttonOutline')
+        model.value.sectionFields.buttonOutline = 'no'
 }
 
 function updateLink() {

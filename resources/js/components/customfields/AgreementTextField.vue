@@ -1,0 +1,45 @@
+<template>
+    <!-- Agreement Text -->
+    <div class="mt-4">
+        <label for="agreementTexts" 
+            class="block mb-2 text-sm font-medium flex
+            text-gray-900 dark:text-white capitalize gap-2">
+            Agreement Text
+        </label>
+        <div class="flex">
+            <input type="text" id="agreementTexts" 
+            v-model="agreementText"
+            class="rounded-none bg-gray-50 
+            border text-gray-900 focus:ring-blue-500 
+            focus:border-blue-500 block flex-1 min-w-0 
+            w-full text-sm border-gray-300 p-2.5 
+            dark:bg-gray-700 dark:border-gray-600 
+            dark:placeholder-gray-400 dark:text-white 
+            dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+            placeholder="">
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref, watch } from 'vue'
+
+const props = defineProps({
+    data: String
+})
+const emit = defineEmits(['update'])
+
+let agreementText = ref(props.data)
+
+watch(() => props.data, (newVal, oldVal) => {
+    agreementText.value = newVal
+})
+
+watch(agreementText, (newVal, oldVal) => {
+    emit('update', agreementText.value)
+})
+</script>
+
+<style>
+
+</style>

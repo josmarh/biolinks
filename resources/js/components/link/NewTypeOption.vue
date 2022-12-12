@@ -50,6 +50,8 @@
     <Twitch v-if="modal.type=='twitch'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
     <Vimeo v-if="modal.type=='vimeo'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
     <Spotify v-if="modal.type=='spotify'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <TikTok v-if="modal.type=='tiktok'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <MailSignup v-if="modal.type=='mail'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
 </template>
 
 <script setup>
@@ -64,6 +66,8 @@ import Youtube from './biolink-section-modals/Youtube.vue'
 import Twitch from './biolink-section-modals/Twitch.vue'
 import Vimeo from './biolink-section-modals/Vimeo.vue'
 import Spotify from './biolink-section-modals/Spotify.vue'
+import TikTok from './biolink-section-modals/TikTok.vue';
+import MailSignup from './biolink-section-modals/MailSignup.vue';
 
 const emit = defineEmits(['reloadSettings'])
 let modal = ref({

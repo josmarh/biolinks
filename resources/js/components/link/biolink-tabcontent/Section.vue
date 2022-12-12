@@ -32,22 +32,32 @@
             <Youtube
                 v-if="item.section.name == 'Youtube'"
                 :data="item"
-                @reload-settings="reloadSettings" 
+                @reload-settings="reloadSettings"
             />
             <Twitch
                 v-if="item.section.name == 'Twitch'"
                 :data="item"
-                @reload-settings="reloadSettings" 
+                @reload-settings="reloadSettings"
             />
             <Vimeo
                 v-if="item.section.name == 'Vimeo'"
                 :data="item"
-                @reload-settings="reloadSettings" 
+                @reload-settings="reloadSettings"
             />
             <Spotify
                 v-if="item.section.name == 'Spotify'"
                 :data="item"
-                @reload-settings="reloadSettings" 
+                @reload-settings="reloadSettings"
+            />
+            <TikTok
+                v-if="item.section.name == 'TikTok'"
+                :data="item"
+                @reload-settings="reloadSettings"
+            />
+            <MailSignup
+                v-if="item.section.name == 'Mail signup'"
+                :data="item"
+                @reload-settings="reloadSettings"
             />
         </biolink-section-accordion>
     </div>
@@ -65,6 +75,8 @@ import Youtube from '../section-accordion-body/Youtube.vue'
 import Twitch from '../section-accordion-body/Twitch.vue';
 import Vimeo from '../section-accordion-body/Vimeo.vue';
 import Spotify from '../section-accordion-body/Spotify.vue'
+import TikTok from '../section-accordion-body/TikTok.vue'
+import MailSignup from '../section-accordion-body/MailSignup.vue'
 
 const props = defineProps({
     data: Object
