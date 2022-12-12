@@ -52,6 +52,12 @@
     <Spotify v-if="modal.type=='spotify'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
     <TikTok v-if="modal.type=='tiktok'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
     <MailSignup v-if="modal.type=='mail'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <Whatsapp v-if="modal.type=='whatsapp'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <Faq v-if="modal.type=='faq'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <GoogleReviews v-if="modal.type=='google-review'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <Calendly v-if="modal.type=='calendly'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <Clubhouse v-if="modal.type=='clubhouse'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <HtmlJsBlock v-if="modal.type=='html-js-block'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
 </template>
 
 <script setup>
@@ -68,6 +74,12 @@ import Vimeo from './biolink-section-modals/Vimeo.vue'
 import Spotify from './biolink-section-modals/Spotify.vue'
 import TikTok from './biolink-section-modals/TikTok.vue';
 import MailSignup from './biolink-section-modals/MailSignup.vue';
+import Whatsapp from './biolink-section-modals/Whatsapp.vue'
+import Faq from './biolink-section-modals/Faq.vue'
+import GoogleReviews from './biolink-section-modals/GoogleReviews.vue'
+import Calendly from './biolink-section-modals/Calendly.vue'
+import Clubhouse from './biolink-section-modals/Clubehouse.vue'
+import HtmlJsBlock from './biolink-section-modals/HtmlJsBlock.vue'
 
 const emit = defineEmits(['reloadSettings'])
 let modal = ref({

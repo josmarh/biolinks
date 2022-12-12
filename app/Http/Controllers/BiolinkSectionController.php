@@ -57,7 +57,8 @@ class BiolinkSectionController extends Controller
         $sectionCustomFields = $request->sectionFields;
 
         if($settings->section_name == 'Facebook Group' 
-            || $settings->section_name == 'Text Block') {
+            || $settings->section_name == 'Text Block'
+            || $settings->section_name == 'WhatsApp') {
             $sectionFields = json_decode($sectionCustomFields);
             $existingImage = json_decode($section->core_section_fields);
 

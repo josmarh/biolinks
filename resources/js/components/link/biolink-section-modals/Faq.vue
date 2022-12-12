@@ -1,8 +1,8 @@
 <template>
-    <modal-layout title="Add a Sign up form" :show-form="open" @close-modal="closeModal">
-        <form @submit.prevent="newMailSignup">
+    <modal-layout title="Add an FAQ" :show-form="open" @close-modal="closeModal">
+        <form @submit.prevent="newFAQ">
             <p class="text-md text-gray-600 font-normal mt-8 tracking-tight">
-                Capture emails for Mailchimp or get the emails captured via Webhook.
+                Capture FAQ Form.
             </p>
             <div class="bg-gray-50 px-4 py-4 sm:flex mt-4
                 sm:flex-row-reverse sm:px-6 mb-6 justify-center">
@@ -40,24 +40,20 @@ const open = ref(props.showForm)
 let isDisabled = ref(false)
 let model = ref({
     linkId: route.params.id,
-    sectionName: 'Mail signup',
-    buttonText: 'Sign up',
+    sectionName: 'FAQ',
+    buttonText: '',
     buttonTextColor: '#000000',
     buttonBckgColor: '#FFFFFF',
     sectionFields: {
-        name: 'Sign up',
-        buttonIcon: '',
-        buttonOutline: 'no',
-        borderRadius: 'rounded',
-        animation: '',
-        emailPlaceholder: '',
-        thankYouMsg: 'Thank you for signing up!',
-        showAgreement: 'no',
-        agreementText: '',
-        agreementURL: '',
-        mailchimpAPIKey: '',
-        mailchimpList: '',
-        webhookURL: '',
+        title: '',
+        titleColor: '#000000',
+        text: '',
+        textColor: '#000000',
+        qstnTextColor: '#000000',
+        qstnBgColor: '#FFFFFF',
+        qestion: '',
+        answer: '',
+        moreFaq: []
     }
 })
 
@@ -74,7 +70,7 @@ function closeModal() {
     open.value = false
 }
 
-function newMailSignup() {
+function newFAQ() {
     isDisabled.value = true;
     biolinksection
         .dispatch('storeSection', {

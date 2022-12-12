@@ -59,6 +59,36 @@
                 :data="item"
                 @reload-settings="reloadSettings"
             />
+            <Whatsapp
+                v-if="item.section.name == 'WhatsApp'"
+                :data="item"
+                @reload-settings="reloadSettings"
+            />
+            <Faq
+                v-if="item.section.name == 'FAQ'"
+                :data="item"
+                @reload-settings="reloadSettings"
+            />
+            <Calendly
+                v-if="item.section.name == 'Calendly'"
+                :data="item"
+                @reload-settings="reloadSettings"
+            />
+            <Clubhouse
+                v-if="item.section.name == 'Clubhouse'"
+                :data="item"
+                @reload-settings="reloadSettings"
+            />
+            <HtmlJsBlock
+                v-if="item.section.name == 'HtmlJsBlock'"
+                :data="item"
+                @reload-settings="reloadSettings"
+            />
+            <GoogleReview
+                v-if="item.section.name == 'GoogleReview'"
+                :data="item"
+                @reload-settings="reloadSettings"
+            />
         </biolink-section-accordion>
     </div>
 </template>
@@ -77,6 +107,12 @@ import Vimeo from '../section-accordion-body/Vimeo.vue';
 import Spotify from '../section-accordion-body/Spotify.vue'
 import TikTok from '../section-accordion-body/TikTok.vue'
 import MailSignup from '../section-accordion-body/MailSignup.vue'
+import Whatsapp from '../section-accordion-body/Whatapp.vue'
+import Faq from '../section-accordion-body/Faq.vue';
+import Calendly from '../section-accordion-body/Calendly.vue';
+import Clubhouse from '../section-accordion-body/Clubhouse.vue';
+import HtmlJsBlock from '../section-accordion-body/HtmlJsBlock.vue'
+import GoogleReview from '../section-accordion-body/GoogleReview.vue';
 
 const props = defineProps({
     data: Object

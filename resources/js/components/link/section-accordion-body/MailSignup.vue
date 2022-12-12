@@ -2,7 +2,7 @@
     <form @submit.prevent="updateMailSignup" class="p-4">
         <name-field 
             :data="model.sectionFields.name" 
-            :is-required="requiredFields.name"
+            :isRequired="requiredFields.name"
             @update="updateName"/>
         <button-icon-field :data="model.sectionFields.buttonIcon" @update="updateIcon"/>
         <button-text-color-field :data="model.buttonTextColor" @update="updateBtnTextColor"/>
@@ -11,7 +11,7 @@
         <button-border-radius-field :data="model.sectionFields.borderRadius" @update="updateBtnBorderRadius"/>
         <email-placeholder-field 
             :data="model.sectionFields.emailPlaceholder" 
-            :is-required="requiredFields.emailPlaceholder"
+            :isRequired="requiredFields.emailPlaceholder"
             @update="updateEmailPlaceholder"/>
         <thankyou-message-field :data="model.sectionFields.thankYouMsg" @update="updateThankyouMsg"/>
         <show-agreement-field :data="model.sectionFields.showAgreement" @update="updateShowAgreement"/>

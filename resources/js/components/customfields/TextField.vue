@@ -1,13 +1,14 @@
 <template>
+    <!-- Title -->
     <div class="mt-4">
-        <label for="emailPlaceholder" 
+        <label for="text" 
             class="block mb-2 text-sm font-medium flex
             text-gray-900 dark:text-white capitalize gap-2">
-            Email placeholder
+            <font-awesome-icon icon="fa-solid fa-paragraph" class="mt-0.5" />
+            Text
         </label>
         <div class="flex">
-            <input type="text" id="emailPlaceholder" 
-            v-model="emailPlaceholder"
+            <input type="text" id="text" v-model="text"
             class="rounded-none bg-gray-50 
             border text-gray-900 focus:ring-blue-500 
             focus:border-blue-500 block flex-1 min-w-0 
@@ -15,7 +16,7 @@
             dark:bg-gray-700 dark:border-gray-600 
             dark:placeholder-gray-400 dark:text-white 
             dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-            placeholder="email@domain.com" :required="isRequired">
+            placeholder="">
         </div>
     </div>
 </template>
@@ -24,19 +25,18 @@
 import { ref, watch } from 'vue'
 
 const props = defineProps({
-    data: String,
-    isRequired: Boolean
+    data: String
 })
 const emit = defineEmits(['update'])
 
-let emailPlaceholder = ref(props.data)
+let text = ref(props.data)
 
 watch(() => props.data, (newVal, oldVal) => {
-    emailPlaceholder.value = newVal
+    text.value = newVal
 })
 
-watch(emailPlaceholder, (newVal, oldVal) => {
-    emit('update', emailPlaceholder.value)
+watch(text, (newVal, oldVal) => {
+    emit('update', text.value)
 })
 </script>
 

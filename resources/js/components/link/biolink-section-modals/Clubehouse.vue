@@ -1,9 +1,18 @@
 <template>
-    <modal-layout title="Add a Sign up form" :show-form="open" @close-modal="closeModal">
-        <form @submit.prevent="newMailSignup">
+    <modal-layout title="Add a Clubhouse Block" :show-form="open" @close-modal="closeModal">
+        <form @submit.prevent="newClubhouse">
             <p class="text-md text-gray-600 font-normal mt-8 tracking-tight">
-                Capture emails for Mailchimp or get the emails captured via Webhook.
+                Add a title and a description with the Clubhouse Block.
             </p>
+            <title-field :data="model.sectionFields.title" @update="updateTitle"/>
+            <description-field :data="model.sectionFields.description" @update="updateDescription"/>
+            <link-field 
+                :data="model.sectionFields.clubhouseLink"
+                :required="isRequired"
+                label="Link"
+                placeholder="https://www.joinclubhouse.com/"
+                @update="updateLink"/>
+            <button-text-field :data="model.buttonText" @update="updateButtonText"/>
             <div class="bg-gray-50 px-4 py-4 sm:flex mt-4
                 sm:flex-row-reverse sm:px-6 mb-6 justify-center">
                 <button type="submit"
@@ -28,6 +37,10 @@ import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } fro
 import { notify } from 'notiwind';
 import ButtonSpinner from '../../ButtonSpinner.vue';
 import ModalLayout from './ModalLayout.vue'
+import TitleField from '../../customfields/TitleField.vue';
+import DescriptionField from '../../customfields/DescriptionField.vue';
+import LinkField from '../../customfields/LinkField.vue';
+import ButtonTextField from '../../customfields/ButtonTextField.vue'
 import biolinksection from '../../../store/biolink-section';
 
 const route = useRoute();
@@ -38,26 +51,18 @@ const emit = defineEmits(['closeForm'])
 const open = ref(props.showForm)
 
 let isDisabled = ref(false)
+let isRequired = true
 let model = ref({
     linkId: route.params.id,
-    sectionName: 'Mail signup',
+    sectionName: 'Clubhouse',
     buttonText: 'Sign up',
     buttonTextColor: '#000000',
     buttonBckgColor: '#FFFFFF',
     sectionFields: {
-        name: 'Sign up',
-        buttonIcon: '',
-        buttonOutline: 'no',
-        borderRadius: 'rounded',
-        animation: '',
-        emailPlaceholder: '',
-        thankYouMsg: 'Thank you for signing up!',
-        showAgreement: 'no',
-        agreementText: '',
-        agreementURL: '',
-        mailchimpAPIKey: '',
-        mailchimpList: '',
-        webhookURL: '',
+        title: '',
+        titleColor: '#000000',
+        description: '',
+        clubhouseLink: ''
     }
 })
 
@@ -74,7 +79,20 @@ function closeModal() {
     open.value = false
 }
 
-function newMailSignup() {
+function updateTitle(data) {
+    model.value.sectionFields.title = data;
+}
+function updateDescription(data) {
+    model.value.sectionFields.description = data;
+}
+function updateLink(data) {
+    model.value.sectionFields.clubhouseLink = data;
+}
+function updateButtonText(data) {
+    model.value.buttonText = data
+}
+
+function newClubhouse() {
     isDisabled.value = true;
     biolinksection
         .dispatch('storeSection', {
