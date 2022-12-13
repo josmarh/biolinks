@@ -56,7 +56,10 @@
                 </div>
             </div>
             <div class="col-span-5 flex justify-end">
-                <biolink-settings-preview :settings="modelSettings" :custom-settings="customSettings.data"/>
+                <biolink-settings-preview 
+                :settings="modelSettings" 
+                :custom-settings="customSettings.data"
+                :section-settings="sectionSettings.data"/>
             </div>
         </div>
     </div>

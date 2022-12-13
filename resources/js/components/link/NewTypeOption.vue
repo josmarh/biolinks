@@ -25,7 +25,7 @@
             leave-from-class="opacity-100 scale-100"
             leave-to-class="opacity-0 scale-90">
             <MenuItems class="overflow-hidden absolute right-0 
-                mt-2 w-48 bg-white border shadow-lg z-0
+                mt-2 w-48 bg-white border shadow-lg z-10
                 origin-top-right focus:outline-none text-gray-400">
                 <MenuItem v-for="(item, i) in listOptions" :key="i"
                     v-slot="{active}">

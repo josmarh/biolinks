@@ -19,7 +19,8 @@ import { faRightFromBracket, faLink, faEnvelope,
     faArrowUpRightFromSquare, faEarthAfrica, faClipboardCheck, 
     faClipboard, faX, faClock, faComputerMouse, faHourglassEnd, 
     faUserShield, faKey, faBullseye, faCamera, faEye, faHeading, 
-    faPaintBrush, faPalette, faPenNib, faShuffle, faParagraph, faPhone, faSignature,  
+    faPaintBrush, faPalette, faPenNib, faShuffle, faParagraph, 
+    faPhone, faSignature, faBell, faCircleQuestion, faCalendarDays, faCode,  
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add( faRightFromBracket, faLink, faEnvelope, 
@@ -29,7 +30,8 @@ library.add( faRightFromBracket, faLink, faEnvelope,
     faArrowUpRightFromSquare, faEarthAfrica, faClipboardCheck, 
     faClipboard, faX, faClock, faComputerMouse, faHourglassEnd, 
     faUserShield, faKey, faBullseye, faCamera, faEye, faHeading, 
-    faPaintBrush, faPalette, faPenNib, faShuffle, faParagraph, faPhone, faSignature
+    faPaintBrush, faPalette, faPenNib, faShuffle, faParagraph, 
+    faPhone, faSignature, faBell, faCircleQuestion, faCalendarDays, faCode
     
 )
 

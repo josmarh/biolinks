@@ -35,8 +35,14 @@ const biolinksection = createStore({
                     return data;
                 })
         },
-        deleteSections({}, id) {
+        deleteSection({}, id) {
             return axiosClient.delete(`/link/biolink/section/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        updateSectionStatus({}, payload) {
+            return axiosClient.put(`/link/biolink/section/status/${payload.id}`, payload)
                 .then(({data}) => {
                     return data;
                 })

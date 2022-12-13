@@ -17,6 +17,7 @@ class BiolinkSectionSettingResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->section_name,
+            'status' => $this->status,
             'position' => $this->section_position
         ];
     }

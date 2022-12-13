@@ -38,7 +38,7 @@ class BiolinkSectionSettingObserver
      */
     public function deleting(BiolinkSectionSetting $biolinkSectionSetting)
     {
-        BiolinkSection::where('section_id', $biolinkSectionSetting->id)->delete();
+        
     }
 
     /**

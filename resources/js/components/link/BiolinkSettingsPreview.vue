@@ -6,17 +6,17 @@
                     <div class="bg-white h-full p-4 overflow-y-auto"
                         v-if="setting.bckgdType == 'preset'"
                         :style="setting.bckgd.presetbckg">
-                        <Main :settings="setting" :custom-settings="custom" />
+                        <Main :settings="setting" :customs="custom" :sections="section"/>
                     </div>
                     <div v-if="setting.bckgdType == 'gradient'"
                         class="bg-white h-full p-4 overflow-y-auto"
                         :style="{'background-image': `linear-gradient(109.6deg, ${setting.bckgd.grad1} 11.2%, ${setting.bckgd.grad2} 91.1%)`}">
-                        <Main :settings="setting" :custom-settings="custom" />
+                        <Main :settings="setting" :customs="custom" :sections="section"/>
                     </div>
                     <div v-if="setting.bckgdType == 'color'"
                         :style="{background: setting.bckgd.color}"
                         class="bg-white h-full p-4 overflow-y-auto">
-                        <Main :settings="setting" :custom-settings="custom" />
+                        <Main :settings="setting" :customs="custom" :sections="section"/>
                     </div>
                     <div v-if="setting.bckgdType == 'image' && setting.bckgd.image"
                         class="bg-white h-full p-4 overflow-y-auto"
@@ -26,12 +26,12 @@
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             backgroundRepeat: 'no-repeat'}">
-                        <Main :settings="setting" :custom-settings="custom" />
+                        <Main :settings="setting" :customs="custom" :sections="section"/>
                     </div>
                     <div v-if="setting.bckgdType == 'image' && !setting.bckgd.image"
                         class="bg-white h-full p-4 overflow-y-auto"
                         :style="setting.bckgd.presetbckg">
-                        <Main :settings="setting" :custom-settings="custom" />
+                        <Main :settings="setting" :customs="custom" :sections="section"/>
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@ import helper from '../../helpers'
 
 const props = defineProps({
     settings: Object,
-    sectionSettings: Object,
+    sectionSettings: Array,
     customSettings: Object
 });
 

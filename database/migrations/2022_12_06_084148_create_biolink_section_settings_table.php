@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->biginteger('link_id');
             $table->string('section_name');
+            $table->smallInteger('status');
             $table->biginteger('section_position')->default(0);
             $table->timestamps();
             $table->index('link_id');

@@ -11,7 +11,7 @@ class BiolinkSectionSetting extends Model
 
     protected $table = 'bl_biolink_section_settings';
     protected $fillable = [
-        'link_id', 'section_name', 'section_position'
+        'link_id', 'section_name', 'status', 'section_position'
     ];
 
     public function link()

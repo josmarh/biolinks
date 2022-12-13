@@ -2,9 +2,10 @@
     <div>
         <biolink-section-accordion
             v-for="item in model" :key="item.id"
-            :title="item.section.name">
+            :title="item.section.name"
+            :data="item">
             <!-- accordion body -->
-            <lead-generation 
+            <lead-generation
                 v-if="item.section.name == 'Lead Generation'"
                 :data="item"
                 @reload-settings="reloadSettings"

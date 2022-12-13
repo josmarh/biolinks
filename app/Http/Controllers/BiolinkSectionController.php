@@ -15,7 +15,7 @@ class BiolinkSectionController extends Controller
 
     public function index(Request $request, $id)
     {
-        $section = BioLinkSection::where('link_id', $id)->with('section')->get();
+        $section = BioLinkSection::where('link_id', $id)->inRandomOrder()->with('section')->get();
 
         return BiolinkSectionResource::collection($section);
     }
@@ -26,7 +26,8 @@ class BiolinkSectionController extends Controller
 
         $sectionSetting = BiolinkSectionSetting::create([
             'link_id' => $data['linkId'],
-            'section_name' => $data['sectionName']
+            'section_name' => $data['sectionName'],
+            'status' => 1
         ]);
 
         $section = [
@@ -91,10 +92,26 @@ class BiolinkSectionController extends Controller
         $section = BioLinkSection::findOrFail($id);
 
         // delete section, settings
+        BiolinkSectionSetting::where('id', $section->section_id)->delete();
+
+        $section->delete();
 
         return response([
             'message' => 'Section deleted.',
             'status_code' => 204
         ], 200);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $status = BiolinkSectionSetting::find($id);
+
+        $status->update(['status' => $request->status]);
+
+        return response([
+            'message' => 'Status updated.',
+            'data' => new BiolinkSectionResource($status),
+            'status_code' => 201
+        ], 201);
     }
 }

@@ -31,6 +31,86 @@
                 width="340" height="300" frameborder="0" allowfullscreen></iframe>
         </div>
 
+        <!-- Section views -->
+        <div v-if="section.length">
+            <div v-for="item in section" :key="item.id">
+                <!-- Vimeo -->
+                <div v-if="item.section.name=='Vimeo'" class="mt-2 mb-4">
+                    <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.vimeoUrl)" 
+                        width="100%" height="200" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <!-- Youtube -->
+                <div v-if="item.section.name=='Youtube'" class="mt-2 mb-4">
+                    <iframe :src="extractVideoId(item.sectionFields.youtubeUrl)" 
+                        frameborder="0" width="100%" height="230"></iframe>
+                </div>
+                <!-- Spotify -->
+                <div v-if="item.section.name=='Spotify'" class="mt-2 mb-4">
+                    <div v-if="item.sectionFields.spotifyUrl.includes('show') || item.sectionFields.spotifyUrl.includes('episode')">
+                        <iframe :src="extractVideoId(item.sectionFields.spotifyUrl)" 
+                            width="100%" height="232" frameborder="0" 
+                            allowtransparency="true" allow="encrypted-media"></iframe>
+                    </div>
+                    <div v-if="item.sectionFields.spotifyUrl.includes('track') || item.sectionFields.spotifyUrl.includes('album')">
+                        <iframe scrolling="no" frameborder="no" v-if="item.sectionFields.spotifyUrl.includes('track')"
+                            :src="extractVideoId(item.sectionFields.spotifyUrl)" 
+                            width="100%" style="height: 80px;"></iframe>
+                        <iframe scrolling="no" frameborder="no" v-if="item.sectionFields.spotifyUrl.includes('album')"
+                            :src="extractVideoId(item.sectionFields.spotifyUrl)" 
+                            width="100%" style="height: 380px;"></iframe>
+                    </div>
+                </div>
+                <!-- Soundcloud -->
+                <div v-if="item.section.name=='Soundcloud'" class="mt-2 mb-4">
+                    <iframe class="embed-responsive-item" scrolling="no" frameborder="no" width="100%"
+                    :src="`https://w.soundcloud.com/player/?url=${item.sectionFields.soundcloudUrl}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`"></iframe>
+                </div>
+                <!-- Twitch -->
+                <div v-if="item.section.name=='Twitch'" class="mt-2 mb-4">
+                    <iframe
+                        class="embed-responsive-item"
+                        scrolling="no"
+                        frameborder="no"
+                        width="100%"
+                        :src="extractVideoId(item.sectionFields.twitchUrl)"
+                    ></iframe>
+                </div>
+                <!-- Clubhouse -->
+                <div v-if="item.section.name=='Clubhouse'" class="mt-2 mb-4">
+                    <h1 class="font-bold text-3xl text-center" 
+                        :style="{color: item.sectionFields.titleColor}">
+                        {{item.sectionFields.title}}
+                    </h1>
+                    <p class="mt-2 text-center font-semibold" 
+                        :style="{color: item.sectionFields.titleColor}"
+                        v-html="item.sectionFields.description"></p>
+                    <div class="flex justify-center mt-2">
+                        <button type="button" 
+                            @click="openExternalLink(item.sectionFields.clubhouseLink)"
+                            class="text-white bg-blue-700 hover:bg-blue-800 
+                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            font-medium rounded-full text-sm px-5 py-2.5 
+                            text-center mr-2 mb-2 dark:bg-blue-600 w-full
+                            dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            :style="{color: item.buttonTextColor,
+                                'background-color': item.buttonBgColor
+                            }">
+                            {{item.buttonText}}
+                        </button>
+                    </div>
+                </div>
+                <!-- Text Block -->
+                <div v-if="item.section.name=='Text Block'" class="mt-2 mb-4">
+
+                </div>
+                <!-- Link -->
+                <div v-if="item.section.name=='Link'" class="mt-2 mb-4">
+
+                </div>
+
+            </div>
+        </div>
+
         <!-- Socials -->
         <div class="mt-6">
             <socials :settings="setting" />
@@ -45,14 +125,14 @@ import Socials from './Socials.vue'
 
 const props = defineProps({
     settings: Object,
-    sections: Object,
+    sections: Array,
     customs: Object
 });
 const videoURL = ref('')
 
 let setting = ref(props.settings)
-let section = ref(props.sectionSettings)
-let custom = ref(props.customSettings)
+let section = ref(props.sections)
+let custom = ref(props.customs)
 
 watch(() => props.settings, (newVal, oldVal) => {
     setting.value = newVal
@@ -65,6 +145,10 @@ watch(() => props.sections, (newVal, oldVal) => {
 watch(() => props.customs, (newVal, oldVal) => {
     custom.value = newVal
 });
+
+function openExternalLink(link) {
+    window.open(link);
+}
 
 function extractVideoId(video) {
     if(video.includes('youtube') || video.includes('youtu')) {
@@ -83,6 +167,23 @@ function extractVideoId(video) {
             video = video.replace("https://www.vimeo.com/","");
         }
         videoURL.value = `https://player.vimeo.com/video/${video}?h=8ef4640006`
+    }else if(video.includes('spotify')) {
+        if(video.includes('track')) {
+            video = video.replace("https://open.spotify.com/track/","");
+            videoURL.value = `https://open.spotify.com/embed/track/${video}`
+        }else if(video.includes('album')) {
+            video = video.replace("https://open.spotify.com/album/","");
+            videoURL.value = `https://open.spotify.com/embed/album/${video}`
+        }else if(video.includes('show')) {
+            video = video.replace("https://open.spotify.com/show/","");
+            videoURL.value = `https://open.spotify.com/embed/show/${video}?theme=0`
+        }else if(video.includes('episode')) {
+            video = video.replace("https://open.spotify.com/episode/","");
+            videoURL.value = `https://open.spotify.com/embed/episode/${video}?theme=0`
+        }
+    }else if(video.includes('twitch')) {
+        video = video.replace("https://www.twitch.tv/","");
+        videoURL.value = `https://player.twitch.tv/?channel=${video}&autoplay=false&parent=${window.location.host}`
     }
 
     return videoURL.value;
