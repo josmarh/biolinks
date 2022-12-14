@@ -56,15 +56,15 @@ let custom = ref(props.customSettings)
 
 watch(() => props.settings, (newVal, oldVal) => {
     setting.value = newVal
-});
+}, {deep: true});
 
 watch(() => props.sectionSettings, (newVal, oldVal) => {
     section.value = newVal
-});
+}, {deep: true});
 
 watch(() => props.customSettings, (newVal, oldVal) => {
     custom.value = newVal
-});
+}, {deep: true});
 </script>
 
 <style scoped>

@@ -89,7 +89,7 @@
                             @click="openExternalLink(item.sectionFields.clubhouseLink)"
                             class="text-white bg-blue-700 hover:bg-blue-800 
                             focus:outline-none focus:ring-4 focus:ring-blue-300 
-                            font-medium rounded-full text-sm px-5 py-2.5 
+                            font-medium rounded-full text-md px-5 py-2.5 
                             text-center mr-2 mb-2 dark:bg-blue-600 w-full
                             dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                             :style="{color: item.buttonTextColor,
@@ -101,7 +101,194 @@
                 </div>
                 <!-- Text Block -->
                 <div v-if="item.section.name=='Text Block'" class="mt-2 mb-4">
+                    <img v-if="item.sectionFields.type=='image'" 
+                        :src="item.sectionFields.typeContentImage.includes('biolink') 
+                        ? helper.applink + item.sectionFields.typeContentImage 
+                        : item.sectionFields.typeContentImage"
+                        class="w-32 h-32 mx-auto rounded-full"/>
+                    <div v-if="item.sectionFields.type=='video'">
+                        <div v-if="item.sectionFields.typeContentVideo == 'youtube' && item.sectionFields.typeContentVideoUrl" class="mt-6 mx-auto">
+                            <iframe :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" frameborder="0" width="100%" height="232"></iframe>
+                        </div>
+                        <div v-if="item.sectionFields.typeContentVideo == 'vimeo' && item.sectionFields.typeContentVideoUrl" class="mt-0 mx-auto">
+                            <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" 
+                                width="100%" height="232" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <h1 class="font-bold text-3xl text-center" 
+                        :style="{color: item.sectionFields.titleColor}">
+                        {{item.sectionFields.title}}
+                    </h1>
+                    <div v-if="item.sectionFields.link" class="flex justify-center mt-2">
+                        <button type="button" 
+                            @click="openExternalLink(item.sectionFields.link)"
+                            class="text-white bg-blue-700 hover:bg-blue-800 
+                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            font-medium rounded-full text-md px-5 py-2.5 
+                            text-center mr-2 mb-2 dark:bg-blue-600 w-full
+                            dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            :style="{color: item.buttonTextColor,
+                                'background-color': item.buttonBgColor
+                            }">
+                            {{item.buttonText}}
+                        </button>
+                    </div>
+                </div>
+                <!-- FB Group -->
+                <div v-if="item.section.name=='Facebook Group'" class="mt-2 mb-4">
+                    <img v-if="item.sectionFields.type=='image'" 
+                        :src="item.sectionFields.typeContentImage.includes('biolink') 
+                        ? helper.applink + item.sectionFields.typeContentImage 
+                        : item.sectionFields.typeContentImage"
+                        class="w-32 h-32 mx-auto rounded-full"/>
+                    <div v-if="item.sectionFields.type=='video'">
+                        <div v-if="item.sectionFields.typeContentVideo == 'youtube' && item.sectionFields.typeContentVideoUrl" class="mt-6 mx-auto">
+                            <iframe :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" frameborder="0" width="100%" height="232"></iframe>
+                        </div>
+                        <div v-if="item.sectionFields.typeContentVideo == 'vimeo' && item.sectionFields.typeContentVideoUrl" class="mt-0 mx-auto">
+                            <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" 
+                                width="100%" height="232" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <h1 class="font-bold text-3xl text-center" 
+                        :style="{color: item.sectionFields.titleColor}">
+                        {{item.sectionFields.title}}
+                    </h1>
+                    <p class="mt-2 text-center font-semibold" 
+                        :style="{color: item.sectionFields.titleColor}"
+                        v-html="item.sectionFields.description"></p>
+                    <div v-if="item.sectionFields.fbGroupLink" class="flex justify-center mt-2">
+                        <button type="button"
+                            @click="openExternalLink(item.sectionFields.fbGroupLink)"
+                            class="text-white bg-blue-700 hover:bg-blue-800 
+                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            font-medium rounded-full text-md px-5 py-2.5 
+                            text-center mr-2 mb-2 dark:bg-blue-600 w-full
+                            dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            :style="{color: item.buttonTextColor,
+                                'background-color': item.buttonBgColor
+                            }">
+                            {{item.buttonText}}
+                        </button>
+                    </div>
+                </div>
+                <!-- TikTok -->
+                <div v-if="item.section.name=='TikTok'" class="mt-2 mb-4">
+                    <iframe
+                        class="embed-responsive-item min-h-[46em]"
+                        scrolling="no"
+                        frameborder="no"
+                        width="100%"
+                        allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture"
+                        :src="extractVideoId(item.sectionFields.tiktokUrl)"
+                    ></iframe>
+                </div>
+                <!-- Mail signup -->
+                <div v-if="item.section.name=='Mail signup'" class="mt-2 mb-4">
+                    <div class="flex justify-center mt-2">
+                        <button type="button"
+                            class="text-white bg-blue-700 hover:bg-blue-800 
+                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            font-medium rounded-full text-md px-5 py-2.5 
+                            text-center mr-2 mb-2 dark:bg-blue-600 w-full
+                            dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            :style="{color: item.buttonTextColor,
+                                'background-color': item.buttonBgColor
+                            }">
+                            <font-awesome-icon 
+                                v-if="item.sectionFields.buttonIcon" 
+                                :icon="item.sectionFields.buttonIcon" 
+                                class="mt-0.5"/>
+                            {{item.sectionFields.name}}
+                        </button>
+                    </div>
+                </div>
+                <!-- WhatsApp -->
+                <div v-if="item.section.name=='WhatsApp'" class="mt-2 mb-4">
+                    <img v-if="item.sectionFields.type=='image'" 
+                        :src="item.sectionFields.typeContentImage.includes('biolink') 
+                        ? helper.applink + item.sectionFields.typeContentImage 
+                        : item.sectionFields.typeContentImage"
+                        class="w-32 h-32 mx-auto rounded-full"/>
+                    <div v-if="item.sectionFields.type=='video'">
+                        <div v-if="item.sectionFields.typeContentVideo == 'youtube' && item.sectionFields.typeContentVideoUrl" class="mt-6 mx-auto">
+                            <iframe :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" frameborder="0" width="100%" height="232"></iframe>
+                        </div>
+                        <div v-if="item.sectionFields.typeContentVideo == 'vimeo' && item.sectionFields.typeContentVideoUrl" class="mt-0 mx-auto">
+                            <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" 
+                                width="100%" height="232" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <h1 class="font-bold text-3xl text-center" 
+                        :style="{color: item.sectionFields.titleColor}">
+                        {{item.sectionFields.title}}
+                    </h1>
+                    <p class="mt-2 text-center font-semibold" 
+                        :style="{color: item.sectionFields.titleColor}"
+                        v-html="item.sectionFields.description"></p>
+                    <div v-if="item.sectionFields.whatsappNumber" class="flex justify-center mt-2">
+                        <a :href="`https://wa.me/${item.sectionFields.whatsappNumber}`" 
+                            target="_blank"
+                            class="text-white bg-blue-700 hover:bg-blue-800 
+                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            font-medium rounded-full text-md px-5 py-2.5 
+                            text-center mr-2 mb-2 dark:bg-blue-600 w-full
+                            dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            :style="{color: item.buttonTextColor,
+                                'background-color': item.buttonBgColor
+                            }">
+                            {{item.buttonText}}
+                        </a>
+                    </div>
+                    
+                </div>
+                <!-- FAQ -->
+                <div v-if="item.section.name=='FAQ'" class="mt-2 mb-4">
 
+                </div>
+                <!-- GoogleReview -->
+                <div v-if="item.section.name=='GoogleReview'" class="mt-2 mb-4">
+
+                </div>
+                <!-- Calendly -->
+                <div v-if="item.section.name=='Calendly'" class="mt-2 mb-4">
+                    <h1 class="font-bold text-3xl text-center" 
+                        :style="{color: item.sectionFields.titleColor}">
+                        {{item.sectionFields.title}}
+                    </h1>
+                    <p class="mt-2 text-center font-semibold" 
+                        :style="{color: item.sectionFields.titleColor}"
+                        v-html="item.sectionFields.description"></p>
+                    <div v-if="item.sectionFields.calendlyLink" class="flex justify-center mt-2">
+                        <button type="button" 
+                            @click="openExternalLink(item.sectionFields.calendlyLink)"
+                            class="text-white bg-blue-700 hover:bg-blue-800 
+                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            font-medium rounded-full text-md px-5 py-2.5 
+                            text-center mr-2 mb-2 dark:bg-blue-600 w-full
+                            dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            :style="{color: item.buttonTextColor,
+                                'background-color': item.buttonBgColor
+                            }">
+                            {{item.buttonText}}
+                        </button>
+                    </div>
+                </div>
+                <!-- Lead Gen -->
+                <div v-if="item.section.name=='Lead Generation'" class="mt-2 mb-4">
+                    <div class="flex justify-center mt-2">
+                        <button type="button"
+                            class="text-white bg-blue-700 hover:bg-blue-800 
+                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            font-medium rounded-full text-md px-5 py-2.5 
+                            text-center mr-2 mb-2 dark:bg-blue-600 w-full
+                            dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            :style="{color: item.buttonTextColor,
+                                'background-color': item.buttonBgColor
+                            }">
+                            {{item.buttonText}}
+                        </button>
+                    </div>
                 </div>
                 <!-- Link -->
                 <div v-if="item.section.name=='Link'" class="mt-2 mb-4">
@@ -136,15 +323,15 @@ let custom = ref(props.customs)
 
 watch(() => props.settings, (newVal, oldVal) => {
     setting.value = newVal
-});
+}, {deep: true});
 
 watch(() => props.sections, (newVal, oldVal) => {
     section.value = newVal
-});
+}, {deep: true});
 
 watch(() => props.customs, (newVal, oldVal) => {
     custom.value = newVal
-});
+}, {deep: true});
 
 function openExternalLink(link) {
     window.open(link);
@@ -184,6 +371,9 @@ function extractVideoId(video) {
     }else if(video.includes('twitch')) {
         video = video.replace("https://www.twitch.tv/","");
         videoURL.value = `https://player.twitch.tv/?channel=${video}&autoplay=false&parent=${window.location.host}`
+    }else if(video.includes('tiktok')) {
+        video = video.split('/')[5];
+        videoURL.value = `https://www.tiktok.com/embed/${video}`
     }
 
     return videoURL.value;
