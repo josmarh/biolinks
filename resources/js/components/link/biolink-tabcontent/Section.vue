@@ -1,101 +1,108 @@
 <template>
-    <div>
-        <biolink-section-accordion
-            v-for="item in model" :key="item.id"
-            :title="item.section.name"
-            :data="item">
-            <!-- accordion body -->
-            <lead-generation
-                v-if="item.section.name == 'Lead Generation'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <Link 
-                v-if="item.section.name == 'Link'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <Fbgroup 
-                v-if="item.section.name == 'Facebook Group'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <TextBlock 
-                v-if="item.section.name == 'Text Block'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <Soundcloud
-                v-if="item.section.name == 'Soundcloud'"
-                :data="item"
-                @reload-settings="reloadSettings" 
-            />
-            <Youtube
-                v-if="item.section.name == 'Youtube'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <Twitch
-                v-if="item.section.name == 'Twitch'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <Vimeo
-                v-if="item.section.name == 'Vimeo'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <Spotify
-                v-if="item.section.name == 'Spotify'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <TikTok
-                v-if="item.section.name == 'TikTok'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <MailSignup
-                v-if="item.section.name == 'Mail signup'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <Whatsapp
-                v-if="item.section.name == 'WhatsApp'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <Faq
-                v-if="item.section.name == 'FAQ'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <Calendly
-                v-if="item.section.name == 'Calendly'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <Clubhouse
-                v-if="item.section.name == 'Clubhouse'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <HtmlJsBlock
-                v-if="item.section.name == 'HtmlJsBlock'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-            <GoogleReview
-                v-if="item.section.name == 'GoogleReview'"
-                :data="item"
-                @reload-settings="reloadSettings"
-            />
-        </biolink-section-accordion>
-    </div>
+    <draggable v-model="model"
+        @start="drag=true" 
+        @end="drag=false"
+        @update="onUpdate"
+        item-key="id">
+        <template #item="{element}">
+            <biolink-section-accordion 
+                :title="element.section.name"
+                :data="element">
+                <lead-generation
+                    v-if="element.section.name == 'Lead Generation'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <Link 
+                    v-if="element.section.name == 'Link'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <Fbgroup 
+                    v-if="element.section.name == 'Facebook Group'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <TextBlock 
+                    v-if="element.section.name == 'Text Block'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <Soundcloud
+                    v-if="element.section.name == 'Soundcloud'"
+                    :data="element"
+                    @reload-settings="reloadSettings" 
+                />
+                <Youtube
+                    v-if="element.section.name == 'Youtube'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <Twitch
+                    v-if="element.section.name == 'Twitch'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <Vimeo
+                    v-if="element.section.name == 'Vimeo'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <Spotify
+                    v-if="element.section.name == 'Spotify'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <TikTok
+                    v-if="element.section.name == 'TikTok'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <MailSignup
+                    v-if="element.section.name == 'Mail signup'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <Whatsapp
+                    v-if="element.section.name == 'WhatsApp'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <Faq
+                    v-if="element.section.name == 'FAQ'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <Calendly
+                    v-if="element.section.name == 'Calendly'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <Clubhouse
+                    v-if="element.section.name == 'Clubhouse'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <HtmlJsBlock
+                    v-if="element.section.name == 'HtmlJsBlock'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <GoogleReview
+                    v-if="element.section.name == 'GoogleReview'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+            </biolink-section-accordion>
+        </template>
+    </draggable>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router';
+import { notify } from 'notiwind';
+import draggable from 'vuedraggable'
 import BiolinkSectionAccordion from '../BiolinkSectionAccordion.vue';
 import LeadGeneration from '../section-accordion-body/LeadGeneration.vue'
 import Link from '../section-accordion-body/Link.vue';
@@ -114,7 +121,9 @@ import Calendly from '../section-accordion-body/Calendly.vue';
 import Clubhouse from '../section-accordion-body/Clubhouse.vue';
 import HtmlJsBlock from '../section-accordion-body/HtmlJsBlock.vue'
 import GoogleReview from '../section-accordion-body/GoogleReview.vue';
+import biolinksection from '../../../store/biolink-section'
 
+const route = useRoute()
 const props = defineProps({
     data: Object
 });
@@ -122,6 +131,7 @@ const props = defineProps({
 const emit = defineEmits(['reloadSettings'])
 
 let model = ref(props.data)
+let modelUpdate = ref([])
 
 watch(() => props.data, (newVal, oldVal) => {
     model.value = newVal
@@ -129,6 +139,47 @@ watch(() => props.data, (newVal, oldVal) => {
 
 function reloadSettings() {
     emit('reloadSettings')
+}
+
+function onUpdate(moved) {
+    for(const [i, v] of model.value.entries()) {
+        modelUpdate.value.push({
+            id: v.section.id,
+            pos: i
+        })
+    }
+    setTimeout(() => {
+        updateSectionPosition();
+    }, 1500);
+}
+
+function updateSectionPosition() {
+    biolinksection
+        .dispatch('updateSectionPosition', {
+            linkId: route.params.id,
+            position: JSON.stringify(modelUpdate.value)
+        })
+        .then((res) => {
+            emit('reloadSettings')
+        })
+        .catch((err) => {
+            let errMsg;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message"))
+                        errMsg = err.response.data.message;
+                    else
+                        errMsg = err.response.data.error;
+                }
+            }else {
+                errMsg = err;
+            }
+            notify({
+                group: "error",
+                title: "Error",
+                text: errMsg
+            }, 4000);
+        })
 }
 </script>
 

@@ -48,10 +48,10 @@
                         />
                     </div>
                     <div v-if="currentTab==='section'">
-                        <Section :data="sectionSettings.data" @reload-settings="reloadSettings" />
+                        <Section :data="sectionSettings.data" @reload-settings="reloadSettings"/>
                     </div>
                     <div v-if="currentTab==='custom'">
-                        <custom :data="customSettings.data" @reload-settings="reloadSettings" />
+                        <custom :data="customSettings.data" @reload-settings="reloadSettings"/>
                     </div>
                 </div>
             </div>

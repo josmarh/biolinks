@@ -70,6 +70,7 @@ Route::middleware('auth:sanctum')->group(function() {
             Route::get('/section/{id}', [BiolinkSectionController::class, 'show']);
             Route::delete('/section/{id}', [BiolinkSectionController::class, 'delete']);
             Route::put('/section/status/{id}', [BiolinkSectionController::class, 'updateStatus']);
+            Route::post('/section/position', [BiolinkSectionController::class, 'updateSectionPosition']);
         });
     });
 

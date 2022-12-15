@@ -47,6 +47,12 @@ const biolinksection = createStore({
                     return data;
                 })
         },
+        updateSectionPosition({}, payload) {
+            return axiosClient.post(`/link/biolink/section/position`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setSections: (state, data) => {

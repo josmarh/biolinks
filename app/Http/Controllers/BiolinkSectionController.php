@@ -15,7 +15,11 @@ class BiolinkSectionController extends Controller
 
     public function index(Request $request, $id)
     {
-        $section = BioLinkSection::where('link_id', $id)->inRandomOrder()->with('section')->get();
+        $section = BioLinkSection::where('bl_biolink_sections.link_id', $id)
+            ->join('bl_biolink_section_settings as sect','bl_biolink_sections.section_id','=','sect.id')
+            ->with('section')
+            ->orderBy('sect.section_position','asc')
+            ->get();
 
         return BiolinkSectionResource::collection($section);
     }
@@ -113,5 +117,18 @@ class BiolinkSectionController extends Controller
             'data' => new BiolinkSectionResource($status),
             'status_code' => 201
         ], 201);
+    }
+
+    public function updateSectionPosition(Request $request)
+    {
+        $data = json_decode($request->position);
+
+        foreach($data as $pos) {
+            BiolinkSectionSetting::where('link_id', $request->linkId)
+                ->where('id', $pos->id)
+                ->update(['section_position' => $pos->pos]);
+        }
+
+        return response(['success' => true]);
     }
 }

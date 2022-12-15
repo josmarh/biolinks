@@ -60,7 +60,7 @@
                 </label>
                 <div class="flex">
                     <input type="text" :id="'more-question-'+i" 
-                    v-model="model.sectionFields.moreFaq[i].qestion"
+                    v-model="model.sectionFields.moreFaq[i].question"
                     class="rounded-none bg-gray-50 
                     border text-gray-900 focus:ring-blue-500 
                     focus:border-blue-500 block flex-1 min-w-0 

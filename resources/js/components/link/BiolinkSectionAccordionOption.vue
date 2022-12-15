@@ -11,7 +11,7 @@
                         text-sm px-0 py-2.5 mr-2 capitalize
                         dark:bg-gray-600 dark:hover:bg-gray-700 
                         focus:outline-none dark:focus:ring-gray-800">
-                        <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" class="mt-1.5"/>
+                        <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" class="mt-1.5 text-gray-600"/>
                     </button>
                 </div>
             </MenuButton>

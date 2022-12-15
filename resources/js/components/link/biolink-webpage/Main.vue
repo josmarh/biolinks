@@ -88,7 +88,7 @@
                         <button type="button" 
                             @click="openExternalLink(item.sectionFields.clubhouseLink)"
                             class="text-white bg-blue-700 hover:bg-blue-800 
-                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            focus:outline-none focus:ring-0 focus:ring-blue-300 
                             font-medium rounded-full text-md px-5 py-2.5 
                             text-center mr-2 mb-2 dark:bg-blue-600 w-full
                             dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -123,7 +123,7 @@
                         <button type="button" 
                             @click="openExternalLink(item.sectionFields.link)"
                             class="text-white bg-blue-700 hover:bg-blue-800 
-                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            focus:outline-none focus:ring-0 focus:ring-blue-300 
                             font-medium rounded-full text-md px-5 py-2.5 
                             text-center mr-2 mb-2 dark:bg-blue-600 w-full
                             dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -161,7 +161,7 @@
                         <button type="button"
                             @click="openExternalLink(item.sectionFields.fbGroupLink)"
                             class="text-white bg-blue-700 hover:bg-blue-800 
-                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            focus:outline-none focus:ring-0 focus:ring-blue-300 
                             font-medium rounded-full text-md px-5 py-2.5 
                             text-center mr-2 mb-2 dark:bg-blue-600 w-full
                             dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -188,7 +188,7 @@
                     <div class="flex justify-center mt-2">
                         <button type="button"
                             class="text-white bg-blue-700 hover:bg-blue-800 
-                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            focus:outline-none focus:ring-0 focus:ring-blue-300 
                             font-medium rounded-full text-md px-5 py-2.5 
                             text-center mr-2 mb-2 dark:bg-blue-600 w-full
                             dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -230,7 +230,7 @@
                         <a :href="`https://wa.me/${item.sectionFields.whatsappNumber}`" 
                             target="_blank"
                             class="text-white bg-blue-700 hover:bg-blue-800 
-                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            focus:outline-none focus:ring-0 focus:ring-blue-300 
                             font-medium rounded-full text-md px-5 py-2.5 
                             text-center mr-2 mb-2 dark:bg-blue-600 w-full
                             dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -240,15 +240,6 @@
                             {{item.buttonText}}
                         </a>
                     </div>
-                    
-                </div>
-                <!-- FAQ -->
-                <div v-if="item.section.name=='FAQ'" class="mt-2 mb-4">
-
-                </div>
-                <!-- GoogleReview -->
-                <div v-if="item.section.name=='GoogleReview'" class="mt-2 mb-4">
-
                 </div>
                 <!-- Calendly -->
                 <div v-if="item.section.name=='Calendly'" class="mt-2 mb-4">
@@ -263,7 +254,7 @@
                         <button type="button" 
                             @click="openExternalLink(item.sectionFields.calendlyLink)"
                             class="text-white bg-blue-700 hover:bg-blue-800 
-                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            focus:outline-none focus:ring-0 focus:ring-blue-300 
                             font-medium rounded-full text-md px-5 py-2.5 
                             text-center mr-2 mb-2 dark:bg-blue-600 w-full
                             dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -279,7 +270,7 @@
                     <div class="flex justify-center mt-2">
                         <button type="button"
                             class="text-white bg-blue-700 hover:bg-blue-800 
-                            focus:outline-none focus:ring-4 focus:ring-blue-300 
+                            focus:outline-none focus:ring-0 focus:ring-blue-300 
                             font-medium rounded-full text-md px-5 py-2.5 
                             text-center mr-2 mb-2 dark:bg-blue-600 w-full
                             dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -290,9 +281,60 @@
                         </button>
                     </div>
                 </div>
+                <!-- FAQ -->
+                <div v-if="item.section.name=='FAQ'" class="mt-2 mb-4">
+                    <h1 class="font-bold text-3xl text-center" 
+                        :style="{color: item.sectionFields.titleColor}">
+                        {{item.sectionFields.title}}
+                    </h1>
+                    <p class="mt-2 text-center font-semibold" 
+                        :style="{color: item.sectionFields.textColor}"
+                        v-html="item.sectionFields.text"></p>
+                    <!-- Accordion -->
+                    <div v-if="item.sectionFields.qestion">
+                        <div :style="{'background-color': item.sectionFields.qstnBgColor}">
+                            <list-accordion :title="item.sectionFields.qestion">
+                                <div>
+                                    {{item.sectionFields.answer}}
+                                </div>
+                            </list-accordion>
+                        </div>
+                        <div v-if="item.sectionFields.moreFaq.length">
+                            <div v-for="(faq, i) in item.sectionFields.moreFaq" :key="i"
+                                :style="{'background-color': item.sectionFields.qstnBgColor}">
+                                <list-accordion :title="faq.question">
+                                    <div>
+                                        {{faq.answer}}
+                                    </div>
+                                </list-accordion>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- GoogleReview -->
+                <div v-if="item.section.name=='GoogleReview'" class="mt-2 mb-4">
+
+                </div>
                 <!-- Link -->
                 <div v-if="item.section.name=='Link'" class="mt-2 mb-4">
-
+                    <div v-if="item.sectionFields.destinationURL" class="flex justify-center">
+                        <a :href="item.sectionFields.destinationURL" 
+                            target="_blank"
+                            class="text-white bg-blue-700 hover:bg-blue-800 
+                            focus:outline-none focus:ring-0 focus:ring-blue-300 
+                            font-medium rounded-full text-md px-5 py-2.5 
+                            text-center mr-2 mb-2 dark:bg-blue-600 w-full
+                            dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            :style="{color: item.buttonTextColor,
+                                'background-color': item.buttonBgColor
+                            }">
+                            <font-awesome-icon 
+                                v-if="item.sectionFields.buttonIcon" 
+                                :icon="item.sectionFields.buttonIcon" 
+                                class="mt-0.5"/>
+                            {{item.buttonText}}
+                        </a>
+                    </div>
                 </div>
 
             </div>
@@ -308,7 +350,8 @@
 <script setup>
 import { ref, watch } from 'vue';
 import helper from '../../../helpers';
-import Socials from './Socials.vue'
+import Socials from './Socials.vue';
+import ListAccordion from '../../link/LinkAccordion.vue'
 
 const props = defineProps({
     settings: Object,
