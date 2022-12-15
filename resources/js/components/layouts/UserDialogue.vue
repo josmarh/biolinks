@@ -30,6 +30,15 @@
                     </a>
                 </MenuItem>
                 <MenuItem v-slot="{active}">
+                    <router-link :to="{name: 'Account'}"
+                        :class="{'bg-gray-100': active}" 
+                        class="block py-2 px-4 text-sm text-gray-700 
+                        cursor-pointer inline-flex w-full">
+                        <font-awesome-icon icon="fa-solid fa-user" class="h-4 w-4 mr-2 mt-0.5" />
+                        Account
+                    </router-link>
+                </MenuItem>
+                <MenuItem v-slot="{active}">
                     <a @click="logout" 
                         :class="{'bg-gray-100': active}" 
                         class="block py-2 px-4 text-sm text-gray-700 

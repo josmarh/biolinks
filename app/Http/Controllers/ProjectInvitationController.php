@@ -44,4 +44,22 @@ class ProjectInvitationController extends Controller
             'status_code' => 201
         ], 201);
     }
+
+    public function getInvitationInfo($inviteId)
+    {
+        $invite = ProjectInvite::where('invite_id', $inviteId)->first();
+
+        if(!$invite) {
+            return response([
+                'error' => 'Invite expired or does not exists'
+            ], 422);
+        }
+
+        $data = [
+            'name' => $invite->invitee_name,
+            'email' => $invite->invitee_email
+        ];
+
+        return $data;
+    }
 }

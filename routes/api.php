@@ -32,8 +32,9 @@ Route::middleware('auth:sanctum')->group(function() {
         return $request->user();
     });
 
-    Route::put('/profile/update', [ProfileController::class, 'updateProfile']);
+    Route::put('/account/update', [ProfileController::class, 'updateAccount']);
     Route::put('/password/update', [ProfileController::class, 'updatePassword']);
+    Route::get('/user-logs/{email}', [ProfileController::class, 'loginHistory']);
     Route::post('/logout', [LogoutController::class, 'logout']);
 
     Route::get('/projects', [ProjectController::class, 'index']);
@@ -82,3 +83,5 @@ Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPassword']);
 Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword']);
+Route::get('/project/invitation/{id}', [ProjectInvitationController::class, 'getInvitationInfo']);
+Route::post('/register/{id}', [RegisterController::class, 'registerMember']);

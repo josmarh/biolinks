@@ -15,7 +15,7 @@ class ProjectInvite extends Model
         'invitee_name',
         'invitee_email',
         'invite_id',
-        'status',
+        'status', // 1: pending, 2: accepted, 0: removed
         'invited_by',
     ];
 

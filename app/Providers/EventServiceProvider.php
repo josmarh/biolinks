@@ -32,6 +32,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\BioLinkSectionCreated' => [
             'App\Listeners\createBiolinkSection',
         ],
+        'App\Events\UserLogin' => [
+            'App\Listeners\StoreUserLogin',
+        ],
     ];
 
     /**

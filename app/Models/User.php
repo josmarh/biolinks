@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Permission;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -58,5 +59,10 @@ class User extends Authenticatable
         }
 
         return $permissions;
+    }
+
+    public function getUserRole()
+    {
+        return Auth::user()->getRoleNames();
     }
 }

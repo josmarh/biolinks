@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Events\UserLogin;
 use Auth;
 
 class LoginController extends Controller
@@ -20,6 +21,12 @@ class LoginController extends Controller
         unset($credentials['remember']);
 
         if(!Auth::attempt($credentials, $remember)) {
+            event(new UserLogin([
+                'email' => $credentials['email'],
+                'ip' => request()->ip(),
+                'status' => 'failed'
+            ]));
+
             return response([
                 'error' => 'The provided credentials are not correct'
             ], 422);
@@ -29,9 +36,16 @@ class LoginController extends Controller
         
         $token = $user->createToken('main')->plainTextToken;
 
+        event(new UserLogin([
+            'email' => $credentials['email'],
+            'ip' => request()->ip(),
+            'status' => 'success'
+        ]));
+
         return response([
             'user' => $user,
             'token' => $token,
+            'membership' => $user->getUserRole(),
             'permissions' => $user->getAllPermissionsAttribute(),
         ]);
     }

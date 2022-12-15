@@ -13,16 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('bl_project_invites', function (Blueprint $table) {
+        Schema::create('bl_project_teams', function (Blueprint $table) {
             $table->id();
             $table->integer('project_id')->length(5);
-            $table->string('invitee_name');
-            $table->string('invitee_email');
-            $table->string('invite_id', 32);
+            $table->bigInteger('user_id');
             $table->smallInteger('status');
-            $table->bigInteger('invited_by');
             $table->timestamps();
-            $table->index(['project_id', 'invitee_email', 'invite_id']);
+            $table->index(['project_id', 'user_id']);
         });
     }
 
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bl_project_invites');
+        Schema::dropIfExists('bl_project_teams');
     }
 };

@@ -47,6 +47,12 @@ const project = createStore({
                     return data;
                 })
         },
+        getInvitationInfo({}, id) {
+            return axiosClient.get(`/project/invitation/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setProjects: (state, data) => {

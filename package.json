@@ -15,6 +15,7 @@
         "vite": "^3.0.0"
     },
     "dependencies": {
+        "@chenfengyuan/vue-countdown": "^2.1.0",
         "@chenfengyuan/vue-qrcode": "^2.0.0",
         "@fortawesome/fontawesome-svg-core": "^6.2.1",
         "@fortawesome/free-brands-svg-icons": "^6.2.1",
@@ -31,6 +32,7 @@
         "qrcode-vue3": "^1.4.17",
         "vue": "^3.2.45",
         "vue-color-kit": "^1.0.5",
+        "vue-countdown": "^1.0.4",
         "vue-loader": "^17.0.1",
         "vue-router": "^4.1.6",
         "vuedraggable": "^4.1.0",

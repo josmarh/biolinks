@@ -7,16 +7,27 @@ const store = createStore({
             data: JSON.parse(localStorage.getItem('userInfo')),
             token: localStorage.getItem('TOKEN'),
             permissions: localStorage.getItem('can'),
+            membership: localStorage.getItem('membership'),
         },
         countries: [],
         languages: [],
+        loginHistory: {
+            data: [],
+            meta: {},
+            links: {}
+        }
     },
     getters: {},
     actions: {
-        register({ commit }, user) {
+        register({ }, user) {
             return axiosClient.post('/register', user)
                 .then(({data}) => {
-                    commit('setUser', data)
+                    return data;
+                })
+        },
+        registerMember({ }, user) {
+            return axiosClient.post(`/register/${user.invitationId}`, user)
+                .then(({data}) => {
                     return data;
                 })
         },
@@ -27,8 +38,8 @@ const store = createStore({
                     return data;
                 })
         },
-        updateProfile({ commit }, user) {
-            return axiosClient.put(`/profile/update`, user)
+        updateAccount({ commit }, user) {
+            return axiosClient.put(`/account/update`, user)
             .then(({data}) => {
                 commit('updateProfile', data)
                 return data;
@@ -73,6 +84,20 @@ const store = createStore({
                     return data;
                 })
         },
+        getLoginHistory({ commit }, email) {
+            return axiosClient.get(`/user-logs/${email}`)
+                .then(({data}) => {
+                    commit('setLoginHistory', data)
+                    return data;
+                })
+        },
+        getLoginHistoryPage({ commit }, {url = null} = {}) {
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setLoginHistory', data)
+                    return data;
+                })
+        },
     },
     mutations: {
         setUser: (state, userData) => {
@@ -82,10 +107,11 @@ const store = createStore({
             localStorage.setItem('userInfo', JSON.stringify(userData.user));
             localStorage.setItem('TOKEN', userData.token);
             localStorage.setItem('can', userData.permissions);
+            localStorage.setItem('membership', userData.membership[0]);
         },
-        updateProfile: (state, userInfo) => {
+        updateProfile: (state, userData) => {
             state.user.data = userData.user
-            localStorage.setItem('userInfo', JSON.stringify(userInfo.user));
+            localStorage.setItem('userInfo', JSON.stringify(userData.user));
         },
         logout: (state, userInfo) => {
             state.user = null;
@@ -96,6 +122,9 @@ const store = createStore({
         },
         setLanguages: (state, data) => {
             state.languages = data;
+        },
+        setLoginHistory: (state, data) => {
+            state.loginHistory = data;
         },
     },
     modules: {}

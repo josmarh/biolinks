@@ -10,16 +10,19 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
-        $user = $request->user();
+        $userId = $request->user()->id;
 
-        $projects = Project::where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
+        $projects = Project::leftjoin('bl_project_teams as pt','bl_projects.custom_id','=','pt.project_id')
+            ->where('bl_projects.user_id', $userId)
+            ->orWhere('pt.user_id', $userId)
+            ->where('pt.status', 1)
+            ->orderBy('bl_projects.id', 'desc')
             ->get();
 
         return ProjectResource::collection($projects);
     }
 
-    public function projectsCollaborate()
+    public function projectsCollaborate($id)
     {
 
     }

@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Rules\MatchOldPassword;
+use App\Models\LoginHistory;
+use App\Http\Resources\LoginHistoryResource;
 
 class ProfileController extends Controller
 {
-    public function updateProfile(Request $request)
+    public function updateAccount(Request $request)
     {
         $user = $request->user();
 
@@ -24,7 +26,7 @@ class ProfileController extends Controller
 
         return response([
             'user' => $user,
-            'status' => 'Personal Information Updated.'
+            'message' => 'Personal Information Updated.'
         ]);
     }
 
@@ -41,8 +43,16 @@ class ProfileController extends Controller
         $user->update(['password' => bcrypt($request->new_password)]);
 
         return response([
-            'user' => $user,
-            'status' => 'Password Updated.'
+            'message' => 'Password Updated.'
         ]);         
+    }
+
+    public function loginHistory($email)
+    {
+        $logs = LoginHistory::where('email', $email)
+            ->orderBy('id', 'desc')
+            ->paginate(12);
+
+        return LoginHistoryResource::collection($logs);
     }
 }
