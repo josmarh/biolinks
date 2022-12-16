@@ -15,6 +15,14 @@ use App\Http\Controllers\LinkSettingController;
 use App\Http\Controllers\BiolinkSettingController;
 use App\Http\Controllers\HelperController;
 use App\Http\Controllers\BiolinkSectionController;
+use App\Http\Controllers\Admin\UserManagerController;
+use App\Http\Controllers\Admin\ResellerManagerController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\RolePermissionsController;
+use App\Http\Controllers\Admin\LogsController;
+use App\Http\Controllers\Admin\AdminProjectController;
+use App\Http\Controllers\Admin\AdminProjectLinkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +83,45 @@ Route::middleware('auth:sanctum')->group(function() {
         });
     });
 
+    Route::get('/roles', [RoleController::class, 'index']);
+    Route::group(['prefix' => 'role'], function () {
+        Route::post('/', [RoleController::class, 'store']);
+        Route::put('/{id}', [RoleController::class, 'update']);
+        Route::delete('/{id}', [RoleController::class, 'delete']);
+    });
+
+    Route::get('/permissions', [PermissionController::class, 'index']);
+    Route::group(['prefix' => 'permission'], function () {
+        Route::post('/', [PermissionController::class, 'store']);
+        Route::put('/{id}', [PermissionController::class, 'update']);
+        Route::delete('/{id}', [PermissionController::class, 'delete']);
+    });
+
+    Route::get('/role-permission/{roleId}', [RolePermissionsController::class, 'rolePermissions']);
+    Route::post('/assign-permissions', [RolePermissionsController::class, 'assignPermissionsToRole']);
+
+    Route::get('/users', [UserManagerController::class, 'index']);
+    Route::group(['prefix' => 'user'], function () {
+        Route::post('/', [UserManagerController::class, 'store']);
+        Route::put('/{id}', [UserManagerController::class, 'update']);
+        Route::put('/block/{id}', [UserManagerController::class, 'block']);
+        Route::delete('/{id}', [UserManagerController::class, 'delete']);
+    });
+
+    Route::group(['prefix' => 'reseller'], function () {
+        Route::get('/users', [ResellerManagerController::class, 'index']);
+        Route::get('/roles', [ResellerManagerController::class, 'resellerRole']);
+        Route::group(['prefix' => 'user'], function () {
+            Route::post('/', [ResellerManagerController::class, 'store']);
+            Route::put('/{id}', [ResellerManagerController::class, 'update']);
+            Route::put('/block/{id}', [ResellerManagerController::class, 'block']);
+            Route::delete('/{id}', [ResellerManagerController::class, 'delete']);
+        });
+    });
+
+    Route::get('/admin/projects', [AdminProjectController::class, 'index']);
+    Route::get('/admin/project-links', [AdminProjectLinkController::class, 'index']);
+    Route::get('/admin/login-history', [LogsController::class, 'getLoginHistory']);
     Route::get('/countries', [HelperController::class, 'country']);
     Route::get('/languages', [HelperController::class, 'language']);
 });

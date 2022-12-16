@@ -1,4 +1,5 @@
 import store from "./store";
+import adminStore from "./store/admin-store";
 import { notify } from 'notiwind'
 
 const helper = {
@@ -47,6 +48,28 @@ const helper = {
                     title: "Error",
                     text: errMsg
                 }, 4000);
+            })
+    },
+    getRoles() {
+        adminStore
+            .dispatch('getRoles')
+            .then((res) => {})
+            .catch((err) => {           
+                if(err.response) {
+                    if (err.response.data) {
+                        let errMsg;
+                        if (err.response.data.hasOwnProperty("message")) {
+                            errMsg = err.response.data.message
+                        } else {
+                            errMsg = err.response.data.error
+                        }
+                        notify({
+                            group: "error",
+                            title: "Error",
+                            text: errMsg
+                        }, 4000)
+                    }
+                }
             })
     }
 };

@@ -32,7 +32,8 @@ class StoreUserLogin
         LoginHistory::create([
             'email' => $userDetails['email'], 
             'ip' => $userDetails['ip'], 
-            'status' => $userDetails['status']
+            'status' => $userDetails['status'],
+            'description' => $userDetails['description'],
         ]);
     }
 }

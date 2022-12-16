@@ -22,37 +22,14 @@
                     md:font-medium md:border-0 md:bg-white 
                     dark:bg-gray-800 md:dark:bg-gray-900 
                     dark:border-gray-700">
-                    <li>
-                        <router-link :to="{name: 'Dashboard'}" 
-                            :class="[$route.name == 'Dashboard'
+                    <li v-for="(item, i) in navigator" :key="i">
+                        <router-link :to="{name: item.to.name}" 
+                            :class="[$route.name == item.to.name
                             ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
                             : '',
                             'block py-2 pl-3 pr-4 md:p-0 dark:text-white']" 
                             aria-current="page">
-                            Dashboard
-                        </router-link>
-                    </li>
-                    <li>
-                        <a href="#" class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Tools</a>
-                    </li>
-                    <li>
-                        <router-link :to="{name: 'Users'}" 
-                            :class="[$route.name == 'Users'
-                            ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
-                            : '',
-                            'block py-2 pl-3 pr-4 md:p-0 dark:text-white']" 
-                            aria-current="page">
-                            Admin
-                        </router-link>
-                    </li>
-                    <li class="hidden">
-                        <router-link :to="{name: 'Reseller'}" 
-                            :class="[$route.name == 'Reseller'
-                            ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
-                            : '',
-                            'block py-2 pl-3 pr-4 md:p-0 dark:text-white']" 
-                            aria-current="page">
-                            Reseller
+                            {{item.label}}
                         </router-link>
                     </li>
                     
@@ -64,6 +41,16 @@
 
 <script setup>
 import UserDialogue from './UserDialogue.vue'
+
+const navigator = [
+    {label: 'Users', to: {name: 'Users'}},
+    {label: 'Projects', to: {name: 'Projects'}},
+    {label: 'Biolinks', to: {name: 'Biolinks'}},
+    {label: 'Roles', to: {name: 'Roles'}},
+    {label: 'Permission', to: {name: 'Permission'}},
+    // {label: 'Settings', to: {name: 'Settings'}},
+    {label: 'Login History', to: {name: 'LoginHistory'}},
+]
 </script>
 
 <style>

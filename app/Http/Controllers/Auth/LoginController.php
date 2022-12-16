@@ -24,7 +24,8 @@ class LoginController extends Controller
             event(new UserLogin([
                 'email' => $credentials['email'],
                 'ip' => request()->ip(),
-                'status' => 'failed'
+                'status' => 'failed',
+                'description' => 'Incorrect credentials'
             ]));
 
             return response([
@@ -39,7 +40,8 @@ class LoginController extends Controller
         event(new UserLogin([
             'email' => $credentials['email'],
             'ip' => request()->ip(),
-            'status' => 'success'
+            'status' => 'success',
+            'description' => 'Authentication verified successfully'
         ]));
 
         return response([

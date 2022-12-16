@@ -3,9 +3,10 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\UserResource;
 use Carbon\Carbon;
 
-class LoginHistoryResource extends JsonResource
+class AdminProjectResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +17,11 @@ class LoginHistoryResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'email' => $this->email,
-            'ip' => $this->ip,
-            'status' => $this->status,
-            'description' => $this->description,
-            'date' => Carbon::create($this->created_at)->toDayDateTimeString()
+            'name' => $this->name,
+            'links' => $this->links,
+            'collaborators' => $this->collaborators,
+            'owner' => $this->owner,
+            'createdAt' => Carbon::create($this->created_at)->toDayDateTimeString()
         ];
     }
 }

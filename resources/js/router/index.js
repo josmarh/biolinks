@@ -13,6 +13,14 @@ import Dashboard from '../views/Dashboard.vue'
 import Project from '../views/Project.vue'
 import Link from '../views/Link.vue'
 import Qrcode from '../views/Qrcode.vue'
+import Users from '../views/admin/Users.vue'
+import Reseller from '../views/admin/Reseller.vue'
+import Roles from '../views/admin/Roles.vue'
+import Permission from '../views/admin/Permission.vue'
+import Biolinks from '../views/admin/Biolinks.vue'
+import LoginHistory from '../views/admin/LoginHistory.vue'
+import Settings from '../views/admin/Settings.vue'
+import Projects from '../views/admin/Projects.vue'
 import store from '../store'
 
 const routes = [
@@ -39,6 +47,22 @@ const routes = [
             {path: '/account', name: 'Account', component: Account},
             {path: '/project/:id', name: 'Project', component: Project},
             {path: '/link/:id', name: 'Link', component: Link},
+            {path: '/reseller/users', name: 'Reseller', component: Reseller},
+        ]
+    },
+    {
+        path: '/',
+        redirect: '/admin/users',
+        component: AdminLayout,
+        meta: {requiresAuth: true},
+        children: [
+            {path: '/admin/users', name: 'Users', component: Users},
+            {path: '/admin/roles', name: 'Roles', component: Roles},
+            {path: '/admin/permissions', name: 'Permission', component: Permission},
+            {path: '/admin/biolinks', name: 'Biolinks', component: Biolinks},
+            {path: '/admin/login-history', name: 'LoginHistory', component: LoginHistory},
+            {path: '/admin/settings', name: 'Settings', component: Settings},
+            {path: '/admin/projects', name: 'Projects', component: Projects},
         ]
     },
     {path: '/:linkid/qr', name: 'Qrcode', component: Qrcode},

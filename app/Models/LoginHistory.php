@@ -11,6 +11,6 @@ class LoginHistory extends Model
 
     protected $table = 'bl_login_history';
     protected $fillable = [
-        'email', 'ip', 'status'
+        'email', 'ip', 'status', 'description'
     ];
 }
