@@ -59,11 +59,11 @@ watch(() => props.settings, (newVal, oldVal) => {
 }, {deep: true});
 
 watch(() => props.sectionSettings, (newVal, oldVal) => {
-    section.value = newVal
+    section.value = newVal;
 }, {deep: true});
 
 watch(() => props.customSettings, (newVal, oldVal) => {
-    custom.value = newVal
+    custom.value = newVal;
 }, {deep: true});
 </script>
 

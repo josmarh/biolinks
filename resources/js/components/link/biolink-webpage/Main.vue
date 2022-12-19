@@ -24,11 +24,12 @@
 
         <!-- Video Display -->
         <div v-if="setting.video.type == 'youtube' && setting.video.link" class="mt-6 mx-auto">
-            <iframe :src="extractVideoId(setting.video.link)" frameborder="0" width="340" height="300"></iframe>
+            <iframe :src="extractVideoId(setting.video.link)" frameborder="0" 
+            width="340" height="300" id="video-display"></iframe>
         </div>
         <div v-if="setting.video.type == 'vimeo' && setting.video.link" class="mt-0 mx-auto">
             <iframe title="vimeo-player" :src="extractVideoId(setting.video.link)" 
-                width="340" height="300" frameborder="0" allowfullscreen></iframe>
+                width="340" height="300" frameborder="0" id="video-display2" allowfullscreen></iframe>
         </div>
 
         <!-- Section views -->
@@ -36,28 +37,33 @@
             <div v-for="item in section" :key="item.id">
                 <!-- Vimeo -->
                 <div v-if="item.section.name=='Vimeo'" class="mt-2 mb-4">
-                    <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.vimeoUrl)" 
-                        width="100%" height="200" frameborder="0" allowfullscreen></iframe>
+                    <!-- <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.vimeoUrl)" 
+                        width="100%" height="200" frameborder="0" allowfullscreen></iframe> -->
+                    <video-display :url="item.sectionFields.vimeoUrl" fheight="232"/>
                 </div>
                 <!-- Youtube -->
                 <div v-if="item.section.name=='Youtube'" class="mt-2 mb-4">
-                    <iframe :src="extractVideoId(item.sectionFields.youtubeUrl)" 
-                        frameborder="0" width="100%" height="230"></iframe>
+                    <!-- <iframe :src="extractVideoId(item.sectionFields.youtubeUrl)" 
+                        frameborder="0" width="100%" height="230"></iframe> -->
+                    <video-display :url="item.sectionFields.youtubeUrl" fheight="232"/>
                 </div>
                 <!-- Spotify -->
                 <div v-if="item.section.name=='Spotify'" class="mt-2 mb-4">
                     <div v-if="item.sectionFields.spotifyUrl.includes('show') || item.sectionFields.spotifyUrl.includes('episode')">
-                        <iframe :src="extractVideoId(item.sectionFields.spotifyUrl)" 
+                        <!-- <iframe :src="extractVideoId(item.sectionFields.spotifyUrl)" 
                             width="100%" height="232" frameborder="0" 
-                            allowtransparency="true" allow="encrypted-media"></iframe>
+                            allowtransparency="true" allow="encrypted-media"></iframe> -->
+                        <video-display :url="item.sectionFields.spotifyUrl" fheight="232"/>
                     </div>
                     <div v-if="item.sectionFields.spotifyUrl.includes('track') || item.sectionFields.spotifyUrl.includes('album')">
-                        <iframe scrolling="no" frameborder="no" v-if="item.sectionFields.spotifyUrl.includes('track')"
+                        <!-- <iframe scrolling="no" frameborder="no" v-if="item.sectionFields.spotifyUrl.includes('track')"
                             :src="extractVideoId(item.sectionFields.spotifyUrl)" 
-                            width="100%" style="height: 80px;"></iframe>
-                        <iframe scrolling="no" frameborder="no" v-if="item.sectionFields.spotifyUrl.includes('album')"
+                            width="100%" style="height: 80px;"></iframe> -->
+                         <video-display :url="item.sectionFields.spotifyUrl" fheight="232" v-if="item.sectionFields.spotifyUrl.includes('track')"/>
+                        <!-- <iframe scrolling="no" frameborder="no" v-if="item.sectionFields.spotifyUrl.includes('album')"
                             :src="extractVideoId(item.sectionFields.spotifyUrl)" 
-                            width="100%" style="height: 380px;"></iframe>
+                            width="100%" style="height: 380px;"></iframe> -->
+                        <video-display :url="item.sectionFields.spotifyUrl" fheight="380" v-if="item.sectionFields.spotifyUrl.includes('album')"/>
                     </div>
                 </div>
                 <!-- Soundcloud -->
@@ -67,13 +73,14 @@
                 </div>
                 <!-- Twitch -->
                 <div v-if="item.section.name=='Twitch'" class="mt-2 mb-4">
-                    <iframe
+                    <!-- <iframe
                         class="embed-responsive-item"
                         scrolling="no"
                         frameborder="no"
                         width="100%"
                         :src="extractVideoId(item.sectionFields.twitchUrl)"
-                    ></iframe>
+                    ></iframe> -->
+                    <video-display :url="item.sectionFields.twitchUrl" fheight=""/>
                 </div>
                 <!-- Clubhouse -->
                 <div v-if="item.section.name=='Clubhouse'" class="mt-2 mb-4">
@@ -108,11 +115,13 @@
                         class="w-32 h-32 mx-auto rounded-full"/>
                     <div v-if="item.sectionFields.type=='video'">
                         <div v-if="item.sectionFields.typeContentVideo == 'youtube' && item.sectionFields.typeContentVideoUrl" class="mt-6 mx-auto">
-                            <iframe :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" frameborder="0" width="100%" height="232"></iframe>
+                            <!-- <iframe :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" frameborder="0" width="100%" height="232"></iframe> -->
+                            <video-display :url="item.sectionFields.typeContentVideoUrl" fheight="232"/>
                         </div>
                         <div v-if="item.sectionFields.typeContentVideo == 'vimeo' && item.sectionFields.typeContentVideoUrl" class="mt-0 mx-auto">
-                            <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" 
-                                width="100%" height="232" frameborder="0" allowfullscreen></iframe>
+                            <!-- <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" 
+                                width="100%" height="232" frameborder="0" allowfullscreen></iframe> -->
+                            <video-display :url="item.sectionFields.typeContentVideoUrl" fheight="232"/>
                         </div>
                     </div>
                     <h1 class="font-bold text-3xl text-center" 
@@ -143,11 +152,13 @@
                         class="w-32 h-32 mx-auto rounded-full"/>
                     <div v-if="item.sectionFields.type=='video'">
                         <div v-if="item.sectionFields.typeContentVideo == 'youtube' && item.sectionFields.typeContentVideoUrl" class="mt-6 mx-auto">
-                            <iframe :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" frameborder="0" width="100%" height="232"></iframe>
+                            <!-- <iframe :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" frameborder="0" width="100%" height="232"></iframe> -->
+                            <video-display :url="item.sectionFields.typeContentVideoUrl" fheight="232"/>
                         </div>
                         <div v-if="item.sectionFields.typeContentVideo == 'vimeo' && item.sectionFields.typeContentVideoUrl" class="mt-0 mx-auto">
-                            <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" 
-                                width="100%" height="232" frameborder="0" allowfullscreen></iframe>
+                            <!-- <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" 
+                                width="100%" height="232" frameborder="0" allowfullscreen></iframe> -->
+                            <video-display :url="item.sectionFields.typeContentVideoUrl" fheight="232"/>
                         </div>
                     </div>
                     <h1 class="font-bold text-3xl text-center" 
@@ -174,14 +185,15 @@
                 </div>
                 <!-- TikTok -->
                 <div v-if="item.section.name=='TikTok'" class="mt-2 mb-4">
-                    <iframe
+                    <!-- <iframe
                         class="embed-responsive-item min-h-[46em]"
                         scrolling="no"
                         frameborder="no"
                         width="100%"
                         allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture"
                         :src="extractVideoId(item.sectionFields.tiktokUrl)"
-                    ></iframe>
+                    ></iframe> -->
+                    <video-display :url="item.sectionFields.tiktokUrl" fheight="" class="embed-responsive-item min-h-[46em]"/>
                 </div>
                 <!-- Mail signup -->
                 <div v-if="item.section.name=='Mail signup'" class="mt-2 mb-4">
@@ -212,11 +224,13 @@
                         class="w-32 h-32 mx-auto rounded-full"/>
                     <div v-if="item.sectionFields.type=='video'">
                         <div v-if="item.sectionFields.typeContentVideo == 'youtube' && item.sectionFields.typeContentVideoUrl" class="mt-6 mx-auto">
-                            <iframe :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" frameborder="0" width="100%" height="232"></iframe>
+                            <!-- <iframe :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" frameborder="0" width="100%" height="232"></iframe> -->
+                            <video-display :url="item.sectionFields.typeContentVideoUrl" fheight="232"/>
                         </div>
                         <div v-if="item.sectionFields.typeContentVideo == 'vimeo' && item.sectionFields.typeContentVideoUrl" class="mt-0 mx-auto">
-                            <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" 
-                                width="100%" height="232" frameborder="0" allowfullscreen></iframe>
+                            <!-- <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.typeContentVideoUrl)" 
+                                width="100%" height="232" frameborder="0" allowfullscreen></iframe> -->
+                            <video-display :url="item.sectionFields.typeContentVideoUrl" fheight="232"/>
                         </div>
                     </div>
                     <h1 class="font-bold text-3xl text-center" 
@@ -352,6 +366,7 @@ import { ref, watch } from 'vue';
 import helper from '../../../helpers';
 import Socials from './Socials.vue';
 import ListAccordion from '../../link/LinkAccordion.vue'
+import VideoDisplay from './VideoDisplay.vue';
 
 const props = defineProps({
     settings: Object,

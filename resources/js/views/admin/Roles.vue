@@ -159,7 +159,7 @@
                                     </div>
                                     <!-- no data view -->
                                     <div v-if="permissionsCheck == 3">
-                                        <NoContentFound />
+                                        <NoProjectContent/>
                                     </div>
                                     <div v-if="permissionsCheck == 2">
                                         <!-- Menu -->
