@@ -123,11 +123,11 @@
 
                 <span class="text-gray-500">Your link </span>
 
-                <a :href="`${applink}/${model.linkId}`" 
+                <a :href="`${applink}/w/${model.linkId}`" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     class="underline">
-                    {{applink}}/{{model.linkId}}
+                    {{applink}}/w/{{model.linkId}}
                 </a>
 
                 <!-- Copy to clipboard -->
@@ -180,7 +180,7 @@ function updateLinkStatus(ev) {
 function ccopy(data) {
     copy.value = 'fa-solid fa-clipboard-check';
 
-    navigator.clipboard.writeText(applink+'/'+data);
+    navigator.clipboard.writeText(applink+'/w/'+data);
 
     setTimeout(() => {
         copy.value = 'fa-solid fa-clipboard';

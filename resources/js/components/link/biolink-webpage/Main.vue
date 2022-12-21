@@ -24,12 +24,14 @@
 
         <!-- Video Display -->
         <div v-if="setting.video.type == 'youtube' && setting.video.link" class="mt-6 mx-auto">
-            <iframe :src="extractVideoId(setting.video.link)" frameborder="0" 
-            width="340" height="300" id="video-display"></iframe>
+            <!-- <iframe :src="extractVideoId(setting.video.link)" frameborder="0" 
+            width="340" height="300" id="video-display"></iframe> -->
+            <video-display :url="setting.video.link" fheight="232"/>
         </div>
         <div v-if="setting.video.type == 'vimeo' && setting.video.link" class="mt-0 mx-auto">
-            <iframe title="vimeo-player" :src="extractVideoId(setting.video.link)" 
-                width="340" height="300" frameborder="0" id="video-display2" allowfullscreen></iframe>
+            <!-- <iframe title="vimeo-player" :src="extractVideoId(setting.video.link)" 
+                width="340" height="300" frameborder="0" id="video-display2" allowfullscreen></iframe> -->
+            <video-display :url="setting.video.link" fheight="232"/>
         </div>
 
         <!-- Section views -->

@@ -41,11 +41,11 @@
                                 class="flex gap-2 text-gray-500 text-sm">
                                 <font-awesome-icon icon="fa-solid fa-link" class="mt-0.5" />
                                 
-                                <a :href="applink+'/'+item.linkId" 
+                                <a :href="applink+'/w/'+item.linkId" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     class="underline">
-                                    {{applink+'/'+item.linkId}}
+                                    {{applink+'/w/'+item.linkId}}
                                 </a>
                             </p>
                             <p v-else

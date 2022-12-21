@@ -53,17 +53,17 @@
                 
                 <!-- Accrodion -->
                 <div>
-                    <link-accordion title="Temporary URL" icon="fa-solid fa-clock">
+                    <link-accordion title="Schedule" icon="fa-solid fa-clock">
                         <TemporaryURL :data="linkSettings.tempURL" @update-link-setting="updateTempURL" />
                     </link-accordion>
 
-                    <link-accordion title="Protection" icon="fa-solid fa-user-shield" class="mt-4">
+                    <!-- <link-accordion title="Protection" icon="fa-solid fa-user-shield" class="mt-4">
                         <protection :data="linkSettings.protection" @update-link-setting="updateProtection" />
                     </link-accordion>
 
                     <link-accordion title="Targeting" icon="fa-solid fa-bullseye" class="mt-4">
                         <target :data="linkSettings.target" @update-link-setting="updateTarget" />
-                    </link-accordion>
+                    </link-accordion> -->
                 </div>
 
                 <button type="submit" 
@@ -97,7 +97,7 @@ const props = defineProps({
 const emit = defineEmits(['updateLinkInfo']);
 const now = new Date();
 
-let applink = `${window.location.protocol}//${window.location.host}/`;
+let applink = `${window.location.protocol}//${window.location.host}/w/`;
 let model = ref(props.data)
 let linkSettings = ref({
     tempURL: {

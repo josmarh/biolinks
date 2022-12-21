@@ -18,7 +18,7 @@
                             border-r-0 border-gray-300 
                             dark:bg-gray-600 dark:text-gray-400 
                             dark:border-gray-600">
-                            {{helper.applink}}
+                            {{helper.applink + 'w/'}}
                         </span>
                         <input type="text" id="shortUrl" v-model="model.linkId"
                             class="rounded-none bg-gray-50 

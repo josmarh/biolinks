@@ -13,7 +13,7 @@
             text-sm focus:ring-blue-500 focus:border-blue-500 
             block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 
             dark:placeholder-gray-400 dark:text-white" 
-            placeholder="••••••••" required>
+            placeholder="••••••••" >
             <showPassword v-if="model.password !=''" :elem="'password'"/>
         </div>
         <p class="flex gap-2 text-gray-500 text-sm">

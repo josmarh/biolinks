@@ -4,7 +4,7 @@
             <label for="schedule-temp-url" 
                 class="inline-flex relative items-center cursor-pointer">
                 <input type="checkbox"
-                    id="schedule-temp-url" 
+                    id="schedule-temp-url"
                     class="sr-only peer"
                     @change="updateScheduleURL($event)"
                     :checked="model.scheduleSwitch == 'yes' ? true : false">

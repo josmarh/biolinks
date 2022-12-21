@@ -14,4 +14,6 @@ use App\Http\Controllers\SPAController;
 |
 */
 
+Route::get('/w/{linkId}', [SPAController::class, 'biolinkPage'])->name('biolink-webpage');
+Route::post('/link-password/{settingId}', [SPAController::class, 'linkPasswordValidate'])->name('link-password.validate');
 Route::get('/{any}', [SPAController::class, 'index'])->where('any', '.*');
