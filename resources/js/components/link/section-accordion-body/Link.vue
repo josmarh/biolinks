@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent="updateLink" class="p-4">
         <!-- Link Type -->
-        <div class="mt-4">
+        <!-- <div class="mt-4">
             <label class="block mb-2 text-sm font-medium flex
                 text-gray-900 dark:text-white capitalize gap-2">
                 <font-awesome-icon icon="fa-solid fa-shuffle" class="mt-0.5" />
@@ -35,7 +35,7 @@
                     </label>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- Destination URL -->
         <div class="mt-4">
             <label for="destinationURL" 

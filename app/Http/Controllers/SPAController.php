@@ -33,7 +33,7 @@ class SPAController extends Controller
                 'pageBckg' => json_decode($settings->background_type_content),
                 'video' => json_decode($settings->video)
             ];
-
+            
             return view('biolinkpage.biolink', compact('settings','custom','section','jdecoded'));
         }else {
             $linkSetting = LinkSetting::where('link_id', $projectLink->id)->first();
@@ -44,6 +44,56 @@ class SPAController extends Controller
                 return view('biolinkpage.link', compact('projectLink','linkSetting'));
             }
         }
+    }
+
+    public function mailSignup(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|string|email',
+            'sectionId' => 'required|numeric'
+        ]);
+
+        $section = BioLinkSection::where('section_id', $data['sectionId'])->first();
+
+        if(!$section) {
+            return response([
+                'error' => 'Email could not be signed up!'
+            ],422);
+        }
+
+        $sectionField = json_decode($section->core_section_fields);
+
+        return response([
+            'message' => $sectionField->thankYouMsg
+        ]);
+    }
+
+    public function leadgen(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|string|email',
+            'sectionId' => 'required|numeric'
+        ]);
+
+        $section = BioLinkSection::where('section_id', $data['sectionId'])->first();
+        
+        if(!$section) {
+            return response([
+                'error' => 'Email could not be signed up!'
+            ],422);
+        }
+
+        $sectionField = json_decode($section->core_section_fields);
+
+        if($sectionField->requirePhone == 'yes') {
+            $request->validate([
+                'phone' => 'required',
+            ]);
+        }
+
+        return response([
+            'message' => $sectionField->thankYouMsg
+        ]);
     }
 
     public function linkPasswordValidate(Request $request, $id)

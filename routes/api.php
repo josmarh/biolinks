@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\RolePermissionsController;
 use App\Http\Controllers\Admin\LogsController;
 use App\Http\Controllers\Admin\AdminProjectController;
 use App\Http\Controllers\Admin\AdminProjectLinkController;
+use App\Http\Controllers\SPAController;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,3 +133,5 @@ Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPasswor
 Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword']);
 Route::get('/project/invitation/{id}', [ProjectInvitationController::class, 'getInvitationInfo']);
 Route::post('/register/{id}', [RegisterController::class, 'registerMember']);
+Route::post('/mail-signup', [SPAController::class, 'mailSignup']);
+Route::post('/leadgen', [SPAController::class, 'leadgen']);

@@ -15,7 +15,8 @@ class BiolinkSectionController extends Controller
 
     public function index(Request $request, $id)
     {
-        $section = BioLinkSection::where('bl_biolink_sections.link_id', $id)
+        $section = BioLinkSection::select('bl_biolink_sections.id','bl_biolink_sections.link_id','bl_biolink_sections.section_id','bl_biolink_sections.button_text','bl_biolink_sections.button_text_color','bl_biolink_sections.button_bg_color','bl_biolink_sections.core_section_fields')
+            ->where('bl_biolink_sections.link_id', $id)
             ->join('bl_biolink_section_settings as sect','bl_biolink_sections.section_id','=','sect.id')
             ->with('section')
             ->orderBy('sect.section_position','asc')
