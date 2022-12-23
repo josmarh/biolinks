@@ -213,7 +213,7 @@
                                 v-if="item.sectionFields.buttonIcon" 
                                 :icon="item.sectionFields.buttonIcon" 
                                 class="mt-0.5"/>
-                            {{item.sectionFields.name}}
+                            {{item.buttonText}}
                         </button>
                     </div>
                 </div>

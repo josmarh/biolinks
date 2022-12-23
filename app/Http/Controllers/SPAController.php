@@ -8,9 +8,14 @@ use App\Models\BiolinkSetting;
 use App\Models\LinkSetting;
 use App\Models\BiolinkCustomSetting;
 use App\Models\BioLinkSection;
+use App\Jobs\LeadsGenJob;
+use App\Jobs\MailSignupJob;
+use App\Services\LeadShareService;
 
 class SPAController extends Controller
 {
+    use LeadShareService;
+
     public function index()
     {
         return view('app');
@@ -63,6 +68,37 @@ class SPAController extends Controller
 
         $sectionField = json_decode($section->core_section_fields);
 
+        // send to notification email
+        if(isset($sectionField->emailPlaceholder)) {
+            $leadInfo = [
+                'notifierEmail' => $sectionField->emailPlaceholder,
+                'formName' => $sectionField->name,
+                'email' => $request->email,
+            ];
+            dispatch(new MailSignupJob($leadInfo))->delay(3);
+        }
+
+        // send to mailchimp
+        if(isset($sectionField->mailchimpAPIKey) && isset($sectionField->mailchimpList)) {
+            $mailchimp = [
+                'name' => '',
+                'email' => $request->email,
+                'mailchimpKey' => $sectionField->mailchimpAPIKey,
+                'mailchimpList' => $sectionField->mailchimpList
+            ];
+            $this->shareWithMailchimp($mailchimp);
+        }
+
+        // send to webhook
+        if(isset($sectionField->webhookURL)) {
+            $webhook = [
+                'webhook' => $sectionField->webhookURL,
+                'name' => $request->name,
+                'email' => $request->email,
+            ];
+            $this->shareWithWebhook($webhook);
+        }
+
         return response([
             'message' => $sectionField->thankYouMsg
         ]);
@@ -76,7 +112,7 @@ class SPAController extends Controller
         ]);
 
         $section = BioLinkSection::where('section_id', $data['sectionId'])->first();
-        
+
         if(!$section) {
             return response([
                 'error' => 'Email could not be signed up!'
@@ -90,6 +126,41 @@ class SPAController extends Controller
                 'phone' => 'required',
             ]);
         }
+
+        // send to notification email
+        if(isset($sectionField->leadNotifyEmail)) {
+            $leadInfo = [
+                'notifierEmail' => $sectionField->leadNotifyEmail,
+                'formName' => $sectionField->formName,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+            ];
+            dispatch(new LeadsGenJob($leadInfo))->delay(3);
+        }
+
+        // send to mailchimp
+        if(isset($sectionField->mailchimpAPIKey) && isset($sectionField->mailchimpList)) {
+            $mailchimp = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'mailchimpKey' => $sectionField->mailchimpAPIKey,
+                'mailchimpList' => $sectionField->mailchimpList
+            ];
+            $this->shareWithMailchimp($mailchimp);
+        }
+
+        // send to webhook
+        if(isset($sectionField->webhookURL)) {
+            $webhook = [
+                'webhook' => $sectionField->webhookURL,
+                'name' => $request->name,
+                'email' => $request->email,
+            ];
+            $this->shareWithWebhook($webhook);
+        }
+
+        // save to db
 
         return response([
             'message' => $sectionField->thankYouMsg

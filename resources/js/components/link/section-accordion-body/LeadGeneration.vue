@@ -374,6 +374,9 @@
                 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                 placeholder="">
             </div>
+            <p class="text-sm text-gray-500">
+                Ensure you add the List/Audience ID 
+            </p>
         </div>
         <!-- Webhook URL -->
         <div class="mt-4">

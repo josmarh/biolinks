@@ -477,6 +477,7 @@
                     data-show-agreement="{{$sectionField->showAgreement}}"
                     data-agreement-text="{{$sectionField->agreementText}}"
                     data-agreement-url="{{$sectionField->agreementURL}}"
+                    data-form-name="{{$sectionField->formName}}"
                     style="color: {{$item->button_text_color}};
                     background-color: {{$item->button_bg_color}}">
                     {{$item->button_text}}
@@ -499,10 +500,11 @@
                     data-show-agreement="{{$sectionField->showAgreement}}"
                     data-agreement-text="{{$sectionField->agreementText}}"
                     data-agreement-url="{{$sectionField->agreementURL}}"
+                    data-form-name="{{$sectionField->name}}"
                     style="color: {{$item->button_text_color}};
                     background-color: {{$item->button_bg_color}}">
                     <i class="{{$sectionField->buttonIcon}}"></i>
-                    {{$sectionField->name}}
+                    {{$item->button_text}}
                 </button>
             </div>
         </div>
@@ -528,9 +530,7 @@
                     <span class="sr-only">Close modal</span>
                 </button>
                 <div class="px-6 py-6 lg:px-8">
-                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-                        Lead Generation Form
-                    </h3>
+                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white" id="leadgen-form-name"></h3>
                     <p class="mt-2 font-normal hidden" id="leadgen-text"></p>
                     <form class="space-y-6" action="" method="post">
                         <div class="p-4 mb-4 text-sm rounded-lg dark:bg-red-200 dark:text-red-800 hidden alert" 
@@ -569,7 +569,7 @@
                                 <label for="agreement-checkbox" 
                                     class="ml-2 text-sm font-normal 
                                     text-gray-900 dark:text-gray-300">
-                                    <a href="" target="_blank" id="agreement-text-url"></a>
+                                    <a href="" target="_blank" id="agreement-text-url" class="hover:underline"></a>
                                 </label>
                             </div>
                         </div>
@@ -603,9 +603,7 @@
                     <span class="sr-only">Close modal</span>
                 </button>
                 <div class="px-6 py-6 lg:px-8">
-                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">
-                        Mail Sign up
-                    </h3>
+                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white" id="mailsignup-form-name"></h3>
                     <form class="space-y-6">
                         <div class="p-4 mb-4 text-sm rounded-lg dark:bg-red-200 dark:text-red-800 hidden alert" 
                         role="alert"></div>
@@ -627,7 +625,7 @@
                                 <label for="mail-agreement-checkbox" 
                                     class="ml-2 text-sm font-normal 
                                     text-gray-900 dark:text-gray-300">
-                                    <a href="" target="_blank" id="mail-agreement-text-url"></a>
+                                    <a href="" target="_blank" id="mail-agreement-text-url" class="hover:underline"></a>
                                 </label>
                             </div>
                         </div>
@@ -692,7 +690,8 @@ $(document).ready(function(){
         showAgreement: '',
         agreementText: '',
         agreementUrl: '',
-        isAgreementChecked: false
+        isAgreementChecked: false,
+        formName: ''
     };
 
     // Submit leads
@@ -704,6 +703,7 @@ $(document).ready(function(){
         model.showAgreement = $(this).data('show-agreement');
         model.agreementText = $(this).data('agreement-text');
         model.agreementUrl = $(this).data('agreement-url');
+        $('#leadgen-form-name').text($(this).data('form-name'));
 
         if(model.showPhone == 'yes') {
             $('#phone')
@@ -740,7 +740,10 @@ $(document).ready(function(){
         model.email = $('#email').val()
         $(this).attr('disabled', true)
 
-        if(!model.email) {
+        if(!model.name) {
+            setErrorAlert('Name is required!');
+            $(this).attr('disabled', false)
+        }else if(!model.email) {
             setErrorAlert('Invalid Email!');
             $(this).attr('disabled', false)
         }else if(!isEmailValid(model.email)) {
@@ -751,6 +754,7 @@ $(document).ready(function(){
             $(this).attr('disabled', false)
         }else if(model.showAgreement == 'yes' && !model.isAgreementChecked) {
             setErrorAlert('Agreement is required!');
+            $(this).attr('disabled', false)
         }else {
             $.ajax({
                 url: '/api/leadgen',
@@ -789,6 +793,7 @@ $(document).ready(function(){
         model.showAgreement = $(this).data('show-agreement');
         model.agreementText = $(this).data('agreement-text');
         model.agreementUrl = $(this).data('agreement-url');
+        $('#mailsignup-form-name').text($(this).data('form-name'))
 
         if(model.showAgreement == 'yes') {
             $('#mail-agreement-section')
@@ -820,6 +825,7 @@ $(document).ready(function(){
             $(this).attr('disabled', false)
         }else if(model.showAgreement == 'yes' && !model.isAgreementChecked) {
             setErrorAlert('Agreement is required!');
+            $(this).attr('disabled', false)
         }else {
             $.ajax({
                 url: '/api/mail-signup',

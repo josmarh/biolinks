@@ -5,6 +5,7 @@
             :isRequired="requiredFields.name"
             @update="updateName"/>
         <button-icon-field :data="model.sectionFields.buttonIcon" @update="updateIcon"/>
+        <button-text-field :data="model.buttonText" @update="updateButtonText"/>
         <button-text-color-field :data="model.buttonTextColor" @update="updateBtnTextColor"/>
         <button-bg-color-field :data="model.buttonBgColor" @update="updateBtnBgColor"/>
         <button-outline-field :data="model.sectionFields.buttonOutline" @update="updateBtnOutline"/>
@@ -39,6 +40,7 @@ import { ref, watch } from 'vue';
 import { notify } from 'notiwind';
 import NameField from '../../customfields/NameField.vue';
 import ButtonIconField from '../../customfields/ButtonIconField.vue';
+import ButtonTextField from '../../customfields/ButtonTextField.vue';
 import ButtonTextColorField from '../../customfields/ButtonTextColorField.vue';
 import ButtonBgColorField from '../../customfields/ButtonBgColorField.vue';
 import ButtonOutlineField from '../../customfields/ButtonOutlineField.vue';
@@ -75,6 +77,9 @@ function updateName(data) {
 }
 function updateIcon(data) {
     model.value.sectionFields.buttonIcon = data
+}
+function updateButtonText(data) {
+    model.value.buttonText = data
 }
 function updateBtnTextColor(data) {
     model.value.buttonTextColor = data
