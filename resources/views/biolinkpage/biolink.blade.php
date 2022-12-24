@@ -509,8 +509,19 @@
             </div>
         </div>
         @endif
-
     @endforeach
+
+    <!-- Socials -->
+    <x-biolink-socials :socials="$jdecoded['socials']"/>
+
+    <!-- Branding -->
+    @if($jdecoded['branding']->display == 'yes' && isset($jdecoded['branding']->name))
+    <div class="mt-10 text-center">
+        <a href="{{$jdecoded['branding']->url}}" target="_blank" class="font-bold text-md">
+            <span class="hover:underline">{{$jdecoded['branding']->name}}</span>
+        </a>
+    </div>
+    @endif
 
     <!-- Main Modal -->
     <div id="leadgen-modal" tabindex="-1" aria-hidden="true" 
@@ -773,7 +784,6 @@ $(document).ready(function(){
                     $('#leadgen-submit').attr('disabled', false)
                 },
                 error: function(err) {
-                    setErrorAlert(err.error)
                     $('#leadgen-submit').attr('disabled', false)
                     if(err.response){
                         if (err.response.data.hasOwnProperty('message')) {
@@ -837,7 +847,6 @@ $(document).ready(function(){
                     $('#mail-submit').attr('disabled', false)
                 },
                 error: function(err) {
-                    setErrorAlert(err.error)
                     $('#mail-submit').attr('disabled', false)
                     if(err.response){
                         if (err.response.data.hasOwnProperty('message')) {
@@ -850,6 +859,72 @@ $(document).ready(function(){
             });
         }
     })
+
+    function getClientInfo() {
+        $.ajax({
+            url: 'https://api.ipgeolocation.io/ipgeo?apiKey=71ec1774e54b4b0f979cefe8d8f0e4bb',
+            method: 'get',
+            success: function(res) {
+                getOS(res)
+            },
+            error: function(err) {
+                if(err.response){
+                    if (err.response.data.hasOwnProperty('message')) {
+                        console.log('ipgeo: ' + err.response.data.message)
+                    }else {
+                        console.log('ipgeo: ' + err.response.data.error)
+                    }
+                } 
+            }
+        });
+    }
+
+    function getOS(ipInfo) {
+        let userAgent = window.navigator.userAgent,
+        platform = window.navigator.platform,
+        macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
+        windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
+        iosPlatforms = ['iPhone', 'iPad', 'iPod'],
+        os = 'Unknown OS';
+
+        if (macosPlatforms.indexOf(platform) !== -1) {
+            os = 'Mac OS';
+        } else if (iosPlatforms.indexOf(platform) !== -1) {
+            os = 'iOS';
+        } else if (windowsPlatforms.indexOf(platform) !== -1) {
+            os = 'Windows';
+        } else if (/Android/.test(userAgent)) {
+            os = 'Android';
+        } else if (!os && /Linux/.test(platform)) {
+            os = 'Linux';
+        }
+        postVisitorInfo(ipInfo, os)
+    }
+
+    function postVisitorInfo(ipInfo, os) {
+        $.ajax({
+            url: '/api/visits',
+            method: 'post',
+            data: {
+                linkId: {!! $settings->link_id !!},
+                ip: ipInfo.ip,
+                country: ipInfo.country_name,
+                countryFlag: ipInfo.country_flag,
+                city: ipInfo.city,
+                os: os
+            },
+            success: (res) => {},
+            error: (err) => {
+                if(err.response){
+                    if (err.response.data.hasOwnProperty('message')) {
+                        console.log('postVisitorInfo: ' + err.response.data.message)
+                    }else {
+                        console.log('postVisitorInfo: ' + err.response.data.error)
+                    }
+                } 
+            }
+        });
+    }
 
     function setErrorAlert(message) {
         $('.alert').removeClass('hidden')
@@ -883,6 +958,7 @@ $(document).ready(function(){
         }
     }
 
+    getClientInfo();
 });
 </script>
 <script>

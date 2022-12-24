@@ -6,6 +6,8 @@ use App\Events\ProjectLinkCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\LinkSetting;
+use App\Models\ProjectLink;
+use App\Models\Project;
 
 class createLinkSettings
 {
@@ -30,23 +32,27 @@ class createLinkSettings
         $projectLink = $event->link;
 
         if($projectLink['type'] == 'link') {
-            $settings = json_decode($projectLink['settings']);
+            $settings = json_decode($projectLink['settings'], true);
 
             LinkSetting::create([
                 'link_id' => $projectLink['linkId'],
-                'tempurl_schedule' => $settings->tempURL->scheduleSwitch,
-                'tempurl_start_date' => $settings->tempURL->scheduleStart,
-                'tempurl_end_date' => $settings->tempURL->scheduleEnd,
-                'tempurl_click_limit' => $settings->tempURL->clickLimit,
-                'tempurl_expire_url' => $settings->tempURL->redirectURL,
-                'protection_password' => $settings->protection->password,
-                'protection_consent_warning' => $settings->protection->contentWarning,
-                'target_type' => $settings->target->targetType,
-                'target_country' => $settings->target->country,
-                'target_device' => $settings->target->device,
-                'target_browser_lang' => $settings->target->browserLang,
-                'target_os' => $settings->target->os
+                'tempurl_schedule' => $settings['tempURL']['scheduleSwitch'],
+                'tempurl_start_date' => $settings['tempURL']['scheduleStart'],
+                'tempurl_end_date' => $settings['tempURL']['scheduleEnd'],
+                'tempurl_click_limit' => $settings['tempURL']['clickLimit'],
+                'tempurl_expire_url' => $settings['tempURL']['redirectURL'],
+                'protection_password' => $settings['protection']['password'],
+                'protection_consent_warning' => $settings['protection']['contentWarning'],
+                'target_type' => $settings['target']['targetType'],
+                'target_country' => json_encode($settings['target']['country']),
+                'target_device' => json_encode($settings['target']['device']),
+                'target_browser_lang' => json_encode($settings['target']['browserLang']),
+                'target_os' => json_encode($settings['target']['os'])
             ]);
+
+            $totalLinks = ProjectLink::where('project_id', $projectLink['projectId'])->count();
+            Project::where('custom_id', $projectLink['projectId'])
+                ->update(['total_links' => $totalLinks]);
         }
     }
 }

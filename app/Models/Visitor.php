@@ -5,17 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LeadStat extends Model
+class Visitor extends Model
 {
     use HasFactory;
 
-    protected $table = 'bl_lead_stats';
+    protected $table = 'bl_visitors';
     protected $fillable = [
-        'email',
-        'name',
-        'phone',
-        'link_id',
-        'section_id',
-        'ip'
+        'link_id', 'section_id', 'ip', 'country', 'country_flag', 'city', 'os'
     ];
 }

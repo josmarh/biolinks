@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('bl_lead_stats', function (Blueprint $table) {
             $table->id();
+            $table->string('email')->nullable();
+            $table->string('name')->nullable();
+            $table->string('phone', 14)->nullable();
+            $table->string('link_id')->nullable();
+            $table->string('section_id')->nullable();
+            $table->string('ip')->nullable();
             $table->timestamps();
         });
     }

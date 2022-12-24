@@ -6,6 +6,8 @@ use App\Events\ProjectLinkCreated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\BiolinkSetting;
+use App\Models\ProjectLink;
+use App\Models\Project;
 
 class createBiolinkSettings
 {
@@ -49,6 +51,10 @@ class createBiolinkSettings
                 'socials' => json_encode($settings->socials),
                 'font' => $settings->fonts,
             ]);
+
+            $totalLinks = ProjectLink::where('project_id', $projectLink['projectId'])->count();
+            Project::where('custom_id', $projectLink['projectId'])
+                ->update(['total_links' => $totalLinks]);
         }
     }
 }

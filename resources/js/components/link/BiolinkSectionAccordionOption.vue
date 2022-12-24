@@ -26,14 +26,14 @@
             <MenuItems class="overflow-hidden absolute right-0 
                 mt-2 w-48 bg-white border shadow-lg z-20
                 origin-top-right focus:outline-none text-gray-400">
-                <MenuItem v-slot="{active}">
+                <!-- <MenuItem v-slot="{active}">
                     <a :class="{'bg-gray-100': active}" 
                         class="block py-2 px-4 text-sm text-gray-700 
                         cursor-pointer inline-flex w-full">
                         <font-awesome-icon icon="fa-solid fa-chart-column" class="h-4 w-4 mr-2 mt-0.5" />
                         Statistics
                     </a>
-                </MenuItem>
+                </MenuItem> -->
                 <MenuItem v-slot="{active}">
                     <a @click="updateSectionStatus"
                         :class="{'bg-gray-100': active}" 

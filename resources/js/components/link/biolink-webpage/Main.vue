@@ -329,7 +329,6 @@
                 </div>
                 <!-- GoogleReview -->
                 <div v-if="item.section.name=='GoogleReview'" class="mt-2 mb-4">
-
                 </div>
                 <!-- Link -->
                 <div v-if="item.section.name=='Link'" class="mt-2 mb-4">
@@ -358,7 +357,13 @@
 
         <!-- Socials -->
         <div class="mt-6">
-            <socials :settings="setting" />
+            <socials :settings="setting"/>
+        </div>
+        <!-- brand -->
+        <div class="mt-10 mb-4 text-center" v-if="setting.branding.display=='yes' && setting.branding.name">
+            <a :href="setting.branding.url" target="_blank" class="font-bold text-md">
+                <span class="hover:underline">{{setting.branding.name}}</span>
+            </a>
         </div>
     </div>
 </template>

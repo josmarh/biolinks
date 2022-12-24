@@ -24,12 +24,25 @@
 </template>
 
 <script setup>
+import { computed, onMounted, watch, ref } from 'vue'
+import reportStore from '../../store/report-store';
 
-const stats = [
+const reports = computed(() => reportStore.state.dashboardCards)
+const stats = ref([
     {label: 'total clicks', total: 0, icon: 'fa-solid fa-chart-column'},
     {label: 'total links', total: 0, icon: 'fa-solid fa-link'},
     {label: 'total leads', total: 0, icon: 'fa-solid fa-envelope'},
-]
+])
+
+watch(reports, (newVal, oldVal) => {
+    stats.value[0].total = newVal.totalVisits
+    stats.value[1].total = newVal.totalLinks
+    stats.value[2].total = newVal.totalLeads
+}, {deep: true})
+
+onMounted(() => {
+    reportStore.dispatch('getDashboardReport')
+})
 </script>
 
 <style>

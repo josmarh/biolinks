@@ -8,6 +8,9 @@ use App\Models\BiolinkSetting;
 use App\Models\LinkSetting;
 use App\Models\BiolinkCustomSetting;
 use App\Models\BioLinkSection;
+use App\Models\LeadStat;
+use App\Models\Visitor;
+use App\Models\Project;
 use App\Jobs\LeadsGenJob;
 use App\Jobs\MailSignupJob;
 use App\Services\LeadShareService;
@@ -36,7 +39,11 @@ class SPAController extends Controller
             $pageBckg = json_decode($settings->background_type_content);
             $jdecoded = [
                 'pageBckg' => json_decode($settings->background_type_content),
-                'video' => json_decode($settings->video)
+                'video' => json_decode($settings->video),
+                'analytics' => json_decode($settings->analytics),
+                'seo' => json_decode($settings->seo),
+                'socials' => json_decode($settings->socials),
+                'branding' => json_decode($settings->branding),
             ];
             
             return view('biolinkpage.biolink', compact('settings','custom','section','jdecoded'));
@@ -79,7 +86,7 @@ class SPAController extends Controller
         }
 
         // send to mailchimp
-        if(isset($sectionField->mailchimpAPIKey) && isset($sectionField->mailchimpList)) {
+        if($sectionField->mailchimpAPIKey && $sectionField->mailchimpList) {
             $mailchimp = [
                 'name' => '',
                 'email' => $request->email,
@@ -90,14 +97,28 @@ class SPAController extends Controller
         }
 
         // send to webhook
-        if(isset($sectionField->webhookURL)) {
+        if($sectionField->webhookURL) {
             $webhook = [
                 'webhook' => $sectionField->webhookURL,
-                'name' => $request->name,
+                'name' => '',
                 'email' => $request->email,
             ];
             $this->shareWithWebhook($webhook);
         }
+
+        // save to db
+        LeadStat::create([
+            'email' => $request->email,
+            'name' => null,
+            'phone' => null,
+            'link_id' => $section->link_id,
+            'section_id' => $section->section_id,
+            'ip' => \Request::ip()
+        ]);
+        $leads = LeadStat::where('link_id', $section->link_id)->count();
+        ProjectLink::where('id', $section->link_id)->update([
+            'total_leads' => $leads
+        ]);
 
         return response([
             'message' => $sectionField->thankYouMsg
@@ -140,7 +161,7 @@ class SPAController extends Controller
         }
 
         // send to mailchimp
-        if(isset($sectionField->mailchimpAPIKey) && isset($sectionField->mailchimpList)) {
+        if($sectionField->mailchimpAPIKey && $sectionField->mailchimpList) {
             $mailchimp = [
                 'name' => $request->name,
                 'email' => $request->email,
@@ -151,7 +172,7 @@ class SPAController extends Controller
         }
 
         // send to webhook
-        if(isset($sectionField->webhookURL)) {
+        if($sectionField->webhookURL) {
             $webhook = [
                 'webhook' => $sectionField->webhookURL,
                 'name' => $request->name,
@@ -160,11 +181,53 @@ class SPAController extends Controller
             $this->shareWithWebhook($webhook);
         }
 
+        // Custom conversion code
+
         // save to db
+        LeadStat::create([
+            'email' => $request->email,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'link_id' => $section->link_id,
+            'section_id' => $section->section_id,
+            'ip' => \Request::ip()
+        ]);
+
+        $leads = LeadStat::where('link_id', $section->link_id)->count();
+        ProjectLink::where('id', $section->link_id)->update([
+            'total_leads' => $leads
+        ]);
 
         return response([
             'message' => $sectionField->thankYouMsg
         ]);
+    }
+
+    public function storeVisits(Request $request)
+    {
+        $data = $request->all();
+
+        Visitor::create([
+            'link_id'      => $data['linkId'],
+            'section_id'   => 0,
+            'ip'           => $data['ip'], 
+            'country'      => $data['country'], 
+            'country_flag' => $data['countryFlag'], 
+            'city'         => $data['city'], 
+            'os'           => $data['os']
+        ]);
+
+        $uniqueClick = Visitor::where('link_id', $data['linkId'])->distinct()->count('ip');
+        $link = ProjectLink::find($data['linkId']);
+
+        Project::where('custom_id', $link->project_id)
+            ->update(['total_unique_clicks' => $uniqueClick]);
+
+        $link->update([
+            'total_unique_clicks' => $uniqueClick
+        ]);
+
+        return response(['message' => true]);
     }
 
     public function linkPasswordValidate(Request $request, $id)

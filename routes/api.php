@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\LogsController;
 use App\Http\Controllers\Admin\AdminProjectController;
 use App\Http\Controllers\Admin\AdminProjectLinkController;
 use App\Http\Controllers\SPAController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,8 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('user', function (Request $request) {
         return $request->user();
     });
+
+    Route::get('/report/dashbord-cards', [ReportController::class, 'dashboardCardSummary']);
 
     Route::put('/account/update', [ProfileController::class, 'updateAccount']);
     Route::put('/password/update', [ProfileController::class, 'updatePassword']);
@@ -135,3 +138,4 @@ Route::get('/project/invitation/{id}', [ProjectInvitationController::class, 'get
 Route::post('/register/{id}', [RegisterController::class, 'registerMember']);
 Route::post('/mail-signup', [SPAController::class, 'mailSignup']);
 Route::post('/leadgen', [SPAController::class, 'leadgen']);
+Route::post('/visits', [SPAController::class, 'storeVisits']);

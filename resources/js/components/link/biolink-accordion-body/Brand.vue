@@ -6,7 +6,7 @@
             <input type="checkbox"
                 id="schedule-temp-url" 
                 class="sr-only peer"
-                @change="updateScheduleURL($event)"
+                @change="updateDisplayBrand($event)"
                 :checked="model.branding.display == 'yes' ? true : false">
             <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none 
                 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full 
@@ -77,6 +77,15 @@ watch(() => props.data, (newVal, oldVal) => {
 watch(model, (newVal, oldVal) => {
     emit('updateSettings', model.value)
 }, {deep:true})
+
+function updateDisplayBrand(ev) {
+    let checked = ev.target.checked;
+
+    if(checked)
+        model.value.branding.display = 'yes'
+    else
+        model.value.branding.display = 'no'
+}
 </script>
 
 <style>

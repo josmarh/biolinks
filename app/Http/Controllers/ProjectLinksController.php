@@ -15,7 +15,7 @@ class ProjectLinksController extends Controller
     {
         $projectId = $request->query('pid');
         $projectLink = ProjectLink::where('project_id', $projectId)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->with('user')
             ->paginate(7);
 
@@ -44,12 +44,9 @@ class ProjectLinksController extends Controller
         $link = [
             'linkId' => $projectLink->id,
             'type' => $request->link['type'],
-            'settings' => $request->linkSettings
+            'settings' => $request->linkSettings,
+            'projectId' => $request->link['projectId'],
         ];
-
-        if($request->link['type'] == 'biolink') {
-            // add custom settings to link object
-        }
         
         event(new ProjectLinkCreated($link));
 

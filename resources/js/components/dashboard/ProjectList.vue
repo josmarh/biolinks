@@ -47,19 +47,27 @@
                             <span class="bg-green-100 text-green-800 
                                 text-xs font-semibold mr-2 px-2.5 
                                 py-0.5 rounded dark:bg-green-200 
-                                dark:text-green-900">
+                                dark:text-green-900" data-tooltip-target="tooltip-total-links">
                                 <font-awesome-icon icon="fa-solid fa-link" class="mt-0.5 mr-1" />
                                 {{item.totalLinks}}
                             </span>
+                            <div id="tooltip-total-links" role="tooltip" class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700">
+                                Total links
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
                         </div>
                         <div class="col-span-2">
                             <span class="bg-green-100 text-blue-800 
                                 text-xs font-semibold mr-2 px-2.5 
                                 py-0.5 rounded dark:bg-green-200 
-                                dark:text-blue-900">
+                                dark:text-blue-900" data-tooltip-target="tooltip-unique-click">
                                 <font-awesome-icon icon="fa-solid fa-chart-column" class="mt-0.5 mr-1" />
                                 {{item.uniqueClicks}}
                             </span>
+                            <div id="tooltip-unique-click" role="tooltip" class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700">
+                                Total unique clicks
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
                         </div>
                         <div class="col-span-2 flex justify-end">
                             <project-list-options :data="item" />
