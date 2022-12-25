@@ -21,6 +21,8 @@ import Biolinks from '../views/admin/Biolinks.vue'
 import LoginHistory from '../views/admin/LoginHistory.vue'
 import Settings from '../views/admin/Settings.vue'
 import Projects from '../views/admin/Projects.vue'
+import LeadStats from '../views/report/Leads.vue'
+import PageViewStats from '../views/report/PageView.vue'
 import store from '../store'
 
 const routes = [
@@ -48,6 +50,8 @@ const routes = [
             {path: '/project/:id', name: 'Project', component: Project},
             {path: '/link/:id', name: 'Link', component: Link},
             {path: '/reseller/users', name: 'Reseller', component: Reseller},
+            {path: '/link/:id/leads', name: 'LeadStats', component: LeadStats},
+            {path: '/link/:id/statistics', name: 'PageViewStats', component: PageViewStats},
         ]
     },
     {

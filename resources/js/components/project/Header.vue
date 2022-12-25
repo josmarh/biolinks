@@ -45,18 +45,79 @@
                 All the links created in this project.
             </p>
         </div>
+        <!-- Chart Report -->
+        <div class="mt-4">
+            <div class="border-t border-gray-200">
+                <div class="py-6 px-4" v-if="projectlinkChartOptions.labels">
+                    <LineChart :chartData="projectlinkChartOptions" />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router';
 import { notify } from 'notiwind';
 import ProjectListOptions from '../dashboard/ProjectListOptions.vue';
 import project from '../../store/project';
+import reportStore from '../../store/report-store';
+import { LineChart } from 'vue-chart-3';
+import { Chart, registerables } from "chart.js";
+Chart.register(...registerables);
 
 const route = useRoute();
 const content = computed(() => project.state.projects)
+const projectLinkClicks = computed(() => reportStore.state.projectLinkClicks)
+
+let isProjectLinkSet = ref(0)
+let projectlinkChartOptions = ref({
+    labels: [],
+    datasets: [
+        {
+            label: 'Impression',
+            data: [],
+            parsing: {
+                yAxisKey: 'impression'
+            },
+            backgroundColor: '#77CEFF',
+            tension: 0.5,
+            fill: false,
+        },
+        {
+            label: 'Unique',
+            data: [],
+            parsing: {
+                yAxisKey: 'unique'
+            },
+            backgroundColor: '#13AA7C',
+            tension: 0.5,
+            fill: false,
+        }
+    ]
+})
+
+watch(projectLinkClicks, (newVal, oldVal) => {
+    projectlinkChartOptions.value.labels = []
+    projectlinkChartOptions.value.datasets[0].data = []
+    projectlinkChartOptions.value.datasets[1].data = []
+
+    for(let d of newVal.linkClicks.reverse()) {
+        projectlinkChartOptions.value.labels.push(d.created)
+
+        projectlinkChartOptions.value.datasets[0].data.push({
+            x: d.created, 
+            impression: d.impression, 
+            unique: d.unique
+        })
+        projectlinkChartOptions.value.datasets[1].data.push({
+            x: d.created, 
+            impression: d.impression, 
+            unique: d.unique
+        })
+    }
+})
 
 function getProjectInfo() {
     project
@@ -84,8 +145,10 @@ function getProjectInfo() {
         })
 }
 
+
 onMounted(() => {
     getProjectInfo();
+    reportStore.dispatch('getProjectLinkClicksReport', route.params.id)
 })
 </script>
 

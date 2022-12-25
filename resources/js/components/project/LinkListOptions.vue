@@ -82,7 +82,11 @@ function duplicateLink() {
 }
 
 function getLinkStatistics() {
-
+    const href = router.resolve({
+        name: 'PageViewStats',
+        params: { id: route.params.id}
+    });
+    window.location = href.href
 }
 
 function getLinkQrcode() {

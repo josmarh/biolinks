@@ -56,7 +56,7 @@
                             <div class="ml-1 text-sm font-medium text-gray-900 
                                 md:ml-2 dark:text-gray-400 
                                 dark:hover:text-white capitalize">
-                                Settings
+                                {{ source }}
                             </div>
                         </div>
                     </li>
@@ -98,6 +98,7 @@
                 </div>
                 <div>
                     <router-link :to="{name: 'PageViewStats', params: {id: $route.params.id}}"
+                        v-if="source == 'Leads'"
                         class="text-white bg-gray-700 hover:bg-gray-800 
                         focus:ring-0 focus:ring-gray-300 font-medium 
                         text-sm px-5 py-2.5 mr-2 mb-2 capitalize
@@ -107,6 +108,7 @@
                         Statistics
                     </router-link>
                     <router-link :to="{name: 'LeadStats', params: {id: $route.params.id}}"
+                        v-else
                         class="text-white bg-gray-700 hover:bg-gray-800 
                         focus:ring-0 focus:ring-gray-300 font-medium 
                         text-sm px-5 py-2.5 mr-2 mb-2 capitalize
@@ -114,6 +116,15 @@
                         focus:outline-none dark:focus:ring-gray-800">
                         <font-awesome-icon icon="fa-solid fa-envelope" />
                         Leads
+                    </router-link>
+                    <router-link :to="{name: 'Link', params: {id: $route.params.id}}"
+                        class="text-white bg-gray-700 hover:bg-gray-800 
+                        focus:ring-0 focus:ring-gray-300 font-medium 
+                        text-sm px-5 py-2.5 mr-2 mb-2 capitalize
+                        dark:bg-gray-600 dark:hover:bg-gray-700 
+                        focus:outline-none dark:focus:ring-gray-800">
+                        <font-awesome-icon icon="fa-solid fa-gears" />
+                        Settings
                     </router-link>
                 </div>
             </div>
@@ -145,7 +156,8 @@ import LinkListOptions from '../project/LinkListOptions.vue';
 import projectlinks from '../../store/projectlinks';
 
 const props = defineProps({
-    data: Object
+    data: Object,
+    source: String
 })
 
 let model = ref({
