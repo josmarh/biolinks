@@ -1,7 +1,7 @@
 <template>
     <Header :data="content.data" source="Leads" />
 
-    <lead-list />
+    <lead-list :linkInfo="content.data" />
 </template>
 
 <script setup>

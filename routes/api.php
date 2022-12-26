@@ -45,7 +45,9 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/report/dashbord-cards', [ReportController::class, 'dashboardCardSummary']);
     Route::get('/report/project-links/{projectId}', [ReportController::class, 'projectLinkClicks']);
     Route::get('/report/leads/{linkId}', [ReportController::class, 'leads']);
+    Route::get('/report/leads/total/{linkId}', [ReportController::class, 'totalLeads']);
     Route::get('/report/page-view/{linkId}', [ReportController::class, 'pageView']);
+    Route::post('/report/export-leads', [ReportController::class, 'exportLeads']);
 
     Route::put('/account/update', [ProfileController::class, 'updateAccount']);
     Route::put('/password/update', [ProfileController::class, 'updatePassword']);

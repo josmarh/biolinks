@@ -15,6 +15,9 @@ const reportStore = createStore({
             data: [],
             links: {},
             meta: {}
+        },
+        totalLeads: {
+            totalLeads: 0
         }
     },
     getters: {},
@@ -47,10 +50,23 @@ const reportStore = createStore({
                     return data;
                 })
         },
-        getPageViewReport({ commit }, linkId) {
-            return axiosClient.get(`/report/page-view/${linkId}`)
+        getTotalLeadsReport({ commit }, linkId) {
+            return axiosClient.get(`/report/leads/total/${linkId}`)
+                .then(({data}) => {
+                    commit('setTotalLeads', data)
+                    return data;
+                })
+        },
+        getPageViewReport({ commit }, params) {
+            return axiosClient.get(`/report/page-view/${params.id}?from=${params.from}&to=${params.to}`)
                 .then(({data}) => {
                     commit('setProjectLinkClicksReport', data)
+                    return data;
+                })
+        },
+        exportLeads({ }, leads) {
+            return axiosClient.post(`/report/export-leads`, leads)
+                .then(({data}) => {
                     return data;
                 })
         },
@@ -64,6 +80,9 @@ const reportStore = createStore({
         },
         setLeads: (state, data) => {
             state.leads = data
+        },
+        setTotalLeads: (state, data) => {
+            state.totalLeads = data
         }
     },
     modules: {}

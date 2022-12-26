@@ -48,7 +48,7 @@
         <!-- Chart Report -->
         <div class="mt-4">
             <div class="border-t border-gray-200">
-                <div class="py-6 px-4" v-if="projectlinkChartOptions.labels">
+                <div class="py-6 px-4" v-if="projectlinkChartOptions.labels.length">
                     <LineChart :chartData="projectlinkChartOptions" />
                 </div>
             </div>
@@ -81,9 +81,10 @@ let projectlinkChartOptions = ref({
             parsing: {
                 yAxisKey: 'impression'
             },
-            backgroundColor: '#77CEFF',
+            backgroundColor: 'rgba(41, 64, 214, 0.48)',
             tension: 0.5,
-            fill: false,
+            fill: true,
+            opacity: 1
         },
         {
             label: 'Unique',
@@ -91,9 +92,10 @@ let projectlinkChartOptions = ref({
             parsing: {
                 yAxisKey: 'unique'
             },
-            backgroundColor: '#13AA7C',
+            backgroundColor: 'rgba(37, 193, 76, 0.67)',
             tension: 0.5,
-            fill: false,
+            fill: true,
+            opacity: 1
         }
     ]
 })
