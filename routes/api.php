@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\AdminProjectController;
 use App\Http\Controllers\Admin\AdminProjectLinkController;
 use App\Http\Controllers\SPAController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ProjectTeamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,8 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::put('/update/{projectId}', [ProjectController::class, 'update']);
         Route::delete('/delete/{projectId}', [ProjectController::class, 'delete']);
         Route::post('/invitation', [ProjectInvitationController::class, 'sendInvitation']);
+        Route::get('/{projectId}/team', [ProjectTeamController::class, 'projectMembers']);
+        Route::delete('/{projectId}/member', [ProjectTeamController::class, 'removeMember']);
     });
 
     Route::get('/links', [ProjectLinksController::class, 'index']);

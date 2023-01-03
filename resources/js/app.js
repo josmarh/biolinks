@@ -22,7 +22,7 @@ import { faRightFromBracket, faLink, faEnvelope,
     faPaintBrush, faPalette, faPenNib, faShuffle, faParagraph, 
     faPhone, faSignature, faBell, faCircleQuestion, faCalendarDays, 
     faCode, faBars, faUser, faCircleUser, faWrench, faScroll, faHouse, 
-    faPenToSquare, faGears, faList, faFileCsv,  
+    faPenToSquare, faGears, faList, faFileCsv, faUsers,  
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add( faRightFromBracket, faLink, faEnvelope, 
@@ -35,7 +35,7 @@ library.add( faRightFromBracket, faLink, faEnvelope,
     faPaintBrush, faPalette, faPenNib, faShuffle, faParagraph, 
     faPhone, faSignature, faBell, faCircleQuestion, faCalendarDays, 
     faCode, faBars, faUser, faCircleUser, faWrench, faScroll, faHouse, 
-    faPenToSquare, faGears, faList, faFileCsv
+    faPenToSquare, faGears, faList, faFileCsv, faUsers
     
 )
 

@@ -63,11 +63,12 @@
 
 <script setup>
 import { computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { notify } from 'notiwind'
-import { useRouter } from 'vue-router'
 import store from '../../store'
 
+const router = useRouter()
 let userSurffix = store.state.user.data.name.split('')[0];
 
 function logout() {

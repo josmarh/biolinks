@@ -5,6 +5,9 @@ const project = createStore({
     state: {
         projects: {
             data: []
+        },
+        projectTeams: {
+            data: []
         }
     },
     getters: {},
@@ -53,10 +56,26 @@ const project = createStore({
                     return data;
                 })
         },
+        getProjectTeam({ commit }, projectId) {
+            return axiosClient.get(`/project/${projectId}/team`)
+                .then(({data}) => {
+                    commit('setProjectTeam', data)
+                    return data;
+                })
+        },
+        deleteProjectMember({}, payload) {
+            return axiosClient.delete(`/project/${payload.projectId}/member?id=${payload.memberUserId}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setProjects: (state, data) => {
             state.projects = data;
+        },
+        setProjectTeam: (state, data) => {
+            state.projectTeams = data;
         },
     },
     modules: {}

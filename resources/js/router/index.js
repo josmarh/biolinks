@@ -23,6 +23,7 @@ import Settings from '../views/admin/Settings.vue'
 import Projects from '../views/admin/Projects.vue'
 import LeadStats from '../views/report/Leads.vue'
 import PageViewStats from '../views/report/PageView.vue'
+import People from '../views/People.vue'
 import store from '../store'
 
 const routes = [
@@ -52,6 +53,7 @@ const routes = [
             {path: '/reseller/users', name: 'Reseller', component: Reseller},
             {path: '/link/:id/leads', name: 'LeadStats', component: LeadStats},
             {path: '/link/:id/statistics', name: 'PageViewStats', component: PageViewStats},
+            {path: '/project/:id/people', name: 'People', component: People},
         ]
     },
     {
@@ -80,9 +82,9 @@ const router = createRouter({
 // handling user auth
 router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth && !store.state.user.token) {
-        next({name: 'Login'})
+        next({name: 'Login'});
     }else if (store.state.user.token && to.meta.isGuest) {
-        next();
+        next({name: 'Dashboard'});
     }else {
         next();
     }

@@ -53,7 +53,7 @@ const store = createStore({
         },
         logout({ commit }) {
             return axiosClient.post('/logout')
-                .then(response => {
+                .then(({response}) => {
                     commit('logout')
                     return response;
                 })

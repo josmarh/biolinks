@@ -484,6 +484,9 @@
                 </button>
             </div>
         </div>
+        @if($sectionField->customConvertCode)
+            {!! $sectionField->customConvertCode !!}
+        @endif
         @endif
         <!-- Mail Signup -->
         @if($item->section_name == 'Mail signup' && $item->status == 1)

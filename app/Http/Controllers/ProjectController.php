@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Resources\ProjectResource;
 use App\Models\Project;
+use App\Http\Resources\ProjectResource;
 
 class ProjectController extends Controller
 {
@@ -20,11 +20,6 @@ class ProjectController extends Controller
             ->get();
 
         return ProjectResource::collection($projects);
-    }
-
-    public function projectsCollaborate($id)
-    {
-
     }
 
     public function store(Request $request)

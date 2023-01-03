@@ -128,7 +128,7 @@ class UserManagerController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Cascade delete project
+        // Cascade delete project, project_links, bl_project_teams
         
 
         $currentRole = Role::select('roles.name as name','mr.model_id')
