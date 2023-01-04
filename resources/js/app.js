@@ -23,7 +23,7 @@ import { faRightFromBracket, faLink, faEnvelope,
     faPhone, faSignature, faBell, faCircleQuestion, faCalendarDays, 
     faCode, faBars, faUser, faCircleUser, faWrench, faScroll, faHouse, 
     faPenToSquare, faGears, faList, faFileCsv, faUsers, faChevronDown, 
-    faImage, faEllipsis, faGear, faSliders, faCircleXmark, 
+    faImage, faEllipsis, faGear, faSliders, faCircleXmark, faTurnDown, 
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add( faRightFromBracket, faLink, faEnvelope, 
@@ -37,7 +37,7 @@ library.add( faRightFromBracket, faLink, faEnvelope,
     faPhone, faSignature, faBell, faCircleQuestion, faCalendarDays, 
     faCode, faBars, faUser, faCircleUser, faWrench, faScroll, faHouse, 
     faPenToSquare, faGears, faList, faFileCsv, faUsers, faChevronDown, 
-    faImage, faEllipsis, faGear, faSliders, faCircleXmark
+    faImage, faEllipsis, faGear, faSliders, faCircleXmark, faTurnDown
     
 )
 
