@@ -29,7 +29,7 @@
                         Send Invitation
                     </a>
                 </MenuItem>
-                <MenuItem v-slot="{active}">
+                <!-- <MenuItem v-slot="{active}">
                     <router-link :to="{name: 'People', params: {id: data.projectId}}"
                         :class="{'bg-gray-100': active}" 
                         class="block py-2 px-4 text-sm text-gray-700 
@@ -37,7 +37,7 @@
                         <font-awesome-icon icon="fa-solid fa-users" class="h-4 w-4 mr-2 mt-0.5" />
                         People
                     </router-link>
-                </MenuItem>
+                </MenuItem> -->
                 <MenuItem v-for="(item, i) in listOptions" :key="i"
                     v-slot="{active}">
                     <a @click="item.action" 

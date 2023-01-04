@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import AuthLayout from '../components/layouts/AuthLayout.vue'
+import ProjectLayout from '../components/layouts/ProjectLayout.vue'
 import GuestLayout from '../components/layouts/GuestLayout.vue'
 import AdminLayout from '../components/layouts/AdminLayout.vue'
 import Register from '../views/auth/Register.vue'
@@ -24,6 +25,10 @@ import Projects from '../views/admin/Projects.vue'
 import LeadStats from '../views/report/Leads.vue'
 import PageViewStats from '../views/report/PageView.vue'
 import People from '../views/People.vue'
+import ProductCategory from '../views/products/Category.vue'
+import ProductCouponCode from '../views/products/CouponCodes.vue'
+import ProductSimple from '../views/products/SimpleProduct.vue'
+import NewProduct from '../views/products/NewProduct.vue'
 import store from '../store'
 
 const routes = [
@@ -48,12 +53,23 @@ const routes = [
         children: [
             {path: '/dashboard', name: 'Dashboard', component: Dashboard},
             {path: '/account', name: 'Account', component: Account},
+        ]
+    },
+    {
+        path: '/',
+        component: ProjectLayout,
+        meta: {requiresAuth: true},
+        children: [
             {path: '/project/:id', name: 'Project', component: Project},
             {path: '/link/:id', name: 'Link', component: Link},
             {path: '/reseller/users', name: 'Reseller', component: Reseller},
             {path: '/link/:id/leads', name: 'LeadStats', component: LeadStats},
             {path: '/link/:id/statistics', name: 'PageViewStats', component: PageViewStats},
-            {path: '/project/:id/people', name: 'People', component: People},
+            {path: '/:id/people', name: 'People', component: People},
+            {path: '/:id/product/category', name: 'ProductCategory', component: ProductCategory},
+            {path: '/:id/product/coupon-code', name: 'ProductCouponCode', component: ProductCouponCode},
+            {path: '/:id/products', name: 'ProductSimple', component: ProductSimple},
+            {path: '/:id/product/new', name: 'NewProduct', component: NewProduct},
         ]
     },
     {
