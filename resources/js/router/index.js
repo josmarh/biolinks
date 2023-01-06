@@ -69,7 +69,7 @@ const routes = [
             {path: '/:id/product/category', name: 'ProductCategory', component: ProductCategory},
             {path: '/:id/product/coupon-code', name: 'ProductCouponCode', component: ProductCouponCode},
             {path: '/:id/products', name: 'ProductSimple', component: ProductSimple},
-            {path: '/:id/product/new', name: 'NewProduct', component: NewProduct},
+            {path: '/:id/product', name: 'NewProduct', component: NewProduct},
         ]
     },
     {

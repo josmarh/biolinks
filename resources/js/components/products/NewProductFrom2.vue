@@ -6,7 +6,7 @@
             </h1>
         </div>
         <div>
-            <button type="button" @click="save"
+            <button type="button" @click="updateForm2"
                 class="text-white bg-blue-700 hover:bg-blue-800 
                 focus:ring-0 focus:ring-blue-300 font-medium 
                 text-sm px-5 py-2.5 mr-2 capitalize
@@ -37,7 +37,7 @@
         <external-link :data="model.extLink" @updateProduct="updateProduct" />
         <hr class="mt-6 w-full">
 
-        <button type="button" @click="save"
+        <button type="button" @click="updateForm2"
             class="text-white bg-blue-700 hover:bg-blue-800 
             focus:ring-0 focus:ring-blue-300 font-medium 
             text-sm px-5 py-4 mr-2 capitalize mt-6
@@ -57,24 +57,17 @@ import Inventory from './product-price-options/Inventory.vue'
 import DigitalFile from './product-price-options/DigitalFile.vue';
 import ExternalLink from './product-price-options/ExternalLink.vue';
 
-let model = ref({
-    pricing: {
-        price: 10.05,
-        comparePrice: null,
-        paymentType: 'one-time',
-    },
-    shipping: {
-        isRequired: 'no',
-        weight: 0
-    },
-    inventory: {
-        sku: '',
-        track: 'no',
-        inventory: 0
-    },
-    files: [],
-    extLink: ''
+const props = defineProps({
+    data: Object
 })
+const emit = defineEmits(['updateModel'])
+
+let model = ref(props.data)
+
+watch(() => props.data, (newVal, oldVal) => {
+    model.value = newVal
+})
+
 let isDisabled = ref(false)
 
 function updateProduct(data) {
@@ -100,8 +93,8 @@ function updateProduct(data) {
     }
 }
 
-function save() {
-
+function updateForm2() {
+    emit('updateModel', model.value)
 }
 
 </script>

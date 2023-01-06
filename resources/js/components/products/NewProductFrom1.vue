@@ -17,7 +17,7 @@
             placeholder="">
         </div>
         <div class="mt-2">
-            <button type="button" @click="save"
+            <button type="button" @click="updateForm1"
                 class="text-white bg-blue-700 hover:bg-blue-800 
                 focus:ring-0 focus:ring-blue-300 font-medium 
                 text-sm px-5 py-2.5 mr-2 capitalize
@@ -189,19 +189,17 @@ import MoreOptions from './MoreOptions.vue'
 import Editor from '@tinymce/tinymce-vue'
 import draggable from 'vuedraggable'
 
-let host = window.location.protocol+'//'+window.location.host
-let model = ref({
-    id: null,
-    title:'Your awesome product!',
-    description: '',
-    category: [],
-    catCheck: [],
-    images: []
+const props = defineProps({
+    data: Object
 })
+const emit = defineEmits(['updateModel'])
+let host = window.location.protocol+'//'+window.location.host
+let model = ref(props.data)
 
-function save() {
-
-}
+watch(() => props.data, (newVal, oldVal) => {
+    model.value = newVal
+    model.value['catCheck'] = newVal.category
+})
 
 function addCategory() {
     let cat = document.getElementById('category');
@@ -270,6 +268,10 @@ function updateFilePos(moved) {
     for(const [i, v] of model.value.images.entries()) {
         
     }
+}
+
+function updateForm1() {
+    emit('updateModel', model.value)
 }
 </script>
 

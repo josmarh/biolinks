@@ -2,7 +2,7 @@
     <div>
         <project-breadcrumbs
             v-if="projectInfo.data"
-            currentPage="New Product" 
+            :currentPage="product.data.title" 
             :projectInfo="projectInfo.data" 
         />
         <div class="flex flex-wrap mt-8">
@@ -39,10 +39,10 @@
                     <div class="px-4 py-5 flex-auto">
                         <div class="tab-content tab-space">
                             <div v-bind:class="{'hidden': openTab !== 1, 'block': openTab === 1}">
-                                <new-product-from-1 />
+                                <new-product-from-1 :data="productModel" @updateModel="updateModel" />
                             </div>
                             <div v-bind:class="{'hidden': openTab !== 2, 'block': openTab === 2}">
-                                <new-product-from-2 />
+                                <new-product-from-2 :data="productModel" @updateModel="updateModel" />
                             </div>
                         </div>
                     </div>
@@ -53,24 +53,105 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { notify } from 'notiwind';
 import ProjectBreadcrumbs from '../../components/ProjectBreadcrumbs.vue';
 import NewProductFrom1 from '../../components/products/NewProductFrom1.vue';
 import NewProductFrom2 from '../../components/products/NewProductFrom2.vue';
 import project from '../../store/project';
+import productStore from '../../store/product-store'
 
 const route = useRoute();
 const projectInfo = computed(() => project.state.projects)
+const product = computed(() => productStore.state.product)
 
 let openTab = ref(1)
+let productModel = ref({
+    id: route.query.pid,
+    title:'Your awesome product!',
+    description: '',
+    category: [],
+    catCheck: [],
+    images: [],
+    pricing: {
+        price: 10.05,
+        comparePrice: null,
+        paymentType: 'one-time',
+    },
+    shipping: {
+        isRequired: 'no',
+        weight: 0
+    },
+    inventory: {
+        sku: '',
+        track: 'no',
+        inventory: 0
+    },
+    files: [],
+    extLink: '',
+    linkId: null,
+})
+
+watch(product, (newVal, oldVal) => {
+    productModel.value = newVal.data
+})
 
 function toggleTabs(tabNumber) {
     openTab.value = tabNumber
 }
 
+function updateModel(data) {
+    productModel.value = data
+    updateProduct();
+}
+
+function updateProduct() {
+    productStore
+        .dispatch('updateProduct', {
+            id: route.query.pid,
+            linkId: productModel.value.linkId,
+            title: productModel.value.title,
+            description: productModel.value.description,
+            category: JSON.stringify(productModel.value.category),
+            images: JSON.stringify(productModel.value.images),
+            pricing: JSON.stringify(productModel.value.pricing),
+            shipping: JSON.stringify(productModel.value.shipping),
+            inventory: JSON.stringify(productModel.value.inventory),
+            prodFiles: JSON.stringify(productModel.value.files),
+            extLink: productModel.value.extLink
+        })
+        .then((res) => {
+            notify({
+                group: "success",
+                title: "Success",
+                text: res.message
+            }, 4000);
+            productStore.dispatch('getProduct', route.query.pid)
+        })
+        .catch((err) => {
+            let errMsg;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message"))
+                        errMsg = err.response.data.message;
+                    else
+                        errMsg = err.response.data.error;
+                }
+            }else{
+                errMsg = err;
+            }
+            notify({
+                group: "error",
+                title: "Error",
+                text: errMsg
+            }, 4000);
+        })
+}
+
 onMounted(() => {
     project.dispatch('getProjectInfo', route.params.id)
+    productStore.dispatch('getProduct', route.query.pid)
 })
 </script>
 

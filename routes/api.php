@@ -26,6 +26,8 @@ use App\Http\Controllers\Admin\AdminProjectLinkController;
 use App\Http\Controllers\SPAController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProjectTeamController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +43,20 @@ use App\Http\Controllers\ProjectTeamController;
 Route::middleware('auth:sanctum')->group(function() {
     Route::get('user', function (Request $request) {
         return $request->user();
+    });
+
+    Route::get('/products/{projectId}', [ProductController::class, 'index']);
+    Route::get('/product/categories/{projectId}', [ProductCategoryController::class, 'index']);
+    Route::group(['prefix' => 'product'], function () {
+        Route::post('/store', [ProductController::class, 'store']);
+        Route::post('/duplicate/{id}', [ProductController::class, 'duplicate']);
+        Route::get('/show/{id}', [ProductController::class, 'show']);
+        Route::put('/update/{id}', [ProductController::class, 'update']);
+        Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
+
+        Route::get('/category/show/{id}', [ProductCategoryController::class, 'show']);
+        Route::put('/category/update/{id}', [ProductCategoryController::class, 'update']);
+        Route::delete('/category/delete/{id}', [ProductCategoryController::class, 'destroy']);
     });
 
     Route::get('/report/dashbord-cards', [ReportController::class, 'dashboardCardSummary']);
