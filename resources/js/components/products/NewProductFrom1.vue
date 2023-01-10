@@ -171,41 +171,81 @@
                     </div>
                 </div>
             </div>
-            <input type="text" id="category" @keyup.enter="addCategory"
+            <input type="text" id="category" 
+            @keyup.enter="addCategory"
+            v-model="catSearch.category"
             class="bg-gray-50 border border-gray-300 
             text-gray-900 text-sm focus:ring-blue-500 mt-4
             focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
             dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
             dark:focus:ring-blue-500 dark:focus:border-blue-500" 
             placeholder="Enter a category">
-            <p class="mt-1 text-sm text-gray-500">Hit the enter button when you're done with the category</p>
+            <!-- <ul class="autocomplete-results" id="autocomplete-results" v-show="searchCatList.isOpen">
+                <li class="loading" v-if="searchCatList.isLoading">
+                    Loading results...
+                </li>
+                <li v-else
+                    v-for="(result, i) in searchCatData.data"
+                    :key="i"
+                    @click="setResult(result)"
+                    class="autocomplete-result"
+                    :class="{ 'is-active': i === searchCatList.arrowCounter }">
+                    {{ result }}
+                </li>
+            </ul> -->
+            <p class="mt-1 text-sm text-gray-500">
+                Hit the enter button when you're done with the category
+            </p>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import MoreOptions from './MoreOptions.vue'
 import Editor from '@tinymce/tinymce-vue'
 import draggable from 'vuedraggable'
+import productStore from '../../store/product-store'
 
 const props = defineProps({
     data: Object
 })
 const emit = defineEmits(['updateModel'])
+const route = useRoute();
+const searchCatData = computed(() => productStore.state.searchCategory)
+
 let host = window.location.protocol+'//'+window.location.host
 let model = ref(props.data)
+let catSearch = ref({
+    projId: route.params.id,
+    category: ''
+})
+// let searchCatList = ref({
+//     isOpen: false,
+//     isLoading: false,
+//     arrowCounter: -1,
+// })
 
 watch(() => props.data, (newVal, oldVal) => {
     model.value = newVal
     model.value['catCheck'] = newVal.category
 })
 
+// watch(catSearch, (newVal, oldVal) => {
+//     if(newVal.category) {
+//         setTimeout(() => {
+//             productStore.dispatch('searchCategory', catSearch.value)
+//         }, 1300)
+//     }
+// }, {deep: true})
+
 function addCategory() {
     let cat = document.getElementById('category');
     model.value.category.push(cat.value);
     model.value.catCheck.push(cat.value);
     cat.value = '';
+    catSearch.value.category = '';
 
     model.value.category = []
     model['_rawValue'].catCheck.forEach((c) => {
@@ -275,6 +315,30 @@ function updateForm1() {
 }
 </script>
 
-<style>
+<style setup>
+.autocomplete {
+    position: relative;
+}
 
+.autocomplete-results {
+    padding: 0;
+    margin: 0;
+    border: 1px solid #eeeeee;
+    height: 120px;
+    min-height: 1em;
+    max-height: 6em;    
+    overflow: auto;
+}
+
+.autocomplete-result {
+    list-style: none;
+    text-align: left;
+    padding: 4px 2px;
+    cursor: pointer;
+}
+
+.autocomplete-result:hover {
+    background-color: #4AAE9B;
+    color: white;
+}
 </style>

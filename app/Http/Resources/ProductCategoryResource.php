@@ -18,7 +18,7 @@ class ProductCategoryResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
-            'products' => isset($this->products) ? json_decode($this->products) : null
+            'products' => isset($this->products) ? json_decode($this->products) : []
         ];
     }
 }

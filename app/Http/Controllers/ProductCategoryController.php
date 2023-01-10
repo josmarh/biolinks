@@ -52,4 +52,14 @@ class ProductCategoryController extends Controller
 
         
     }
+
+    public function search(Request $request, $projectId) 
+    {
+        $category = $request->query('category');
+        $prodCategory = ProductCategory::where('project_id', $projectId)
+            ->where('title', 'like', '%'.$category.'%')
+            ->get();
+
+        return ProductCategoryResource::collection($prodCategory);
+    }
 }

@@ -54,6 +54,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::put('/update/{id}', [ProductController::class, 'update']);
         Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
 
+        Route::get('/category/search/{projectId}', [ProductCategoryController::class, 'search']);
         Route::get('/category/show/{id}', [ProductCategoryController::class, 'show']);
         Route::put('/category/update/{id}', [ProductCategoryController::class, 'update']);
         Route::delete('/category/delete/{id}', [ProductCategoryController::class, 'destroy']);

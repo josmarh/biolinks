@@ -26,6 +26,7 @@ import LeadStats from '../views/report/Leads.vue'
 import PageViewStats from '../views/report/PageView.vue'
 import People from '../views/People.vue'
 import ProductCategory from '../views/products/Category.vue'
+import ProductCategoryEdit from '../views/products/CategoryEdit.vue'
 import ProductCouponCode from '../views/products/CouponCodes.vue'
 import ProductSimple from '../views/products/SimpleProduct.vue'
 import NewProduct from '../views/products/NewProduct.vue'
@@ -67,6 +68,7 @@ const routes = [
             {path: '/link/:id/statistics', name: 'PageViewStats', component: PageViewStats},
             {path: '/:id/people', name: 'People', component: People},
             {path: '/:id/product/category', name: 'ProductCategory', component: ProductCategory},
+            {path: '/:id/product/category/update', name: 'ProductCategoryEdit', component: ProductCategoryEdit},
             {path: '/:id/product/coupon-code', name: 'ProductCouponCode', component: ProductCouponCode},
             {path: '/:id/products', name: 'ProductSimple', component: ProductSimple},
             {path: '/:id/product', name: 'NewProduct', component: NewProduct},

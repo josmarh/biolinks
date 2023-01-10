@@ -132,12 +132,13 @@ class ProductController extends Controller
 
         // product info in category data treat
         $categories = json_decode($request->category);
-        if(count($categories) > 0) {
+        // if(count($categories) > 0) {
             foreach($categories as $cat) {
                 $prodCat = ProductCategory::where('project_id', $product->project_id)
                     ->where('title', $cat)
                     ->first();
 
+                // If request category does not exist add new
                 if(!$prodCat) {
                     $prodCatArr = [['id' => $product->id, 'name' => $product->title]];
 
@@ -167,13 +168,35 @@ class ProductController extends Controller
                             ]);
                         }
                     }
+
+                    // $existingProductInCat = json_decode($prodCat->products);
+                    // $existingCatInProduct = json_decode($request->category);
                     
                     $prodCat->update([
                         'products' => json_encode($prodCatArr)
                     ]);
                 }
             }
-        }
+
+            $prodCategories = ProductCategory::where('project_id', $product->project_id)->get();
+
+            foreach ($prodCategories as $prodCatKeys => $prodCat) {
+                foreach ($categories as $catKey => $cat) {
+                    if($cat != $prodCat) {
+                        $categoryProd = json_decode($prodCat->products);
+                        // if(count($categoryProd)>0) {
+                            foreach($categoryProd as $prodKey => $prod) {
+                                if ($product->id == $prod->id) {
+                                    unset($categoryProd[$prodKey]);
+                                    $prodCat->update(['products' => json_encode($prodCat->products)]);
+                                }
+                            }
+                        // }
+                    }
+                }
+            }
+            
+        // }
 
         return response([
             'message' => 'Product Updated.',

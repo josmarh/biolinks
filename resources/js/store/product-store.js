@@ -19,6 +19,9 @@ const productStore = createStore({
         category: {
             data: {}
         },
+        searchCategory: {
+            data: []
+        }
     },
     getters: {},
     actions: {
@@ -95,6 +98,13 @@ const productStore = createStore({
                     return data;
                 })
         },
+        searchCategory({ commit }, query) {
+            return axiosClient.get(`/product/category/search/${query.projId}?category=${query.category}`)
+                .then(({data}) => {
+                    commit('setSearchCategory', data)
+                    return data;
+                })
+        },
         updateCategory({ }, payload) {
             return axiosClient.put(`/product/category/update/${payload.id}`, payload)
                 .then(({data}) => {
@@ -121,6 +131,9 @@ const productStore = createStore({
         setCategory: (state, data) => {
             state.category = data
         },
+        setSearchCategory: (state, data) => {
+            state.searchCategory = data
+        }
     },
     modules: {}
 });

@@ -19,8 +19,7 @@
                     <td class="px-6 py-4">
                         <div class="flex gap-10">
                             <div>
-                                <button
-                                    type="button"
+                                <button type="button" @click="editCategory(item.id)"
                                     class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                                     focus:outline-none focus:ring-gray-100
                                     font-medium text-sm px-5 py-2.5 text-center 
@@ -31,8 +30,7 @@
                                 </button>
                             </div>
                             <div>
-                                <button
-                                    type="button"
+                                <button type="button" @click="deleteModal(item.id)"
                                     class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                                     focus:outline-none focus:ring-gray-100
                                     font-medium text-sm px-5 py-2.5 text-center 
@@ -71,14 +69,83 @@
             </nav>
         </div>
     </div>
+    <confirm-delete 
+    from="category" 
+    :showDelete="showDelete" 
+    :isDisabled="isDisabled"
+    @confirm="deleteCategory"
+    @cancel="cancelModal"
+    />
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { notify } from 'notiwind';
+import ConfirmDelete from '../ConfirmDelete.vue'
+import productStore from '../../store/product-store';
+
+const route = useRoute();
+const router = useRouter();
 const theaders = ['category title','']
 const props = defineProps({
     data: Array,
     meta: Object
 })
+let isDisabled = ref(false)
+let showDelete = ref(false)
+let catId = ref(null)
+
+function editCategory(catId) {
+    router.push({
+        name: 'ProductCategoryEdit',
+        params: {id: route.params.id},
+        query: {cat_id: catId}
+    })
+}
+
+function deleteModal(id) {
+    showDelete.value = true
+    catId.value = id
+}
+
+function cancelModal() {
+    showDelete.value = false
+}
+
+function deleteCategory() {
+    isDisabled.value = true
+    productStore
+        .dispatch('deleteCategory', catId.value)
+        .then((res) => {
+            isDisabled.value = false
+            notify({
+                group: "success",
+                title: "Success",
+                text: res.message
+            }, 4000);
+        })
+        .catch((err) => {
+            isDisabled.value = false
+            let errMsg;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message"))
+                        errMsg = err.response.data.message;
+                    else
+                        errMsg = err.response.data.error;
+                }
+            }else{
+                errMsg = err;
+            }
+            notify({
+                group: "error",
+                title: "Error",
+                text: errMsg
+            }, 4000);
+        })
+
+}
 
 const getForPage = (ev,link) => {
     ev.preventDefault();
