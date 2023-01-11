@@ -1,9 +1,13 @@
 <template>
     <div>
-        <project-breadcrumbs
-            v-if="projectInfo.data"
-            :currentPage="product.data.title" 
-            :projectInfo="projectInfo.data" 
+        <Breadcrumbs 
+        v-if="projectInfo.data"
+        :currentPage="product.data.title" 
+        :projectInfo="projectInfo.data" 
+        :prevPage="{
+            to: 'ProductSimple',
+            label: 'Products'
+        }"
         />
         <div class="flex flex-wrap mt-8">
             <div class="w-full">
@@ -56,7 +60,7 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { notify } from 'notiwind';
-import ProjectBreadcrumbs from '../../components/ProjectBreadcrumbs.vue';
+import Breadcrumbs from '../../components/4StageBreadcrumbs.vue'
 import NewProductFrom1 from '../../components/products/NewProductFrom1.vue';
 import NewProductFrom2 from '../../components/products/NewProductFrom2.vue';
 import project from '../../store/project';

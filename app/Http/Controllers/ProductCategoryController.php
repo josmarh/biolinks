@@ -12,7 +12,9 @@ class ProductCategoryController extends Controller
 {
     public function index($projectId)
     {
-        $prodCategory = ProductCategory::where('project_id', $projectId)->paginate(15);
+        $prodCategory = ProductCategory::where('project_id', $projectId)
+            ->orderBy('id', 'desc')
+            ->paginate(15);
 
         return ProductCategoryResource::collection($prodCategory);
     }
@@ -48,9 +50,32 @@ class ProductCategoryController extends Controller
 
     public function destroy($id)
     {
-        $prodCategory = ProductCategory::findOrFail($id);
+        $category = ProductCategory::findOrFail($id);
 
-        
+        // check all project product where category is used
+        $products = Product::where('project_id', $category->project_id)->get();
+
+        foreach ($products as $productKey => $product) {
+            $productCategories = json_decode($product->category);
+
+            if(count($productCategories) > 0) {
+                foreach ($productCategories as $productCatKey => $productCategory) {
+                    if($productCategory == $category->title) {
+                        unset($productCategories[$productCatKey]);
+                    }
+                }
+                // update product after category is deleted
+                $product->update([
+                    'category' => json_encode($productCategories)
+                ]);
+            }
+        }
+        $category->delete();
+
+        return response([
+            'message' => 'Category deleted.',
+            'status_code' => 204
+        ], 200);
     }
 
     public function search(Request $request, $projectId) 

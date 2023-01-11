@@ -28,6 +28,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProjectTeamController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductCouponController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::get('/products/{projectId}', [ProductController::class, 'index']);
     Route::get('/product/categories/{projectId}', [ProductCategoryController::class, 'index']);
+    Route::get('/product/coupons/{projectId}', [ProductCouponController::class, 'index']);
     Route::group(['prefix' => 'product'], function () {
         Route::post('/store', [ProductController::class, 'store']);
         Route::post('/duplicate/{id}', [ProductController::class, 'duplicate']);
@@ -58,6 +60,11 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/category/show/{id}', [ProductCategoryController::class, 'show']);
         Route::put('/category/update/{id}', [ProductCategoryController::class, 'update']);
         Route::delete('/category/delete/{id}', [ProductCategoryController::class, 'destroy']);
+
+        Route::post('/coupon/store', [ProductCouponController::class, 'store']);
+        Route::get('/coupon/show/{id}', [ProductCouponController::class, 'show']);
+        Route::put('/coupon/update/{id}', [ProductCouponController::class, 'update']);
+        Route::delete('/coupon/delete/{id}', [ProductCouponController::class, 'destroy']);
     });
 
     Route::get('/report/dashbord-cards', [ReportController::class, 'dashboardCardSummary']);

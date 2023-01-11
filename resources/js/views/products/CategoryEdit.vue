@@ -56,7 +56,7 @@
                             <template #item="{element}">
                                 <li class="w-full px-4 py-2.5 bg-gray-100
                                     border-b border-gray-200 rounded-lg 
-                                    dark:border-gray-600">
+                                    dark:border-gray-600 mb-2">
                                     <font-awesome-icon icon="fa-solid fa-up-down-left-right" class="mr-2" />
                                     {{ element.name }}
                                 </li>                                

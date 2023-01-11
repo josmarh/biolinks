@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Http\Resources\ProductResource;
 use App\Services\FileHandler;
+use Log;
 
 class ProductController extends Controller
 {
@@ -130,73 +131,108 @@ class ProductController extends Controller
             'external_link' => $request->extLink
         ]);
 
-        // product info in category data treat
+        // Add or update category
         $categories = json_decode($request->category);
-        // if(count($categories) > 0) {
+
+        if(count($categories) > 0) {
+            $notInProductCategories = [];
+            $projectCategories = ProductCategory::where('project_id', $product->project_id)->get();
+
             foreach($categories as $cat) {
-                $prodCat = ProductCategory::where('project_id', $product->project_id)
+                // Check if category exist
+                $category = ProductCategory::where('project_id', $product->project_id)
                     ->where('title', $cat)
                     ->first();
 
                 // If request category does not exist add new
-                if(!$prodCat) {
-                    $prodCatArr = [['id' => $product->id, 'name' => $product->title]];
+                if(!$category) {
+                    $newCategoryProduct = [['id' => $product->id, 'name' => $product->title]];
 
                     ProductCategory::create([
                         'title' => $cat,
                         'slug' => $cat,
-                        'products' => json_encode($prodCatArr),
+                        'products' => json_encode($newCategoryProduct),
                         'project_id' => $product->project_id
                     ]);
-                }elseif($prodCat) {
-                    // check if product exist in arr else add
-                    $prodCatArr = json_decode($prodCat->products);
+                } // update category products where category exist
+                elseif($category) {
+                    // check if product exist in category->products else add
+                    $categoryProducts = json_decode($category->products);
 
-                    if(count($prodCatArr) > 0) {
+                    if(count($categoryProducts) > 0) {
                         $counter = 0;
-
-                        foreach($prodCatArr as $prod) {
-                            if($prod->id == $product->id) {
+                        foreach($categoryProducts as $categoryProduct) {
+                            if($categoryProduct->id == $product->id) {
                                 $counter += 1;
                             }
                         }
-
                         if($counter == 0) {
-                            array_push($prodCatArr, (object)[
+                            array_push($categoryProducts, (object)[
                                 'id' => $product->id,
                                 'name' => $product->title
                             ]);
                         }
+                    }else {
+                        array_push($categoryProducts, (object)[
+                            'id' => $product->id,
+                            'name' => $product->title
+                        ]);
                     }
 
-                    // $existingProductInCat = json_decode($prodCat->products);
-                    // $existingCatInProduct = json_decode($request->category);
-                    
-                    $prodCat->update([
-                        'products' => json_encode($prodCatArr)
+                    $category->update([
+                        'products' => json_encode($categoryProducts)
+                    ]);
+                }
+
+                // remove product from category products where $this category is not (if product exist there)
+                if(count($projectCategories) > 0) {
+                    foreach ($projectCategories as $projectCategory) {
+                        if($projectCategory->title !== $cat) {
+                            array_push($notInProductCategories, $projectCategory->title);
+                        }
+                    }
+                }
+            }            
+
+            $unique = array_values(array_unique($notInProductCategories));
+            $notInProductCategories = array_diff($unique, $categories);
+
+            if(count($notInProductCategories) > 0) {
+                foreach ($projectCategories as $projectCategory) {
+                    foreach ($notInProductCategories as $notInProductCategory) {
+                        if($projectCategory->title == $notInProductCategory) {
+                            $categoryProducts = json_decode($projectCategory->products);
+                            foreach ($categoryProducts as $categoryProductKey => $categoryProduct) {
+                                if($product->id == $categoryProduct->id) {
+                                    unset($categoryProducts[$categoryProductKey]);
+                                }
+                            }
+                            $projectCategory->update([
+                                'products' => json_encode($categoryProducts)
+                            ]);
+                        }
+                    }
+                }
+            }
+        }else {
+            // check all project category where product exist and remove product
+            $projectCategories = ProductCategory::where('project_id', $product->project_id)->get();
+
+            if(count($projectCategories) > 0) {
+                foreach ($projectCategories as $projectCategory) {
+                    $categoryProducts = json_decode($projectCategory->products);
+                    foreach ($categoryProducts as $categoryProductKey => $categoryProduct) {
+                        if($categoryProduct->id == $product->id) {
+                            unset($categoryProducts[$categoryProductKey]);
+                        }
+                    }
+                    // update category product after product is deleted
+                    $projectCategory->update([
+                        'products' => json_encode($categoryProducts)
                     ]);
                 }
             }
-
-            $prodCategories = ProductCategory::where('project_id', $product->project_id)->get();
-
-            foreach ($prodCategories as $prodCatKeys => $prodCat) {
-                foreach ($categories as $catKey => $cat) {
-                    if($cat != $prodCat) {
-                        $categoryProd = json_decode($prodCat->products);
-                        // if(count($categoryProd)>0) {
-                            foreach($categoryProd as $prodKey => $prod) {
-                                if ($product->id == $prod->id) {
-                                    unset($categoryProd[$prodKey]);
-                                    $prodCat->update(['products' => json_encode($prodCat->products)]);
-                                }
-                            }
-                        // }
-                    }
-                }
-            }
-            
-        // }
+        }
 
         return response([
             'message' => 'Product Updated.',
@@ -209,7 +245,25 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         // delete biolink if associated 
-        // delete product id from category
+
+        // delete product id from category products
+        $projectCategories = ProductCategory::where('project_id', $product->project_id)->get();
+
+        if(count($projectCategories) > 0) {
+            foreach ($projectCategories as $projectCategory) {
+                $categoryProducts = json_decode($projectCategory->products);
+
+                foreach ($categoryProducts as $categoryProductKey => $categoryProduct) {
+                    if($categoryProduct->id == $product->id) {
+                        unset($categoryProducts[$categoryProductKey]);
+                    }
+                }
+                // update category product after product is deleted
+                $projectCategory->update([
+                    'products' => json_encode($categoryProducts)
+                ]);
+            }
+        }
 
         $product->delete();
 

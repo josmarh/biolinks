@@ -14,39 +14,42 @@
                     class="bg-white border-b hover:bg-gray-50">
                     <th scope="row" class="px-6 py-4 font-medium 
                     text-gray-900 dark:text-white whitespace-nowrap">
-                        {{item.title}}
+                        <router-link :to="{
+                        name: 'CouponUpdateForm', 
+                        params: {id: $route.params.id}, 
+                        query: {cop_id: item.id}}"
+                        class="hover:text-blue-600">
+                            {{ item.couponCode }}
+                        </router-link>
                     </th>
                     <td class="px-6 py-4">
-                        <div class="flex gap-10">
-                            <div>
-                                <button type="button" @click="editCategory(item.id)"
-                                    class="text-gray-500 bg-gray-100 hover:bg-gray-200 
-                                    focus:outline-none focus:ring-gray-100
-                                    font-medium text-sm px-5 py-2.5 text-center 
-                                    inline-flex items-center dark:focus:ring-gray-500 mr-2">
-                                    <font-awesome-icon 
-                                        icon="fa-solid fa-pen-to-square"
-                                        class="" />
-                                </button>
-                            </div>
-                            <div>
-                                <button type="button" @click="deleteModal(item.id)"
-                                    class="text-gray-500 bg-gray-100 hover:bg-gray-200 
-                                    focus:outline-none focus:ring-gray-100
-                                    font-medium text-sm px-5 py-2.5 text-center 
-                                    inline-flex items-center dark:focus:ring-gray-500 mr-2">
-                                    <font-awesome-icon 
-                                        icon="fa-solid fa-trash"
-                                        class="" />
-                                </button>
-                            </div>
-                        </div>
+
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ !item.expiryDate ? 'Active' : 'Inactive' }}
+                    </td>
+                    <td class="px-6 py-4">
+                        0
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ item.isExpires == 'no' ? 'No expiration.' : item.expiryDate }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <button type="button" @click="deleteModal(item.id)"
+                            class="text-gray-500 bg-gray-100 hover:bg-gray-200 
+                            focus:outline-none focus:ring-gray-100
+                            font-medium text-sm px-5 py-2.5 text-center 
+                            inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                            <font-awesome-icon 
+                                icon="fa-solid fa-trash"
+                                class="" />
+                        </button>
                     </td>
                 </tr>
             </tbody>
         </table>
-         <!-- Pagination -->
-         <div class="flex justify-center mt-5 mb-5">
+        <!-- Pagination -->
+        <div class="flex justify-center mt-5 mb-5">
             <nav class="relative z-0 inline-flex justify-center rounded-md shadow-sm"
                 aria-label="Pagination">
                 <a v-for="(link, i) of meta.links" 
@@ -70,11 +73,11 @@
         </div>
     </div>
     <confirm-delete 
-    from="category" 
-    :showDelete="showDelete" 
-    :isDisabled="isDisabled"
-    @confirm="deleteCategory"
-    @cancel="cancelModal"
+        from="coupon" 
+        :showDelete="showDelete" 
+        :isDisabled="isDisabled"
+        @confirm="deleteCoupon"
+        @cancel="cancelModal"
     />
 </template>
 
@@ -87,40 +90,32 @@ import productStore from '../../store/product-store';
 
 const route = useRoute();
 const router = useRouter();
-const theaders = ['category title','']
+const theaders = ['coupon','discount','status','number used','date expired','']
 const props = defineProps({
     data: Array,
     meta: Object
 })
 let isDisabled = ref(false)
 let showDelete = ref(false)
-let catId = ref(null)
-
-function editCategory(catId) {
-    router.push({
-        name: 'ProductCategoryEdit',
-        params: {id: route.params.id},
-        query: {cat_id: catId}
-    })
-}
+let copId = ref(null)
 
 function deleteModal(id) {
     showDelete.value = true
-    catId.value = id
+    copId.value = id
 }
 
 function cancelModal() {
     showDelete.value = false
 }
 
-function deleteCategory() {
+function deleteCoupon() {
     isDisabled.value = true
     productStore
-        .dispatch('deleteCategory', catId.value)
+        .dispatch('deleteCoupon', copId.value)
         .then((res) => {
             isDisabled.value = false
             showDelete.value = false
-            productStore.dispatch('getCatgories', route.params.id)
+            productStore.dispatch('getCoupons', route.params.id)
             notify({
                 group: "success",
                 title: "Success",
@@ -146,7 +141,6 @@ function deleteCategory() {
                 text: errMsg
             }, 4000);
         })
-
 }
 
 const getForPage = (ev,link) => {
@@ -154,7 +148,7 @@ const getForPage = (ev,link) => {
     if(!link.url || link.active) {
         return;
     }
-    productStore.dispatch('paginateCatgories', link.url);
+    productStore.dispatch('paginateCoupon', link.url);
 }
 </script>
 

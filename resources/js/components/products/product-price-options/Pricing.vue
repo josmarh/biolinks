@@ -11,7 +11,7 @@
         <div class="mt-5 md:col-span-2 md:mt-0">
             <div class="shadow-xl sm:overflow-hidden sm:rounded-md">
                 <div class="space-y-6 bg-white px-4 py-5 sm:p-6">
-                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div class="md:grid gap-6 mb-6 md:grid-cols-2">
                         <div>
                             <label for="price" 
                                 class="block mb-2 text-sm font-medium 

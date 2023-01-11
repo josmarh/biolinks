@@ -51,6 +51,7 @@
 </template>
 
 <script setup>
+import productStore from '../../store/product-store';
 import ProductListOptions from './ProductListOptions.vue';
 
 const props = defineProps({
@@ -63,7 +64,7 @@ const getForPage = (ev,link) => {
     if(!link.url || link.active) {
         return;
     }
-    store.dispatch('paginateProducts', link.url);
+    productStore.dispatch('paginateProducts', link.url);
 }
 </script>
 

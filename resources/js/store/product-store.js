@@ -21,7 +21,15 @@ const productStore = createStore({
         },
         searchCategory: {
             data: []
-        }
+        },
+        coupons: {
+            data: [],
+            links: {},
+            meta: {}
+        },
+        coupon: {
+            data: {}
+        },
     },
     getters: {},
     actions: {
@@ -117,6 +125,45 @@ const productStore = createStore({
                     return data;
                 })
         },
+        getCoupons({ commit }, projectId) {
+            return axiosClient.get(`/product/coupons/${projectId}`)
+                .then(({data}) => {
+                    commit('setCoupons', data)
+                    return data;
+                })
+        },
+        paginateCoupons({ commit }, url) {
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setCoupons', data)
+                    return data;
+                })
+        },
+        getCoupon({ commit }, id) {
+            return axiosClient.get(`/product/coupon/show/${id}`)
+                .then(({data}) => {
+                    commit('setCoupon', data)
+                    return data;
+                })
+        },
+        storeCoupon({ }, payload) {
+            return axiosClient.post(`/product/coupon/store`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        updateCoupon({ }, payload) {
+            return axiosClient.put(`/product/coupon/update/${payload.id}`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        deleteCoupon({ }, id) {
+            return axiosClient.delete(`/product/coupon/delete/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setProducts: (state, data) => {
@@ -133,7 +180,13 @@ const productStore = createStore({
         },
         setSearchCategory: (state, data) => {
             state.searchCategory = data
-        }
+        },
+        setCoupons: (state, data) => {
+            state.coupons = data
+        },
+        setCoupon: (state, data) => {
+            state.coupon = data
+        },
     },
     modules: {}
 });

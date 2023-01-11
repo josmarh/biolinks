@@ -30,6 +30,8 @@ import ProductCategoryEdit from '../views/products/CategoryEdit.vue'
 import ProductCouponCode from '../views/products/CouponCodes.vue'
 import ProductSimple from '../views/products/SimpleProduct.vue'
 import NewProduct from '../views/products/NewProduct.vue'
+import CouponNewForm from '../views/products/CouponForm.vue'
+import CouponUpdateForm from '../views/products/CouponForm.vue'
 import store from '../store'
 
 const routes = [
@@ -70,6 +72,8 @@ const routes = [
             {path: '/:id/product/category', name: 'ProductCategory', component: ProductCategory},
             {path: '/:id/product/category/update', name: 'ProductCategoryEdit', component: ProductCategoryEdit},
             {path: '/:id/product/coupon-code', name: 'ProductCouponCode', component: ProductCouponCode},
+            {path: '/:id/product/coupon/new', name: 'CouponNewForm', component: CouponNewForm},
+            {path: '/:id/product/coupon/update', name: 'CouponUpdateForm', component: CouponUpdateForm},
             {path: '/:id/products', name: 'ProductSimple', component: ProductSimple},
             {path: '/:id/product', name: 'NewProduct', component: NewProduct},
         ]
