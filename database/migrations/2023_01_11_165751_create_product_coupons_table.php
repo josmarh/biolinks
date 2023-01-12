@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('is_expires');
             $table->date('expiry_date')->nullable();
             $table->timestamps();
+            $table->index(['project_id']);
         });
     }
 

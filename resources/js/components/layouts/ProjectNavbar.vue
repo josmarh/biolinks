@@ -40,6 +40,9 @@
                         <ProductDropdown />
                     </li>
                     <li>
+                        <MembershipDropdownMenu />
+                    </li>
+                    <li>
                         <router-link :to="{name: 'People', params: {id: $route.params.id}}"
                             :class="[$route.name == 'People'
                             ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
@@ -78,7 +81,8 @@
 
 <script setup>
 import UserDialogue from './UserDialogue.vue'
-import ProductDropdown from '../products/ProductDropdown.vue'
+import ProductDropdown from './ProductDropdownMenu.vue'
+import MembershipDropdownMenu from './MembershipDropdownMenu.vue';
 </script>
 
 <style>

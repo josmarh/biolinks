@@ -29,6 +29,7 @@ use App\Http\Controllers\ProjectTeamController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductCouponController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,17 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/coupon/show/{id}', [ProductCouponController::class, 'show']);
         Route::put('/coupon/update/{id}', [ProductCouponController::class, 'update']);
         Route::delete('/coupon/delete/{id}', [ProductCouponController::class, 'destroy']);
+    });
+
+    Route::group(['prefix' => 'membership'], function () {
+        Route::get('/posts/{projectId}', [PostController::class, 'index']);
+        Route::group(['prefix' => 'post'], function () {
+            Route::post('/store', [PostController::class, 'store']);
+            Route::post('/duplicate/{id}', [PostController::class, 'duplicate']);
+            Route::get('/show/{id}', [PostController::class, 'show']);
+            Route::put('/update/{id}', [PostController::class, 'update']);
+            Route::delete('/delete/{id}', [PostController::class, 'destroy']);
+        });
     });
 
     Route::get('/report/dashbord-cards', [ReportController::class, 'dashboardCardSummary']);

@@ -13,4 +13,9 @@ class ProductCategory extends Model
     protected $fillable = [
         'title', 'slug','products','project_id'
     ];
+
+    public function project() 
+    {
+        return $this->belongsTo(\App\Models\Project::class, 'project_id', 'custom_id');
+    }
 }

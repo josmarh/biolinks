@@ -10,6 +10,17 @@
             }"
         />
     </div>
+    <div v-else>
+        <Breadcrumbs 
+        v-if="projectInfo.data"
+        :currentPage="'Update Coupon: '+ model.couponCode " 
+        :projectInfo="projectInfo.data"
+        :prevPage="{
+            to: 'ProductCouponCode',
+            label: 'Coupons'
+        }"
+    />
+    </div>
     <div class="mt-4">
         <h1 class="py-4 text-3xl font-bold text-gray-800"
             v-if="$route.name == 'CouponNewForm'">
@@ -107,6 +118,7 @@ import productStore from '../../store/product-store'
 const route = useRoute();
 const router = useRouter();
 const projectInfo = computed(() => project.state.projects)
+const coupon = computed(() => productStore.state.coupon)
 let isDisabled = ref(false)
 
 let model = ref({
@@ -136,11 +148,22 @@ watch(() => model.value.expiryDate, (newVal, oldVal) => {
     model.value.expiryDate = dformat(newVal)
 })
 
+watch(coupon, (newVal, oldVal) => {
+    model.value = newVal.data
+})
+
 function updateCouponData(data) {
     model.value = data
 }
 
 function saveCoupon() {
+    if(route.name == 'CouponUpdateForm')
+        updateCoupon();
+    else
+        newCoupon();
+}
+
+function newCoupon() {
     isDisabled.value = true
     productStore
         .dispatch('storeCoupon', {
@@ -242,6 +265,9 @@ function dformat(date) {
 
 onMounted(() => {
     project.dispatch('getProjectInfo', route.params.id)
+
+    if(route.name == 'CouponUpdateForm')
+        productStore.dispatch('getCoupon', route.query.cop_id)
 })
 </script>
 

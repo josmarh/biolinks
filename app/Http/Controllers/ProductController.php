@@ -57,7 +57,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        $product = Product::create([
+        $newProduct = Product::create([
             'project_id' => $product->project_id,
             'title' => $product->title.' - Copy',
             'description' => $product->description,
@@ -70,9 +70,11 @@ class ProductController extends Controller
             'external_link' => $product->external_link
         ]);
 
+        // check if product has category and insert into it
+
         return response([
             'message' => 'Product duplicated.',
-            'productId' => $product->id,
+            'productId' => $newProduct->id,
             'status_code' => 201
         ], 201);
     }
@@ -272,4 +274,5 @@ class ProductController extends Controller
             'status_code' => 204
         ]);
     }
+
 }

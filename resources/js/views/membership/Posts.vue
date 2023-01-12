@@ -2,20 +2,17 @@
     <div>
         <project-breadcrumbs
             v-if="projectInfo.data"
-            currentPage="Products" 
+            currentPage="Post" 
             :projectInfo="projectInfo.data" 
         />
         <div class="flex justify-between">
             <div class="mt-4">
                 <h1 class="py-4 text-3xl font-bold text-gray-800">
-                    Simple Products
+                    Posts
                 </h1>
-                <p class="text-gray-500 text-sm font-bold">
-                    This area is for creating simple digital (digital download) or physical products.
-                </p>
             </div>
             <div class="mt-6">
-                <button type="button" @click="newProduct"
+                <button type="button" @click="newPost"
                     class="text-white bg-blue-700 hover:bg-blue-800 
                     focus:ring-0 focus:ring-blue-300 font-medium 
                     text-sm px-5 py-2.5 mr-2 capitalize
@@ -23,20 +20,21 @@
                     focus:outline-none dark:focus:ring-blue-800"
                     :disabled="isDisabled">
                     <font-awesome-icon icon="fa-solid fa-plus" />
-                    Create New Product
+                    Add New Post
                 </button>
             </div>
         </div>
+        <!-- main content -->
         <div class="flex mt-10 gap-10">
             <div class="w-96">
                 <label for="product_search" 
                     class="block mb-2 text-sm 
                     font-medium text-gray-900 
                     dark:text-white">
-                    Search for product
+                    Search for post
                 </label>
                 <input type="text" id="product_search" 
-                v-model="searchProduct.title"
+                v-model="searchPost.title"
                 class="bg-gray-50 border border-gray-300 
                 text-gray-900 text-sm focus:ring-blue-500 
                 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
@@ -44,7 +42,7 @@
                 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                 placeholder="Search by title">
             </div>
-            <product-list :data="products.data" :meta="products.meta" />
+            <post-list :data="posts.data" :meta="posts.meta" />
         </div>
     </div>
 </template>
@@ -54,48 +52,53 @@ import { onMounted, computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { notify } from 'notiwind';
 import ProjectBreadcrumbs from '../../components/ProjectBreadcrumbs.vue';
-import ProductList from '../../components/products/ProductList.vue';
+import PostList from '../../components/membership/PostList.vue'
+import postData from '../../includes/post-default-data'
 import project from '../../store/project';
-import productStore from '../../store/product-store';
-import productData from '../../includes/product-default-data'
+import memberStore from '../../store/membership-store';
 
 const route = useRoute();
 const router = useRouter();
 const projectInfo = computed(() => project.state.projects)
-const products = computed(() => productStore.state.products)
+const posts = computed(() => memberStore.state.posts)
 let isDisabled = ref(false)
-let searchProduct = ref({
+let searchPost = ref({
     title: '',
     projectId: route.params.id
 })
 
-watch(searchProduct, (newVal, oldVal) => {
+watch(searchPost, (newVal, oldVal) => {
     setTimeout(() => {
-        productStore.dispatch('searchProducts', searchProduct.value)
+        memberStore.dispatch('searchPosts', searchPost.value)
     }, 1200)
 }, {deep: true})
 
-function newProduct() {
+function newPost() {
     isDisabled.value = true
-    productStore
-        .dispatch('storeProduct', {
+    memberStore
+        .dispatch('storePost', {
             projectId: route.params.id,
-            title: productData.title,
-            description: productData.description,
-            category: JSON.stringify(productData.category),
-            images: JSON.stringify(productData.images),
-            pricing: JSON.stringify(productData.pricing),
-            shipping: JSON.stringify(productData.shipping),
-            inventory: JSON.stringify(productData.inventory),
-            prodFiles: JSON.stringify(productData.files),
-            extLink: productData.extLink
+            slug: postData.slug,
+            title: postData.title,
+            excerpt: postData.excerpt,
+            post: postData.post,
+            images: JSON.stringify(postData.images),
+            featuredImageStyle: postData.featuredImageStyle,
+            media: JSON.stringify(postData.media),
+            products: JSON.stringify(postData.products),
+            courses: JSON.stringify(postData.courses),
+            publishedDate: postData.publishedDate,
+            author: postData.author,
+            categories: JSON.stringify(postData.categories),
+            postPaymentSettings: postData.postPaymentSettings,
+            publishedStatus: 'Draft'
         })
         .then((res) => {
             isDisabled.value = false
             router.push({
-                name: 'NewProduct',
+                name: 'PostUpdate',
                 params: {id: route.params.id},
-                query: {pid: res.productId}
+                query: {pid: res.postId}
             })
         })
         .catch((err) => {
@@ -121,7 +124,7 @@ function newProduct() {
 
 onMounted(() => {
     project.dispatch('getProjectInfo', route.params.id)
-    productStore.dispatch('getProducts', route.params.id)
+    memberStore.dispatch('getPosts', route.params.id)
 })
 </script>
 
