@@ -24,12 +24,20 @@ class Post extends Model
         'published_date',
         'author',
         'categories',
+        'otp',
+        'content_preview',
         'payment_setting',
+        'plans',
         'published_status'
     ];
 
     public function project() 
     {
         return $this->belongsTo(\App\Models\Project::class, 'project_id', 'custom_id');
+    }
+
+    public function user() 
+    {
+        return $this->belongsTo(\App\Models\User::class, 'author', 'id');
     }
 }

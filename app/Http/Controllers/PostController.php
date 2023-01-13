@@ -12,14 +12,16 @@ class PostController extends Controller
     {
         $title = $request->query('title');
 
-        if(isset($productTitle)) {
+        if(isset($title)) {
             $posts = Post::where('project_id', $projectId)
-                ->where('title', 'like', '%'.$productTitle.'%')
+                ->where('title', 'like', '%'.$title.'%')
                 ->orderBy('id', 'desc')
+                ->with('user')
                 ->paginate(15);
         }else {
             $posts = Post::where('project_id', $projectId)
                 ->orderBy('id', 'desc')
+                ->with('user')
                 ->paginate(15);
         }
 
@@ -28,6 +30,8 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+        $user = $request->user();
+
         $post = Post::create([
             'project_id' => $request->projectId,
             'slug' => $request->slug,
@@ -40,7 +44,7 @@ class PostController extends Controller
             'products' => $request->products,
             'courses' => $request->courses,
             'published_date' => $request->publishedDate,
-            'author' => $request->author,
+            'author' => $user->id,
             'categories' => $request->categories,
             'payment_setting' => $request->postPaymentSettings,
             'published_status' => $request->publishedStatus
@@ -53,9 +57,10 @@ class PostController extends Controller
         ], 201);
     }
 
-    public function duplicate($id)
+    public function duplicate(Request $request, $id)
     {
         $post = Post::findOrFail($id);
+        $user = $request->user();
 
         $newPost = Post::create([
             'project_id' => $post->project_id,
@@ -69,7 +74,7 @@ class PostController extends Controller
             'products' => $post->products,
             'courses' => $post->courses,
             'published_date' => $post->published_date,
-            'author' => $post->author,
+            'author' => $user->id,
             'categories' => $post->categories,
             'payment_setting' => $post->payment_setting,
             'published_status' => $post->published_status
@@ -84,9 +89,11 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = Post::findOrFail($id);
-
-        return new PostResource($post);
+        $post = Post::where('id', $id)->with('user')->first();
+        
+        if($post) {
+            return new PostResource($post);
+        }        
     }
 
     public function update(Request $request, $id)
@@ -100,8 +107,7 @@ class PostController extends Controller
         // Check for images and files
 
         $post->update([
-            'project_id' => $request->projectId,
-            'slug' => $request->slug,
+            'slug' => $request->slug ? $request->slug : 'post-'.rand(111111, 999999),
             'title' => $data['title'],
             'excerpt' => $request->excerpt,
             'post' => $request->post,
@@ -114,6 +120,10 @@ class PostController extends Controller
             'author' => $request->author,
             'categories' => $request->categories,
             'payment_setting' => $request->postPaymentSettings,
+            'otp' => $request->otp,
+            'content_preview' => $request->contentPreview,
+            'plans' => $request->plans,
+            'published_status' => $request->publishedStatus
         ]);
 
         return response([

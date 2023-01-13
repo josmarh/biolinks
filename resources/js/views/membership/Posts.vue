@@ -27,13 +27,13 @@
         <!-- main content -->
         <div class="flex mt-10 gap-10">
             <div class="w-96">
-                <label for="product_search" 
+                <label for="post_search" 
                     class="block mb-2 text-sm 
                     font-medium text-gray-900 
                     dark:text-white">
                     Search for post
                 </label>
-                <input type="text" id="product_search" 
+                <input type="text" id="post_search" 
                 v-model="searchPost.title"
                 class="bg-gray-50 border border-gray-300 
                 text-gray-900 text-sm focus:ring-blue-500 

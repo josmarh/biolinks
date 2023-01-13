@@ -29,6 +29,9 @@ return new class extends Migration
             $table->bigInteger('author')->nullable();
             $table->text('categories')->nullable();
             $table->string('payment_setting');
+            $table->decimal('otp', [17, 2])->nullable();
+            $table->string('content_preview', 20)->default('no_preview');
+            $table->text('plans')->nullable();
             $table->string('published_status', 20)->nullable();
             $table->timestamps();
             $table->index(['project_id']);

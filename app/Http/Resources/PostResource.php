@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\UserResource;
 
 class PostResource extends JsonResource
 {
@@ -21,15 +22,18 @@ class PostResource extends JsonResource
             'title' => $this->title,
             'excerpt' => $this->excerpt,
             'post' => $this->post,
-            'images' => $this->images,
+            'images' => json_decode($this->images),
             'featuredImageStyle' => $this->featured_image_style,
-            'media' => $this->media,
-            'products' => $this->products,
-            'courses' => $this->courses,
+            'media' => json_decode($this->media),
+            'products' => json_decode($this->products),
+            'courses' => json_decode($this->courses),
             'publishedDate' => $this->published_date,
-            'author' => $this->author,
-            'categories' => $this->categories,
-            'paymentSetting' => $this->payment_setting,
+            'author' => new UserResource($this->whenLoaded('user')),
+            'categories' => json_decode($this->categories),
+            'postPaymentSettings' => $this->payment_setting,
+            'otp' => $this->otp,
+            'contentPreview' => $this->content_preview,
+            'plans' => $this->plans,
             'publishedStatus' => $this->published_status
         ];
     }
