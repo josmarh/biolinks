@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Http\Resources\PostResource;
+use App\Services\FileHandler;
 
 class PostController extends Controller
 {
+    use FileHandler;
+
     public function index(Request $request, $projectId)
     {
         $title = $request->query('title');
@@ -104,16 +107,44 @@ class PostController extends Controller
             'title' => 'required|string'
         ]);
 
-        // Check for images and files
+        // Check for images and media
+        $images = json_decode($request->images);
+        $files = json_decode($request->media);
+        $newImgList = [];
+        $newMediaList = [];
+
+        foreach($images as $img) {
+            if(str_contains($img, 'base64')) {
+                $relativePath = $this->saveFile('post-images', $img);
+                array_push($newImgList, $img);
+            }else {
+                array_push($newImgList, $img);
+            }
+        }
+
+        foreach($files as $file) {
+            if(str_contains($file->file, 'base64')) {
+                $relativePath = $this->saveFile('post-media', $file->file);
+                array_push($newMediaList, (object)[
+                    'name' => $file->name, 
+                    'file' => $relativePath
+                ]);
+            }else {
+                array_push($newMediaList, $file);
+            }
+        }
+
+        // delete images and files from dir not needed
+
 
         $post->update([
             'slug' => $request->slug ? $request->slug : 'post-'.rand(111111, 999999),
             'title' => $data['title'],
             'excerpt' => $request->excerpt,
             'post' => $request->post,
-            'images' => $request->images,
+            'images' => json_encode($newImgList),
             'featured_image_style' => $request->featuredImageStyle,
-            'media' => $request->media,
+            'media' => json_encode($newMediaList),
             'products' => $request->products,
             'courses' => $request->courses,
             'published_date' => $request->publishedDate,

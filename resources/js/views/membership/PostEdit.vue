@@ -85,10 +85,10 @@
                                         <ContentFields :data="postModel" @updateModel="updateModel" />
                                     </div>
                                     <div v-bind:class="{'hidden': openTab !== 2, 'block': openTab === 2}">
-                                        <media-download :data="postModel" @updateModel="updateModel" />
+                                        <media-download :data="postModel" @updateModel="updateMedia" />
                                     </div>
                                     <div v-bind:class="{'hidden': openTab !== 3, 'block': openTab === 3}">
-                                        <!-- <new-product-from-2 :data="postModel" @updateModel="updateModel" /> -->
+                                        <product-access :data="postModel" :products="products.data" @updateModel="updateProducts" />
                                     </div>
                                 </div>
                             </div>
@@ -245,12 +245,15 @@ import MediaDownload from '../../components/membership/post-fields/MediaDownload
 import ProductAccess from '../../components/membership/post-fields/ProductAccess.vue'
 import project from '../../store/project';
 import memberStore from '../../store/membership-store'
+import productStore from '../../store/product-store';
 import helper from '../../helpers'
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
+import '@vuepic/vue-datepicker/dist/main.css';
+
 
 const route = useRoute();
 const projectInfo = computed(() => project.state.projects)
+const products = computed(() => productStore.state.products)
 const post = computed(() => memberStore.state.post)
 
 let isDisabled = ref(false)
@@ -295,7 +298,16 @@ function toggleTabs(tabNumber) {
 }
 
 function updateModel(data) {
-    productModel.value = data
+    postModel.value = data
+}
+
+function updateMedia(data) {
+    postModel.value.images = data.images
+    postModel.value.media = data.media
+}
+
+function updateProducts(data) {
+    postModel.value.products = data.products
 }
 
 function updatePost() {
@@ -390,6 +402,7 @@ function dformat(date) {
 onMounted(() => {
     project.dispatch('getProjectInfo', route.params.id)
     memberStore.dispatch('getPost', route.query.pid)
+    productStore.dispatch('getProducts', route.params.id)
 })
 </script>
 

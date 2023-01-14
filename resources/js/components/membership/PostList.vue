@@ -5,9 +5,15 @@
             text-center bg-white border shadow-md mb-4
             sm:p-8 dark:bg-gray-800 dark:border-gray-700">
             <div class="flex gap-6">
-                <font-awesome-icon icon="fa-solid fa-image" class="w-8 h-8" />
+                <img v-if="item.images.length"
+                :src="helper.applink + item.images[0]" 
+                class="w-14 h-14 object-cover rounded-md"/>
+
+                <font-awesome-icon v-else 
+                icon="fa-solid fa-image" class="w-10 h-10"  />
+                
                 <router-link :to="{name: 'PostUpdate', query: {pid: item.id}}"
-                    class="text-2xl font-semibold text-gray-900 dark:text-white hover:underline">
+                    class="text-2xl font-semibold text-gray-900 dark:text-white hover:underline pt-2">
                     {{ item.title }}
                 </router-link>
             </div>
@@ -52,6 +58,7 @@
 <script setup>
 import PostListOptions from './PostListOptions.vue';
 import memberStore from '../../store/membership-store';
+import helper from '../../helpers'
 
 const props = defineProps({
     data: Array,
