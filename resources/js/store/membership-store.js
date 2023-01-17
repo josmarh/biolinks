@@ -11,6 +11,9 @@ const memberStore = createStore({
         post: {
             data: {}
         },
+        blog: {
+            data: {}
+        }
     },
     getters: {},
     actions: {
@@ -66,6 +69,19 @@ const memberStore = createStore({
                     return data;
                 })
         },
+        getBlog({ commit }, projectId) {
+            return axiosClient.get(`/membership/blog/show/${projectId}`)
+                .then(({data}) => {
+                    commit('setBlog', data)
+                    return data;
+                })
+        },
+        storeBlog({ }, payload) {
+            return axiosClient.post(`/membership/blog/store`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setPosts: (state, data) => {
@@ -73,6 +89,9 @@ const memberStore = createStore({
         },
         setPost: (state, data) => {
             state.post = data
+        },
+        setBlog: (state, data) => {
+            state.blog = data
         },
     },
     modules: {}

@@ -7,7 +7,7 @@ import router from './router';
 import store from './store';
 
 import '../css/index.css'
-import 'flowbite'
+// import 'flowbite'
 import Notifications from 'notiwind'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -24,7 +24,8 @@ import { faRightFromBracket, faLink, faEnvelope,
     faCode, faBars, faUser, faCircleUser, faWrench, faScroll, faHouse, 
     faPenToSquare, faGears, faList, faFileCsv, faUsers, faChevronDown, 
     faImage, faEllipsis, faGear, faSliders, faCircleXmark, faTurnDown, 
-    faUpDownLeftRight, faUpRightFromSquare, 
+    faUpDownLeftRight, faUpRightFromSquare, faTriangleExclamation, 
+    faHandPointRight, faArrowRight, 
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add( faRightFromBracket, faLink, faEnvelope, 
@@ -39,7 +40,8 @@ library.add( faRightFromBracket, faLink, faEnvelope,
     faCode, faBars, faUser, faCircleUser, faWrench, faScroll, faHouse, 
     faPenToSquare, faGears, faList, faFileCsv, faUsers, faChevronDown, 
     faImage, faEllipsis, faGear, faSliders, faCircleXmark, faTurnDown, 
-    faUpDownLeftRight, faUpRightFromSquare
+    faUpDownLeftRight, faUpRightFromSquare, faTriangleExclamation, 
+    faHandPointRight, faArrowRight, 
     
 )
 

@@ -35,9 +35,9 @@
             Write your post
         </label>
         <editor 
-            api-key="nz91pgequ1i4nogj6arnwzcz01gd4h5d43gbnj6pdvyfdzzx" 
-            v-model="model.post" class="z-0" 
-            :init="init"
+        api-key="nz91pgequ1i4nogj6arnwzcz01gd4h5d43gbnj6pdvyfdzzx" 
+        v-model="model.post" class="z-0" 
+        :init="init"
         />
     </div>
 </template>
@@ -82,7 +82,7 @@ let model = ref(props.data)
 
 watch(model, (newVal, oldVal) => {
     emit('updateModel', model.value)
-})
+}, {deep: true})
 </script>
 
 <style>

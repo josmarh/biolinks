@@ -104,6 +104,7 @@ const routes = [
         ]
     },
     {path: '/:linkid/qr', name: 'Qrcode', component: Qrcode},
+    
 ];
 
 const router = createRouter({

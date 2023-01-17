@@ -82,7 +82,7 @@
                             <div class="px-4 py-5 flex-auto">
                                 <div class="tab-content tab-space">
                                     <div v-bind:class="{'hidden': openTab !== 1, 'block': openTab === 1}">
-                                        <ContentFields :data="postModel" @updateModel="updateModel" />
+                                        <ContentFields :data="postModel" @updateModel="updatePostContent" />
                                     </div>
                                     <div v-bind:class="{'hidden': openTab !== 2, 'block': openTab === 2}">
                                         <media-download :data="postModel" @updateModel="updateMedia" />
@@ -308,6 +308,11 @@ function updateMedia(data) {
 
 function updateProducts(data) {
     postModel.value.products = data.products
+}
+function updatePostContent(data) {
+    postModel.value.post = data.post
+    postModel.value.excerpt = data.excerpt
+    postModel.value.title = data.title
 }
 
 function updatePost() {

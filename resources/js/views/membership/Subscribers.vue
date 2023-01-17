@@ -8,7 +8,7 @@
         <div class="flex justify-between">
             <div class="mt-4">
                 <h1 class="py-4 text-3xl font-bold text-gray-800">
-                    Subscibers
+                    Subscribers
                 </h1>
             </div>
         </div>
