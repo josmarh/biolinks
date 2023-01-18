@@ -37,6 +37,7 @@ import Plans from '../views/membership/Plans.vue'
 import Posts from '../views/membership/Posts.vue'
 import PostUpdate from '../views/membership/PostEdit.vue'
 import Subscribers from '../views/membership/Subscribers.vue'
+import PlanUpdate from '../views/membership/PlanEdit.vue'
 import store from '../store'
 
 const routes = [
@@ -83,6 +84,7 @@ const routes = [
             {path: '/:id/product', name: 'NewProduct', component: NewProduct},
             {path: '/:id/membership/design', name: 'DesignSetting', component: DesignSetting},
             {path: '/:id/membership/plans', name: 'Plans', component: Plans},
+            {path: '/:id/membership/plan', name: 'PlanUpdate', component: PlanUpdate},
             {path: '/:id/membership/posts', name: 'Posts', component: Posts},
             {path: '/:id/membership/post', name: 'PostUpdate', component: PostUpdate},
             {path: '/:id/membership/subscribers', name: 'Subscribers', component: Subscribers},
@@ -104,7 +106,7 @@ const routes = [
         ]
     },
     {path: '/:linkid/qr', name: 'Qrcode', component: Qrcode},
-    
+
 ];
 
 const router = createRouter({

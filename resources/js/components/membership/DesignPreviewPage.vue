@@ -109,7 +109,7 @@
         </div>
         <!-- Posts -->
         <div class="mt-16">
-            <div v-if="data.posts=='single post'">
+            <div v-if="data.posts == 'single post'">
                 <div v-for="item in posts" :key="item.id" class="mt-4">
                     <div class="bg-white border border-gray-200
                         rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700"
@@ -203,11 +203,13 @@
                 </div>
             </div>
         </div>
-        <!-- Subscribe - footer -->
-        <div class="mt-10">
+        <!-- Subscribe Alert -->
+        <div class="mt-10" v-if="data.subsscriberAlert == 'show'"
+        :style="{'background-color': data.subsscriberAlertColor}">
             <div class="w-full p-4 text-center bg-white 
                 border rounded-lg shadow-md sm:p-8 
-                dark:bg-gray-800 dark:border-gray-700">
+                dark:bg-gray-800 dark:border-gray-700"
+                :style="{'background-color': data.subsscriberAlertColor}">
                 <p class="flex justify-end">
                     <font-awesome-icon icon="fa-solid fa-x" class="cursor-pointer"/>
                 </p>

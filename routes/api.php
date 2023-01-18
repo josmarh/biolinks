@@ -31,6 +31,7 @@ use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductCouponController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\MembershipBlogController;
+use App\Http\Controllers\PlanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,14 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::group(['prefix' => 'blog'], function () {
             Route::post('/store', [MembershipBlogController::class, 'store']);
             Route::get('/show/{projectId}', [MembershipBlogController::class, 'show']);
+        });
+
+        Route::get('/plans/{projectId}', [PlanController::class, 'index']);
+        Route::group(['prefix' => 'plan'], function () {
+            Route::post('/store', [PlanController::class, 'store']);
+            Route::get('/show/{projectId}', [PlanController::class, 'show']);
+            Route::put('/update/{id}', [PlanController::class, 'update']);
+            Route::delete('/delete/{id}', [PlanController::class, 'destroy']);
         });
     });
 

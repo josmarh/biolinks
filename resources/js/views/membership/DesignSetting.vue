@@ -194,6 +194,7 @@ function updateTab1Settings(data) {
     model.value.subsscriberAlert = data.subsscriberAlert
     model.value.subsscriberAlertColor = data.subsscriberAlertColor
     model.value.emailbox = data.emailbox
+    // console.log(model.value.posts)
 }
 function updateTab2Settings(data) {
     model.value.postGatedContent = data.postGatedContent

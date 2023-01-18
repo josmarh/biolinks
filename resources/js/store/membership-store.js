@@ -11,6 +11,14 @@ const memberStore = createStore({
         post: {
             data: {}
         },
+        plans: {
+            data: [],
+            links: {},
+            meta: {}
+        },
+        plan: {
+            data: {}
+        },
         blog: {
             data: {}
         }
@@ -82,6 +90,52 @@ const memberStore = createStore({
                     return data;
                 })
         },
+        getPlans({ commit }, projectId) {
+            return axiosClient.get(`/membership/plans/${projectId}`)
+                .then(({data}) => {
+                    commit('setPlans', data)
+                    return data;
+                })
+        },
+        searchPlans({ commit }, search) {
+            return axiosClient.get(`/membership/plans/${search.projectId}?title=${search.title}`)
+                .then(({data}) => {
+                    commit('setPlans', data)
+                    return data;
+                })
+        },
+        paginatePlans({ commit }, url) {
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setPlans', data)
+                    return data;
+                })
+        },
+        storePlan({ }, payload) {
+            return axiosClient.post(`/membership/plan/store`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        getPlan({ commit }, id) {
+            return axiosClient.get(`/membership/plan/show/${id}`)
+                .then(({data}) => {
+                    commit('setPlan', data)
+                    return data;
+                })
+        },
+        updatePlan({ }, payload) {
+            return axiosClient.put(`/membership/plan/update/${payload.id}`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        deletePlan({ }, id) {
+            return axiosClient.delete(`/membership/plan/delete/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setPosts: (state, data) => {
@@ -92,6 +146,12 @@ const memberStore = createStore({
         },
         setBlog: (state, data) => {
             state.blog = data
+        },
+        setPlans: (state, data) => {
+            state.plans = data
+        },
+        setPlan: (state, data) => {
+            state.plan = data
         },
     },
     modules: {}
