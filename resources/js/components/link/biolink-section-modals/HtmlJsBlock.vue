@@ -54,7 +54,7 @@ const open = ref(props.showForm)
 let isDisabled = ref(false)
 let isRequired = true
 let model = ref({
-    linkId: route.params.id,
+    linkId: route.params.linkId,
     sectionName: 'HtmlJsBlock',
     buttonText: '',
     buttonTextColor: '#000000',
@@ -80,7 +80,7 @@ function newHtmlJsBlock() {
     isDisabled.value = true;
     biolinksection
         .dispatch('storeSection', {
-            linkId: route.params.id,
+            linkId: route.params.linkId,
             sectionName: model.value.sectionName,
             buttonText: model.value.buttonText,
             buttonTextColor: model.value.buttonTextColor,

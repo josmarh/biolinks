@@ -1,12 +1,12 @@
 <template>
-    <modal-layout title="Add a Sign up form" :show-form="open" @close-modal="closeModal">
-        <form @submit.prevent="newMailSignup">
+    <modal-layout title="Add a Product / Membership Form" :show-form="open" @close-modal="closeModal">
+        <form @submit.prevent="newProductMembership">
             <p class="text-md text-gray-600 font-normal mt-8 tracking-tight">
-                Capture emails for Mailchimp or get the emails captured via Webhook.
+                Allow customer to buy a product or subscription
             </p>
-            <div class="bg-gray-50 px-4 py-4 sm:flex mt-4
-                sm:flex-row-reverse sm:px-6 mb-6 justify-center">
-                <button type="submit"
+            <div class="bg-gray-50 px-4 py-4 sm:flex 
+                sm:flex-row-reverse sm:px-6 mb-6 justify-center ">
+                <button type="submit" 
                     class="inline-flex w-full
                     border border-transparent bg-blue-600 px-4 py-2 text-base 
                     font-medium text-white shadow-sm hover:bg-blue-700 
@@ -36,29 +36,14 @@ const props = defineProps({
 });
 const emit = defineEmits(['closeForm'])
 const open = ref(props.showForm)
-
 let isDisabled = ref(false)
 let model = ref({
     linkId: route.params.linkId,
-    sectionName: 'Mail signup',
-    buttonText: 'Sign up',
+    sectionName: 'Product/Membership',
+    buttonText: 'Sign Up',
     buttonTextColor: '#000000',
     buttonBckgColor: '#FFFFFF',
-    sectionFields: {
-        name: 'Sign up',
-        buttonIcon: '',
-        buttonOutline: 'no',
-        borderRadius: 'rounded',
-        animation: '',
-        emailPlaceholder: '',
-        thankYouMsg: 'Thank you for signing up!',
-        showAgreement: 'no',
-        agreementText: '',
-        agreementURL: '',
-        mailchimpAPIKey: '',
-        mailchimpList: '',
-        webhookURL: '',
-    }
+    sectionFields: JSON.stringify({})
 })
 
 watch(() => props.showForm, (newVal, oldVal) => {
@@ -74,17 +59,10 @@ function closeModal() {
     open.value = false
 }
 
-function newMailSignup() {
-    isDisabled.value = true;
+function newProductMembership() {
+    isDisabled.value = true
     biolinksection
-        .dispatch('storeSection', {
-            linkId: route.params.linkId,
-            sectionName: model.value.sectionName,
-            buttonText: model.value.buttonText,
-            buttonTextColor: model.value.buttonTextColor,
-            buttonBckgColor: model.value.buttonBckgColor,
-            sectionFields: JSON.stringify(model.value.sectionFields)
-        })
+        .dispatch('storeSection', model.value)
         .then((res) => {
             isDisabled.value = false
             emit('closeForm');
@@ -97,7 +75,6 @@ function newMailSignup() {
         .catch((err) => {
             isDisabled.value = false
             emit('closeForm');
-
             let errMsg;
             if(err.response) {
                 if (err.response.data) {

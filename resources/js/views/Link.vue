@@ -21,7 +21,7 @@ const content = computed(() => projectlinks.state.links);
 
 function getLinkInfo() {
     projectlinks
-        .dispatch('getLinkInfoId', route.params.id)
+        .dispatch('getLinkInfoId', route.params.linkId)
         .then((res) => {})
         .catch((err) => {
             let errMsg;

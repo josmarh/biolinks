@@ -49,7 +49,7 @@ const linkRequired = true
 
 let isDisabled = ref(false)
 let model = ref({
-    linkId: route.params.id,
+    linkId: route.params.linkId,
     sectionName: 'Spotify',
     buttonText: '',
     buttonTextColor: '#000000',
@@ -80,7 +80,7 @@ function newSpotify() {
     isDisabled.value = true
     biolinksection
         .dispatch('storeSection', {
-            linkId: route.params.id,
+            linkId: route.params.linkId,
             sectionName: model.value.sectionName,
             buttonText: model.value.buttonText,
             buttonTextColor: model.value.buttonTextColor,

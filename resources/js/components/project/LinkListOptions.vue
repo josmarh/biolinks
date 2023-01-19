@@ -71,7 +71,13 @@ let modal = ref({
 })
 
 function editLinkPage() {
-    router.push({name: 'Link', params: {id: props.data.id}})
+    router.push({
+        name: 'Link', 
+        params: {
+            id: route.params.id, 
+            linkId: props.data.id
+        }
+    })
 }
 
 function duplicateLink() {
@@ -84,7 +90,7 @@ function duplicateLink() {
 function getLinkStatistics() {
     const href = router.resolve({
         name: 'PageViewStats',
-        params: { id: route.params.id}
+        params: { id: route.params.id, linkId: props.data.id}
     });
     window.location = href.href
 }

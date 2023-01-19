@@ -50,7 +50,7 @@ class BiolinkSettingController extends Controller
         }elseif(!$settings->seo->favicon) {
             $this->deleteFile($favicon->favicon);
         }
-
+        
         $linkSettings->update([
             'top_logo' => $settings->topLogo,
             'video' => json_encode($settings->video),

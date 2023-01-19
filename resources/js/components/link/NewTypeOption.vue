@@ -58,6 +58,9 @@
     <Calendly v-if="modal.type=='calendly'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
     <Clubhouse v-if="modal.type=='clubhouse'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
     <HtmlJsBlock v-if="modal.type=='html-js-block'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <Donation v-if="modal.type=='donation'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <ProductMembership v-if="modal.type=='purchase'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
+    <FanRequest v-if="modal.type=='fan-request'" :show-form="modal.showSectionModal" @close-form="closeForm"/>
 </template>
 
 <script setup>
@@ -80,6 +83,9 @@ import GoogleReviews from './biolink-section-modals/GoogleReviews.vue'
 import Calendly from './biolink-section-modals/Calendly.vue'
 import Clubhouse from './biolink-section-modals/Clubehouse.vue'
 import HtmlJsBlock from './biolink-section-modals/HtmlJsBlock.vue'
+import Donation from './biolink-section-modals/Donation.vue'
+import ProductMembership from './biolink-section-modals/ProductMembership.vue'
+import FanRequest from './biolink-section-modals/FanRequest.vue'
 
 const emit = defineEmits(['reloadSettings'])
 let modal = ref({
@@ -116,7 +122,10 @@ const listOptions = [
     {label: 'Google Reviews', type: 'google-review', color:'text-[#E50000]'},
     {label: 'Calendly', type: 'calendly', color:'text-[#D304E0]'},
     {label: 'HTML/Js Block', type: 'html-js-block', color:'text-[#808000]'},
-    {label: 'Clubhouse', type: 'clubhouse', color:'text-blue-800'}
+    {label: 'Clubhouse', type: 'clubhouse', color:'text-blue-800'},
+    {label: 'Product/Membership', type: 'purchase', color:'text-indigo-800'},
+    {label: 'Donation', type: 'donation', color:'text-green-800'},
+    {label: 'Take Custom Fan Request', type: 'fan-request', color:'text-orange-500'},
 ];
 </script>
 

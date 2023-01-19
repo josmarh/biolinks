@@ -76,7 +76,7 @@ function updateBiolinkCustomSettings() {
     isDisabled.value = true;
     projectlinks
         .dispatch('updateBiolinkCustomSettings', {
-            linkId: route.params.id,
+            linkId: route.params.linkId,
             headerScript: model.value.headerScript,
             footerScript: model.value.footerScript
         })

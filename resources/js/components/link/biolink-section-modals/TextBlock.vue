@@ -93,7 +93,7 @@ const linkRequired = false
 
 let isDisabled = ref(false)
 let model = ref({
-    linkId: route.params.id,
+    linkId: route.params.linkId,
     sectionName: 'Text Block',
     buttonText: '',
     buttonTextColor: '#000000',
@@ -157,7 +157,7 @@ function newTextBlock() {
 
     biolinksection
         .dispatch('storeSection', {
-            linkId: route.params.id,
+            linkId: route.params.linkId,
             sectionName: model.value.sectionName,
             buttonText: model.value.buttonText,
             buttonTextColor: model.value.buttonTextColor,

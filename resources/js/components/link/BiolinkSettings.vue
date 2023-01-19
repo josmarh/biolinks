@@ -106,17 +106,17 @@ function updatePreview(data) {
 
 function reloadSettings() {
     if(currentTab.value == 'settings')
-        projectlinks.dispatch('getBiolinkSettings', route.params.id)
+        projectlinks.dispatch('getBiolinkSettings', route.params.linkId)
     else if(currentTab.value == 'custom')
-        projectlinks.dispatch('getBiolinkCustomSettings', route.params.id)
+        projectlinks.dispatch('getBiolinkCustomSettings', route.params.linkId)
     else
-        biolinksection.dispatch('getSections', route.params.id)
+        biolinksection.dispatch('getSections', route.params.linkId)
     emit('reloadLinkInfo')
 }
 
 function getBiolinkSettings() {
     projectlinks
-        .dispatch('getBiolinkSettings', route.params.id)
+        .dispatch('getBiolinkSettings', route.params.linkId)
         .then((res) => {
             modelSettings.value.topLogo = res.data.topLogo
             modelSettings.value.video = res.data.video
@@ -157,7 +157,7 @@ function getBiolinkSettings() {
 
 function getBiolinkCustomSettings() {
     projectlinks
-        .dispatch('getBiolinkCustomSettings', route.params.id)
+        .dispatch('getBiolinkCustomSettings', route.params.linkId)
         .then((res) => {
             getBiolinkSectionSettings();
         })
@@ -183,7 +183,7 @@ function getBiolinkCustomSettings() {
 
 function getBiolinkSectionSettings() {
     biolinksection
-        .dispatch('getSections', route.params.id)
+        .dispatch('getSections', route.params.linkId)
         .then((res) => {})
         .catch((err) => {
             let errMsg;

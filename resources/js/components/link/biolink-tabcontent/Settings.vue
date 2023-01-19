@@ -568,7 +568,7 @@ function updateBiolinkSetting() {
     isDisabled.value = true;
     projectlinks
         .dispatch('updateBiolinkSettings', {
-            linkId: route.params.id,
+            linkId: route.params.linkId,
             link: model.value,
             linkSettings: JSON.stringify(modelSettings.value)
         })

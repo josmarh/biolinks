@@ -138,7 +138,7 @@ function updateTarget(data) {
 
 function getLinkSettings() {
     projectlinks
-        .dispatch('getLinkSettings', route.params.id)
+        .dispatch('getLinkSettings', route.params.linkId)
         .then((res) => {
             linkSettings.value.tempURL.scheduleSwitch = res.data.tempUrlSchedule;
             linkSettings.value.tempURL.scheduleStart = !res.data.tempUrlStartDate ? dformat(now) : res.data.tempUrlStartDate;

@@ -27,8 +27,8 @@ class SPAController extends Controller
     public function biolinkPage($linkId)
     {
         $projectLink = ProjectLink::where('link_id', $linkId)->first();
-
-        if($projectLink->type == 'biolink') {
+        
+        if($projectLink && $projectLink->type === 'biolink') {
             $settings = BiolinkSetting::where('link_id', $projectLink->id)->first();
             $custom = BiolinkCustomSetting::where('link_id', $projectLink->id)->first();
             $section = BioLinkSection::where('bl_biolink_sections.link_id', $projectLink->id)
@@ -47,7 +47,7 @@ class SPAController extends Controller
             ];
             
             return view('biolinkpage.biolink', compact('settings','custom','section','jdecoded'));
-        }else {
+        }elseif($projectLink && $projectLink->type === 'link') {
             $linkSetting = LinkSetting::where('link_id', $projectLink->id)->first();
 
             if($projectLink->status == 'inactive') {

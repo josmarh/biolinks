@@ -35,8 +35,81 @@
         </div>
 
         <!-- Section views -->
-        <div v-if="section.length">
+        <div v-if="section.length" class="mt-10">
             <div v-for="item in section" :key="item.id">
+                <!-- Donation -->
+                <div v-if="item.section.name=='Donation'" class="mt-2 mb-4">
+                    <div class="items-center bg-white border rounded-lg 
+                    shadow-md md:flex-row md:max-w-xl cursor-pointer
+                    dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                    :style="{color: item.buttonTextColor,
+                        'background-color': item.buttonBgColor
+                    }">
+                        <div class="flex justify-between">
+                            <div class="flex ">
+                                <div v-if="item.sectionFields.thumbnail">
+                                    <img :src="item.sectionFields.thumbnail.includes('biolink') 
+                                        ? helper.applink + item.sectionFields.thumbnail
+                                        : item.sectionFields.thumbnail"
+                                        class="ml-4 w-14 h-14 mx-auto rounded-full"/>
+                                </div>
+                                <div v-else >
+                                    <font-awesome-icon
+                                    icon="fa-solid fa-money-bill-1-wave"
+                                    class="ml-4 mt-2 bg-green-500 rounded p-3 text-white w-4 h-4 "/>
+                                </div>
+                                <div class="flex flex-col justify-between p-4 leading-normal">
+                                    <p class="text-lg font-semibold tracking-tight text-gray-900 
+                                    dark:text-white truncate">
+                                        {{ item.sectionFields.title.replace(/(.{35})..+/, "$1…") }}
+                                    </p>
+                                    <div v-if="item.sectionFields.description" 
+                                    class="font-normal text-gray-700 dark:text-gray-400 text-sm"
+                                    v-html="item.sectionFields.description"></div>
+                                </div>
+                            </div>
+                            <span class="mt-4 px-4">$</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fan Request -->
+                <div v-if="item.section.name=='Fan Request'" class="mt-2 mb-4">
+                    <div class="items-center bg-white border rounded-lg 
+                    shadow-md md:flex-row md:max-w-xl cursor-pointer p-2
+                    dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                    :style="{color: item.buttonTextColor,
+                        'background-color': item.buttonBgColor
+                    }">
+                        <div class="flex justify-between">
+                            <div class="flex ">
+                                <div v-if="item.sectionFields.thumbnail">
+                                    <img :src="item.sectionFields.thumbnail.includes('biolink') 
+                                    ? helper.applink + item.sectionFields.thumbnail
+                                    : item.sectionFields.thumbnail"
+                                    class="ml-4 w-14 h-14 mx-auto rounded-full"/>
+                                </div>
+                                <div v-else >
+                                    <font-awesome-icon
+                                    icon="fa-solid fa-mug-hot"
+                                    class="ml-2 mt-2 bg-orange-500 rounded p-3 text-white w-4 h-4"/>
+                                </div>
+                                <div class="flex flex-col justify-between p-3 leading-normal">
+                                    <h5 class="text-lg font-semibold tracking-tight text-gray-900 
+                                    dark:text-white truncate"
+                                    :title="item.sectionFields.title">
+                                        {{ item.sectionFields.title.replace(/(.{26})..+/, "$1…") }}
+                                    </h5>
+                                    <div v-if="item.sectionFields.description" 
+                                    class="font-normal text-gray-700 dark:text-gray-400 text-sm"
+                                    v-html="item.sectionFields.description"></div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                ${{ item.sectionFields.requestCost }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Vimeo -->
                 <div v-if="item.section.name=='Vimeo'" class="mt-2 mb-4">
                     <!-- <iframe title="vimeo-player" :src="extractVideoId(item.sectionFields.vimeoUrl)" 

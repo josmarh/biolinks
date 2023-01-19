@@ -52,7 +52,7 @@ const open = ref(props.showForm)
 let isDisabled = ref(false)
 let isRequired = true
 let model = ref({
-    linkId: route.params.id,
+    linkId: route.params.linkId,
     sectionName: 'Calendly',
     buttonText: 'Sign up',
     buttonTextColor: '#000000',
@@ -92,7 +92,7 @@ function newCalendly() {
     isDisabled.value = true;
     biolinksection
         .dispatch('storeSection', {
-            linkId: route.params.id,
+            linkId: route.params.linkId,
             sectionName: model.value.sectionName,
             buttonText: model.value.buttonText,
             buttonTextColor: model.value.buttonTextColor,

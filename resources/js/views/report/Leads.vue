@@ -16,7 +16,7 @@ const route = useRoute();
 const content = computed(() => projectlinks.state.links);
 
 onMounted(() => {
-    projectlinks.dispatch('getLinkInfoId', route.params.id)
+    projectlinks.dispatch('getLinkInfoId', route.params.linkId)
 })
 </script>
 

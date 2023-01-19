@@ -31,7 +31,9 @@
                             </span>
                         </div>
                         <div class="col-span-4 text-start">
-                            <router-link  :to="{name: 'Link', params: {id: item.id}}"
+                            <router-link  :to="{
+                                name: 'Link', 
+                                params: {id: $route.params.id, linkId: item.id}}"
                                 class="mb-2 text-lg font-bold 
                                 tracking-tight text-gray-700 
                                 dark:text-white">
@@ -60,8 +62,11 @@
                                 </a>
                             </p>
                         </div>
+                        <!-- pageviews -->
                         <div class="col-span-1">
-                            <router-link :to="{name: 'PageViewStats', params: {id: item.id}}">
+                            <router-link :to="{
+                                name: 'PageViewStats', 
+                                params: {id: $route.params.id, linkId: item.id}}">
                                 <span class="bg-green-100 text-green-800 
                                     text-xs font-semibold mr-2 px-2.5 
                                     py-0.5 rounded dark:bg-green-200 
@@ -75,8 +80,11 @@
                                 </div>
                             </router-link>
                         </div>
+                        <!-- Leads -->
                         <div class="col-span-1">
-                            <router-link :to="{name: 'LeadStats', params: {id: item.id}}">
+                            <router-link :to="{
+                                name: 'LeadStats', 
+                                params: {id: $route.params.id, linkId: item.id}}">
                                 <span class="bg-green-100 text-blue-800 
                                     text-xs font-semibold mr-2 px-2.5 
                                     py-0.5 rounded dark:bg-green-200 

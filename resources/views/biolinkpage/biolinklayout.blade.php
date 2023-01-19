@@ -23,6 +23,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://ooblec.co/wp-content/themes/divi-child/js/google-places.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/solid.min.js" integrity="sha512-dcTe66qF6q/NW1X64tKXnDDcaVyRowrsVQ9wX6u7KSQpYuAl5COzdMIYDg+HqAXhPpIz1LO9ilUCL4qCbHN5Ng==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        @if($jdecoded["analytics"]->googleId)
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id={{$jdecoded['analytics']->googleId}}"></script>
         <script>
@@ -32,8 +33,10 @@
 
             gtag('config', '{{$jdecoded["analytics"]->googleId}}');
         </script>
+        @endif
 
         <!-- Facebook Pixel Code -->
+        @if($jdecoded["analytics"]->fbPixel)
         <script>
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -50,7 +53,9 @@
         <img height="1" width="1" style="display:none" 
             src="https://www.facebook.com/tr?id={{$jdecoded['analytics']->fbPixel}}&ev=PageView&noscript=1"/>
         </noscript>
+        @endif
         <!-- End Facebook Pixel Code -->
+
     </head>
     <body class="antialiased">
         @if($settings->background_type == 'preset')

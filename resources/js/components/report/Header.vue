@@ -37,7 +37,9 @@
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                             </svg>
-                            <router-link :to="{name: 'Link', params: {id: $route.params.id}}"
+                            <router-link :to="{
+                                name: 'Link', 
+                                params: {id: $route.params.id, linkId: $route.params.linkId}}"
                                 class="ml-1 text-sm font-medium text-gray-500 
                                 hover:text-gray-900 md:ml-2 dark:text-gray-400 
                                 dark:hover:text-white capitalize">
@@ -97,7 +99,7 @@
                     </div>
                 </div>
                 <div>
-                    <router-link :to="{name: 'PageViewStats', params: {id: $route.params.id}}"
+                    <router-link :to="{name: 'PageViewStats', params: {id: $route.params.id, linkId: $route.params.linkId}}"
                         v-if="source == 'Leads'"
                         class="text-white bg-gray-700 hover:bg-gray-800 
                         focus:ring-0 focus:ring-gray-300 font-medium 
@@ -107,7 +109,7 @@
                         <font-awesome-icon icon="fa-solid fa-chart-column" />
                         Statistics
                     </router-link>
-                    <router-link :to="{name: 'LeadStats', params: {id: $route.params.id}}"
+                    <router-link :to="{name: 'LeadStats', params: {id: $route.params.id, linkId: $route.params.linkId}}"
                         v-else
                         class="text-white bg-gray-700 hover:bg-gray-800 
                         focus:ring-0 focus:ring-gray-300 font-medium 
@@ -117,7 +119,7 @@
                         <font-awesome-icon icon="fa-solid fa-envelope" />
                         Leads
                     </router-link>
-                    <router-link :to="{name: 'Link', params: {id: $route.params.id}}"
+                    <router-link :to="{name: 'Link', params: {id: $route.params.id, linkId: $route.params.linkId}}"
                         class="text-white bg-gray-700 hover:bg-gray-800 
                         focus:ring-0 focus:ring-gray-300 font-medium 
                         text-sm px-5 py-2.5 mr-2 mb-2 capitalize

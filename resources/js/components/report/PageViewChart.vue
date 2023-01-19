@@ -72,7 +72,7 @@ let projectlinkChartOptions = ref({
 
 watch(datePicker, (newVal, oldVal) => {
     reportStore.dispatch('getPageViewReport', {
-        id: route.params.id, 
+        id: route.params.linkId, 
         from: dformat(newVal[0]),
         to: dformat(newVal[1])
     })
@@ -110,7 +110,7 @@ function dformat(date) {
 
 onMounted(() => {
     reportStore.dispatch('getPageViewReport', {
-        id: route.params.id, 
+        id: route.params.linkId, 
         from: datePicker.value[0],
         to: datePicker.value[1]
     })

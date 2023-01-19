@@ -23,12 +23,12 @@
     </div>
     @endif
     <!-- Video Display -->
-    @if($jdecoded['video']->type == 'youtube' && isset($jdecoded['video']->link))
+    @if($jdecoded['video']->type == 'youtube' && $jdecoded['video']->link)
     <div class="mt-6 mx-auto lg:mx-72">
         <x-iframe-video :videoUrl="$jdecoded['video']->link"/>
     </div>
     @endif
-    @if($jdecoded['video']->type == 'vimeo' && isset($jdecoded['video']->link))
+    @if($jdecoded['video']->type == 'vimeo' && $jdecoded['video']->link)
     <div class="mt-0 mx-auto">
         <x-iframe-video :videoUrl="$jdecoded['video']->link"/>
     </div>
@@ -37,6 +37,90 @@
     <!-- Section views -->
     @foreach($section as $item)
         @php $sectionField = json_decode($item['core_section_fields']); @endphp
+        <!-- Donation -->
+        @if($item->section_name == 'Donation' && $item->status == 1)
+        <!-- Include time schedule -->
+            @if(!$sectionField->schedule || ($sectionField->schedule && $sectionField->schedule >= date('Y-m-d')))
+            <div class="mt-6 mb-4 mx-auto lg:mx-[450px] md:mx-[250px]">
+                <div class="items-center bg-white border rounded-lg p-2
+                shadow-md md:flex-row md:max-w-md cursor-pointer donation-modal
+                dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                data-modal-toggle="donation-modal"
+                data-section-id="{{$item->section_id}}"
+                data-description="{{$sectionField->description}}"
+                data-form-name="Donation"
+                style="color: {{$item->button_text_color}};background-color: {{$item->button_bg_color}}">
+                    <div class="flex justify-between">
+                        <div class="flex">
+                            @if(isset($sectionField->thumbnail))
+                            <img :src="{{asset($sectionField->thumbnail)}}"
+                            class="ml-4 w-14 h-14 mx-auto rounded-full"/>
+                            @else
+                            <span class="ml-4 mt-2 mb-2 bg-green-500 rounded p-3 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                                </svg>
+                            </span>
+                            @endif
+                            <div class="flex flex-col justify-between p-4 leading-normal">
+                                <p class="text-lg font-semibold tracking-tight text-gray-900 dark:text-white truncate">
+                                    {{ $sectionField->title }}
+                                </p>
+                                <!-- @if($sectionField->description)
+                                <div class="font-normal text-gray-700 dark:text-gray-400 text-sm">
+                                    {!! $sectionField->description !!}
+                                </div>
+                                @endif -->
+                            </div>
+                        </div>
+                        <span class="mt-4 px-4">$</span>
+                    </div>
+                </div>
+            </div>
+            @endif
+        @endif
+        <!-- Fan Request -->
+        @if($item->section_name == 'Fan Request' && $item->status == 1)
+            @if(!$sectionField->schedule || ($sectionField->schedule && $sectionField->schedule >= date('Y-m-d')))
+            <div class="mt-6 mb-4 mx-auto lg:mx-[450px] md:mx-[250px]">
+                <div class="items-center bg-white border rounded-lg p-2
+                shadow-md md:flex-row md:max-w-md cursor-pointer fanrequest-modal
+                dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                data-modal-toggle="fanrequest-modal"
+                data-section-id="{{$item->section_id}}"
+                data-description="{{ $sectionField->description }}"
+                data-form-name="Request"
+                style="color: {{$item->button_text_color}};background-color: {{$item->button_bg_color}}">
+                    <div class="flex justify-between">
+                        <div class="flex">
+                            @if(isset($sectionField->thumbnail))
+                            <img :src="{{asset($sectionField->thumbnail)}}"
+                            class="ml-4 w-14 h-14 mx-auto rounded-full"/>
+                            @else
+                            <span class="ml-4 mt-2 mb-2 bg-orange-500 rounded p-3 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
+                                </svg>
+                            </span>
+                            @endif
+                            <div class="flex flex-col justify-between p-4 leading-normal">
+                                <p class="text-lg font-semibold tracking-tight text-gray-900 dark:text-white truncate">
+                                    {{ $sectionField->title }}
+                                </p>
+                                <!-- @if($sectionField->description)
+                                <div class="font-normal text-gray-700 dark:text-gray-400 text-sm">
+                                    {!! $sectionField->description !!}
+                                </div>
+                                @endif -->
+                            </div>
+                        </div>
+                        <span class="mt-4 px-4">${{ $sectionField->requestCost }}</span>
+                    </div>
+                </div>
+            </div>
+            @endif
+        @endif
          <!-- Vimeo -->
         @if($item->section_name == 'Vimeo' && $item->status == 1)
         <div class="mt-6 mb-4 mx-auto lg:mx-72">
@@ -526,7 +610,7 @@
     </div>
     @endif
 
-    <!-- Main Modal -->
+    <!-- Modals -->
     <div id="leadgen-modal" tabindex="-1" aria-hidden="true" 
         class="fixed top-0 left-0 right-0 z-50 hidden w-full 
         p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
@@ -656,6 +740,114 @@
             </div>
         </div>
     </div>
+    <!-- Donation -->
+    <div id="donation-modal" tabindex="-1" aria-hidden="true" 
+        class="fixed top-0 left-0 right-0 z-50 hidden w-full 
+        p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
+        <div class="relative w-full h-full max-w-md md:h-auto">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <button type="button" 
+                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent 
+                    hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 
+                    ml-auto inline-flex items-center dark:hover:bg-gray-800 
+                    dark:hover:text-white" data-modal-toggle="donation-modal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <div class="px-6 py-6 lg:px-8">
+                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white" id="donation-form-name"></h3>
+                    <form class="space-y-6">
+                        <p id="donation-desc" class="text-sm"></p>
+                        <div class="flex gap-2" id="regular-amount">
+                            <select id="donation-times" 
+                            class="bg-gray-50 border border-gray-300 
+                            text-gray-900 text-sm rounded-lg 
+                            focus:ring-blue-500 focus:border-blue-500 
+                            block p-2.5 dark:bg-gray-700 
+                            dark:border-gray-600 dark:placeholder-gray-400 
+                            dark:text-white dark:focus:ring-blue-500 
+                            dark:focus:border-blue-500 max-w-sm">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="100">100</option>
+                            </select>
+                            <span class="font-semibold mt-2 px-2">x</span>
+                            <span class="font-semibold mt-2">$5</span>
+                            <span class="font-semibold mt-2 px-2">=</span>
+                            <span id="total-donation" class="font-semibold mt-2">$5</span>
+                            <span id="to-custom-amount" class="font-semibold mt-2 px-6 text-blue-400 cursor-pointer">
+                                Custom amount?
+                            </span>
+                        </div>
+                        <div class="flex gap-2" id="custom-amount" style="display:none">
+                            <span class="font-semibold mt-2 px-2">$</span>
+                            <input type="number" id="custom-amount-field" value="5"
+                            class="bg-gray-50 border border-gray-300 
+                            text-gray-900 text-sm rounded-lg 
+                            focus:ring-blue-500 focus:border-blue-500 
+                            block p-2 dark:bg-gray-700 mx-w-sm
+                            dark:border-gray-600 dark:placeholder-gray-400 
+                            dark:text-white dark:focus:ring-blue-500 
+                            dark:focus:border-blue-500">
+                            <span id="to-regular-amount" class="font-semibold mt-2 pl-4 text-blue-400 cursor-pointer">
+                                To regular amount?
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fan request -->
+    <div id="fanrequest-modal" tabindex="-1" aria-hidden="true" 
+        class="fixed top-0 left-0 right-0 z-50 hidden w-full 
+        p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
+        <div class="relative w-full h-full max-w-md md:h-auto">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <button type="button"
+                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent 
+                    hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 
+                    ml-auto inline-flex items-center dark:hover:bg-gray-800 
+                    dark:hover:text-white" data-modal-toggle="fanrequest-modal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <div class="px-6 py-6 lg:px-8">
+                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white" id="fanrequest-form-name"></h3>
+                    <form class="space-y-6">
+                        <p id="request-desc" class="text-sm"></p>
+                        <textarea id="fanrequest-message" rows="3" 
+                        class="block p-2.5 w-full text-sm text-gray-900 
+                        bg-gray-50 rounded-lg border border-gray-300 
+                        focus:ring-blue-500 focus:border-blue-500 
+                        dark:bg-gray-700 dark:border-gray-600 
+                        dark:placeholder-gray-400 dark:text-white 
+                        dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                        placeholder=""></textarea>
+
+                        <button type="button" id="fanrequest-submit"
+                            class="w-full text-white bg-blue-700 hover:bg-blue-800 
+                            focus:ring-4 focus:outline-none focus:ring-blue-300 
+                            font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                            dark:bg-blue-600 dark:hover:bg-blue-700 
+                            dark:focus:ring-blue-800">
+                            Continue
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -705,10 +897,45 @@ $(document).ready(function(){
         agreementText: '',
         agreementUrl: '',
         isAgreementChecked: false,
-        formName: ''
+        formName: '',
+        fanrequestMessage: ''
     };
 
-    // Submit leads
+    // donation modal
+    $('.donation-modal').click(function() {
+        model.sectionId = $(this).data('section-id');
+        $('#donation-form-name').text($(this).data('form-name'));
+        $('#donation-desc').html($(this).data('description'));
+    })
+    $('#donation-times').change(function() {
+        let total = parseInt($(this).val()) * 5;
+        $('#total-donation').text('$'+total);
+        $('#custom-amount-field').val(total);
+        
+    })
+    $('#to-custom-amount').click(function() {
+        $('#custom-amount').show();
+        $('#regular-amount').hide();
+    });
+    $('#to-regular-amount').click(function() {
+        $('#custom-amount').hide();
+        $('#regular-amount').show();
+    });
+
+    // fanrequest modal
+    $('.fanrequest-modal').click(function() {
+        model.sectionId = $(this).data('section-id');
+        $('#fanrequest-form-name').text($(this).data('form-name'));
+        $('#request-desc').html($(this).data('description'));
+    });
+
+    $('#fanrequest-submit').click(function() {
+        model.fanrequestMessage = $('#fanrequest-message').val()
+        console.log(model.fanrequestMessage)
+        $('#fanrequest-message').val('')
+    });
+
+    // toogle leads modal
     $('.leadgen-modal').click(function() {
         model.sectionId = $(this).data('section-id');
         model.showPhone = $(this).data('show-phone');
@@ -748,6 +975,7 @@ $(document).ready(function(){
         model.isAgreementChecked = ev.target.checked;
     })
 
+    // submit leads
     $('#leadgen-submit').click(function() {
         model.name = $('#name').val()
         model.phone = $('#phone').val()
@@ -961,7 +1189,7 @@ $(document).ready(function(){
         }
     }
 
-    getClientInfo();
+    // getClientInfo();
 });
 </script>
 <script>

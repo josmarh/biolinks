@@ -93,6 +93,21 @@
                     :data="element"
                     @reload-settings="reloadSettings"
                 />
+                <Donation
+                    v-if="element.section.name == 'Donation'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <FanRequest
+                    v-if="element.section.name == 'Fan Request'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
+                <ProductMembership
+                    v-if="element.section.name == 'Product/Membership'"
+                    :data="element"
+                    @reload-settings="reloadSettings"
+                />
             </biolink-section-accordion>
         </template>
     </draggable>
@@ -121,6 +136,9 @@ import Calendly from '../section-accordion-body/Calendly.vue';
 import Clubhouse from '../section-accordion-body/Clubhouse.vue';
 import HtmlJsBlock from '../section-accordion-body/HtmlJsBlock.vue'
 import GoogleReview from '../section-accordion-body/GoogleReview.vue';
+import Donation from '../section-accordion-body/Donation.vue';
+import FanRequest from '../section-accordion-body/FanRequest.vue';
+import ProductMembership from '../section-accordion-body/ProductMembership.vue';
 import biolinksection from '../../../store/biolink-section'
 
 const route = useRoute()
@@ -156,7 +174,7 @@ function onUpdate(moved) {
 function updateSectionPosition() {
     biolinksection
         .dispatch('updateSectionPosition', {
-            linkId: route.params.id,
+            linkId: route.params.linkId,
             position: JSON.stringify(modelUpdate.value)
         })
         .then((res) => {

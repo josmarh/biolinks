@@ -228,11 +228,11 @@ const getForPage = (ev,link) => {
 
 onMounted(() => {
     reportStore.dispatch('getLeadsReport', {
-        id: route.params.id, 
+        id: route.params.linkId, 
         from: datePicker.value[0],
         to: datePicker.value[1]
     });
-    reportStore.dispatch('getTotalLeadsReport', route.params.id)
+    reportStore.dispatch('getTotalLeadsReport', route.params.linkId)
 })
 </script>
 

@@ -70,10 +70,10 @@ const routes = [
         meta: {requiresAuth: true},
         children: [
             {path: '/project/:id', name: 'Project', component: Project},
-            {path: '/link/:id', name: 'Link', component: Link},
+            {path: '/:id/link/:linkId', name: 'Link', component: Link},
             {path: '/reseller/users', name: 'Reseller', component: Reseller},
-            {path: '/link/:id/leads', name: 'LeadStats', component: LeadStats},
-            {path: '/link/:id/statistics', name: 'PageViewStats', component: PageViewStats},
+            {path: '/:id/link/:linkId/leads', name: 'LeadStats', component: LeadStats},
+            {path: '/:id/link/:linkId/statistics', name: 'PageViewStats', component: PageViewStats},
             {path: '/:id/people', name: 'People', component: People},
             {path: '/:id/product/category', name: 'ProductCategory', component: ProductCategory},
             {path: '/:id/product/category/update', name: 'ProductCategoryEdit', component: ProductCategoryEdit},

@@ -41,7 +41,7 @@ const open = ref(props.showForm)
 
 let isDisabled = ref(false)
 let model = ref({
-    linkId: route.params.id,
+    linkId: route.params.linkId,
     sectionName: 'Lead Generation',
     buttonText: 'Sign Up',
     buttonTextColor: '#000000',
