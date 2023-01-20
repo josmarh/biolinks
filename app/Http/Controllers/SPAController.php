@@ -45,8 +45,9 @@ class SPAController extends Controller
                 'socials' => json_decode($settings->socials),
                 'branding' => json_decode($settings->branding),
             ];
+            $projectLinkId = $linkId;
             
-            return view('biolinkpage.biolink', compact('settings','custom','section','jdecoded'));
+            return view('biolinkpage.biolink', compact('settings','custom','section','jdecoded','projectLinkId'));
         }elseif($projectLink && $projectLink->type === 'link') {
             $linkSetting = LinkSetting::where('link_id', $projectLink->id)->first();
 

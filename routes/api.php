@@ -32,6 +32,7 @@ use App\Http\Controllers\ProductCouponController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\MembershipBlogController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -198,3 +199,4 @@ Route::post('/register/{id}', [RegisterController::class, 'registerMember']);
 Route::post('/mail-signup', [SPAController::class, 'mailSignup']);
 Route::post('/leadgen', [SPAController::class, 'leadgen']);
 Route::post('/visits', [SPAController::class, 'storeVisits']);
+Route::post('/donation', [PaymentController::class, 'donation']);

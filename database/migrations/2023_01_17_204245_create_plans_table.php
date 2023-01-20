@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('description');
             $table->string('unlock_type');
             $table->string('monthly_pricing')->length(5);
-            $table->decimal('monthly_price', [17, 2])->nullable();
+            $table->decimal('monthly_price', $precision = 17, $scale = 2)->nullable();
             $table->string('annual_pricing')->length(5);
-            $table->decimal('annual_price', [17, 2])->nullable();
+            $table->decimal('annual_price', $precision = 17, $scale = 2)->nullable();
             $table->text('action');
             $table->timestamps();
             $table->index(['project_id']);

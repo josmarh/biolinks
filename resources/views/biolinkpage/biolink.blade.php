@@ -48,6 +48,8 @@
                 data-modal-toggle="donation-modal"
                 data-section-id="{{$item->section_id}}"
                 data-description="{{$sectionField->description}}"
+                data-title="{{$sectionField->title}}"
+                data-link-id="{{$settings->link_id}}"
                 data-form-name="Donation"
                 style="color: {{$item->button_text_color}};background-color: {{$item->button_bg_color}}">
                     <div class="flex justify-between">
@@ -759,7 +761,9 @@
                 </button>
                 <div class="px-6 py-6 lg:px-8">
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white" id="donation-form-name"></h3>
-                    <form class="space-y-6">
+                    <!-- <form class="space-y-6"> -->
+                        <!-- alert -->
+                        <div class="p-4 mb-4 text-sm rounded-lg hidden alert" role="alert"></div>
                         <p id="donation-desc" class="text-sm"></p>
                         <div class="flex gap-2" id="regular-amount">
                             <select id="donation-times" 
@@ -780,9 +784,9 @@
                             </select>
                             <span class="font-semibold mt-2 px-2">x</span>
                             <span class="font-semibold mt-2">$5</span>
-                            <span class="font-semibold mt-2 px-2">=</span>
-                            <span id="total-donation" class="font-semibold mt-2">$5</span>
-                            <span id="to-custom-amount" class="font-semibold mt-2 px-6 text-blue-400 cursor-pointer">
+                            <span class="font-semibold mt-2 pl-2">=</span>
+                            <span class="font-semibold mt-2 total-donation">$5</span>
+                            <span id="to-custom-amount" class="font-semibold mt-2 pl-6 text-blue-400 cursor-pointer">
                                 Custom amount?
                             </span>
                         </div>
@@ -800,7 +804,134 @@
                                 To regular amount?
                             </span>
                         </div>
-                    </form>
+                        <div class="mt-4">
+                            <!-- Payment methods -->
+                            <h3 class="mb-4 text-lg font-medium text-gray-900 dark:text-white">
+                                Payment Method
+                            </h3>
+                            <div class="flex gap-3">
+                                <div class="flex items-center pl-4 border w-full
+                                border-gray-200 rounded dark:border-gray-700">
+                                    <input id="bordered-radio-1" type="radio" 
+                                    value="card" name="payType" 
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 
+                                    focus:ring-blue-500 dark:focus:ring-blue-600 
+                                    dark:ring-offset-gray-800 focus:ring-2 payType
+                                    dark:bg-gray-700 dark:border-gray-600"
+                                    checked>
+                                    <label for="bordered-radio-1" 
+                                        class="w-full py-4 ml-2 text-sm font-medium 
+                                        text-gray-900 dark:text-gray-300 flex gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                                        </svg>
+                                        <span class="mt-0.5 uppercase md:text-sm text-sm">Credit card</span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center pl-4 border w-full
+                                border-gray-200 rounded dark:border-gray-700">
+                                    <input id="bordered-radio-2" type="radio" 
+                                    value="paypal" name="payType" 
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 
+                                    border-gray-300 focus:ring-blue-500 payType
+                                    dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                                    focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="bordered-radio-2" 
+                                        class="w-full py-4 ml-2 text-sm font-medium 
+                                        text-gray-900 dark:text-gray-300 flex gap-2 uppercase">
+                                        <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#00457C" class="w-4 h-4 mt-0.5">
+                                            <title>PayPal</title>
+                                            <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z"/>
+                                        </svg>
+                                        Paypal
+                                    </label>
+                                </div>
+                            </div>
+                            <!-- Creadit card details -->
+                            <div class="mt-3" id="credit-card-slot">
+                                <div class="flex rounded-md shadow-sm">
+                                    <input type="text" name="card-number" id="card-number" 
+                                    class="block w-full flex-1 rounded-none rounded-l-md 
+                                    border-gray-300 focus:border-indigo-500 
+                                    focus:ring-indigo-500 sm:text-sm" 
+                                    placeholder="Card number">
+                                    <span class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="md:flex gap-2 mt-3">
+                                    <div class="flex input-group w-full">
+                                        <select class="block w-full rounded-none rounded-l-md 
+                                            border-gray-300 focus:border-indigo-500 
+                                            focus:ring-indigo-500 sm:text-sm" name="month" id="card-month">
+                                            <option value="">MM</option>
+                                            @foreach(range(1, 12) as $month)
+                                                <option value="{{$month}}">{{$month}}</option>
+                                            @endforeach
+                                        </select>
+                                        <select class="block w-full rounded-none rounded-r-md 
+                                            border-gray-300 focus:border-indigo-500 
+                                            focus:ring-indigo-500 sm:text-sm" name="year" id="card-year">
+                                            <option value="">YYYY</option>
+                                            @foreach(range(date('Y'), date('Y') + 10) as $year)
+                                                <option value="{{$year}}">{{$year}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="w-full">
+                                        <input type="text" name="cvv-number" id="cvv-number" 
+                                        class="block flex-1 rounded-md 
+                                        border-gray-300 focus:border-indigo-500 
+                                        focus:ring-indigo-500" 
+                                        placeholder="CVV">
+                                    </div>
+                                </div>
+                            </div> 
+                            
+                            <!-- Total donation -->
+                            <div class="flex gap-2 text-lg mt-6">
+                                <h2 class="font-bold ">Total: </h2>
+                                <span class="total-donation font-bold">$5.00</span>
+                                <input type="number" value="5.00" id="actual-total-donation" style="display:none">
+                            </div>
+                            <!-- paypal slot -->
+                            <div class="mt-3" id="paypal-slot" style="display:none">
+                            <form action="{{route('paypal-payment')}}" method="post">
+                                @csrf
+                                <input type="text" value="" name="linkId" id="linkId" style="display:none">
+                                <input type="text" value="" name="sectionId" id="sectionId" style="display:none">
+                                <input type="text" value="" name="description" id="description" style="display:none">
+                                <input type="text" value="paypal" name="type" style="display:none">
+                                <input type="text" value="{{$projectLinkId}}" name="projectlinkid" style="display:none">
+                                <input type="number" value="5.00" name="amount" id="paypal-total-donation" style="display:none">
+                                <button type="submit" id="donation-paypal-submit"
+                                    class="w-full text-white bg-blue-700 hover:bg-blue-800 
+                                    focus:ring-4 focus:outline-none focus:ring-blue-300 
+                                    font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                                    dark:bg-blue-600 dark:hover:bg-blue-700 
+                                    dark:focus:ring-blue-800">
+                                    Donate
+                                </button>
+                            </form>
+                            </div>
+                        </div>
+                        <button type="button" id="donation-submit"
+                            class="w-full text-white bg-blue-700 hover:bg-blue-800 
+                            focus:ring-4 focus:outline-none focus:ring-blue-300 
+                            font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                            dark:bg-blue-600 dark:hover:bg-blue-700 
+                            dark:focus:ring-blue-800 mt-3">
+                            Donate
+                            <span id="donation-loader" style="display:none">
+                                <svg aria-hidden="true" role="status" class="inline w-4 h-4 ml-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+                                </svg>
+                            </span>
+                        </button>
+                    <!-- </form> -->
                 </div>
             </div>
         </div>
@@ -898,21 +1029,43 @@ $(document).ready(function(){
         agreementUrl: '',
         isAgreementChecked: false,
         formName: '',
-        fanrequestMessage: ''
+        fanrequestMessage: '',
     };
+
+    let payment = {
+        type: '',
+        cardNumber: '',
+        cvv: '',
+        expiryMonth: '',
+        expiryYear: '',
+        amount: 0,
+        description: ''
+    }
 
     // donation modal
     $('.donation-modal').click(function() {
         model.sectionId = $(this).data('section-id');
         $('#donation-form-name').text($(this).data('form-name'));
         $('#donation-desc').html($(this).data('description'));
+        payment.description = $(this).data('title')
+
+        $('#linkId').val($(this).data('link-id'));
+        $('#sectionId').val($(this).data('section-id'));
+        $('#description').val($(this).data('title'));
     })
     $('#donation-times').change(function() {
-        let total = parseInt($(this).val()) * 5;
-        $('#total-donation').text('$'+total);
+        let total = parseFloat($(this).val()) * 5;
+        $('.total-donation').text('$'+ total.toFixed(2));
         $('#custom-amount-field').val(total);
-        
-    })
+        $('#actual-total-donation').val(total.toFixed(2));
+        $('#paypal-total-donation').val(total.toFixed(2));
+    });
+    $('#custom-amount-field').change(function() {
+        let total = parseFloat($(this).val());
+        $('.total-donation').text('$'+ total.toFixed(2));
+        $('#actual-total-donation').val(total.toFixed(2));
+        $('#paypal-total-donation').val(total.toFixed(2));
+    });
     $('#to-custom-amount').click(function() {
         $('#custom-amount').show();
         $('#regular-amount').hide();
@@ -921,6 +1074,76 @@ $(document).ready(function(){
         $('#custom-amount').hide();
         $('#regular-amount').show();
     });
+    // donation submit
+    $('#donation-submit').click(function() {
+        payment.type = $('input[name=payType]:checked').val();
+        payment.cardNumber = $('#card-number').val();
+        payment.cvv = $('#cvv-number').val();
+        payment.expiryMonth = $('#card-month').val();
+        payment.expiryYear = $('#card-year').val();
+        payment.amount = $('#actual-total-donation').val();
+
+        $('#donation-loader').show();
+        $(this).attr('disabled', true);
+
+        // send to backend
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: '/api/donation',
+            method: 'post',
+            data: { 
+                linkId: {!! $settings->link_id !!},
+                sectionId: model.sectionId,
+                type: payment.type, 
+                amount: payment.amount,
+                cardNumber: payment.cardNumber,
+                cvv: payment.cvv,
+                month: payment.expiryMonth,
+                year: payment.expiryYear,
+                description: payment.description
+            },
+            success: function(res) {
+                $('#donation-loader').hide();
+                $('#donation-submit').attr('disabled', false)
+                $('#card-number').val('')
+                $('#cvv-number').val('')
+                $('#card-month').val('')
+                $('#card-year').val('')
+
+                setSuccessAlert(res.message)
+            },
+            error: function(err) {
+                $('#donation-loader').hide();
+                $('#donation-submit').attr('disabled', false)
+                
+                if(err.hasOwnProperty('responseJSON')) {
+                    setErrorAlert(err.responseJSON.message);
+                }else if(err.hasOwnProperty('statusText')) {
+                    setErrorAlert(err.statusText);
+                }else {
+                    console.log(err)
+                }
+                
+            }
+        });
+    });
+
+    // switch payment method
+    $('.payType').change(function() {
+        if($('input[name=payType]:checked').val()=='card') {
+            $('#credit-card-slot').show();
+            $('#paypal-slot').hide();
+            $('#donation-submit').show();
+        }else {
+            $('#credit-card-slot').hide();
+            $('#paypal-slot').show();
+            $('#donation-submit').hide();
+        }
+    })
 
     // fanrequest modal
     $('.fanrequest-modal').click(function() {
@@ -928,7 +1151,7 @@ $(document).ready(function(){
         $('#fanrequest-form-name').text($(this).data('form-name'));
         $('#request-desc').html($(this).data('description'));
     });
-
+    // fanrequest submit
     $('#fanrequest-submit').click(function() {
         model.fanrequestMessage = $('#fanrequest-message').val()
         console.log(model.fanrequestMessage)
@@ -1166,7 +1389,7 @@ $(document).ready(function(){
             $('.alert').removeClass('text-red-700 bg-red-100 block')
                 .addClass('hidden')
                 .text('')
-        }, 1600)
+        }, 5000)
     }
 
     function setSuccessAlert(message) {
@@ -1177,7 +1400,7 @@ $(document).ready(function(){
             $('.alert').removeClass('text-green-700 bg-green-100 block')
                 .addClass('hidden')
                 .text('')
-        }, 1600)
+        }, 5000)
     }
 
     function isEmailValid(email) {
