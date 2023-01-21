@@ -3,7 +3,7 @@
         <label for="applyTo" 
             class="block mb-2 text-sm font-medium 
             text-gray-900 dark:text-white">
-            Only Apply For Certain Products / Courses / Membership?
+            Only Apply For Certain Products / Membership?
         </label>
         <select id="applyTo" 
             v-model="model.applyTo.apply"
@@ -14,7 +14,7 @@
             dark:text-white dark:focus:ring-blue-500 
             dark:focus:border-blue-500">
             <option value="all_products">Applies to all products</option>
-            <option value="specific">Choose specific products / courses</option>
+            <option value="specific">Choose specific products </option>
         </select>
         <div v-if="model.applyTo.apply=='specific'" class="mt-4 ml-4">
             <div class="mt-4">
@@ -35,7 +35,7 @@
                     <option value="yes_products">Apply to YES products</option>
                 </select>
             </div>
-            <div class="mt-4">
+            <!-- <div class="mt-4">
                 <label for="courses" 
                     class="block mb-2 text-sm font-medium 
                     text-gray-900 dark:text-white">
@@ -52,7 +52,7 @@
                     <option value="no_courses">Apply to NO courses</option>
                     <option value="yes_courses">Apply to YES courses</option>
                 </select>
-            </div>
+            </div> -->
             <div class="mt-4">
                 <label for="membership" 
                     class="block mb-2 text-sm font-medium 

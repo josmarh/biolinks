@@ -38,6 +38,8 @@ import Posts from '../views/membership/Posts.vue'
 import PostUpdate from '../views/membership/PostEdit.vue'
 import Subscribers from '../views/membership/Subscribers.vue'
 import PlanUpdate from '../views/membership/PlanEdit.vue'
+import ProjectSettings from '../views/settings/Index.vue'
+import Orders from '../views/products/Orders.vue'
 import store from '../store'
 
 const routes = [
@@ -88,6 +90,8 @@ const routes = [
             {path: '/:id/membership/posts', name: 'Posts', component: Posts},
             {path: '/:id/membership/post', name: 'PostUpdate', component: PostUpdate},
             {path: '/:id/membership/subscribers', name: 'Subscribers', component: Subscribers},
+            {path: '/:id/settings/update', name: 'ProjectSettings', component: ProjectSettings},
+            {path: '/:id/orders', name: 'Orders', component: Orders}
         ]
     },
     {

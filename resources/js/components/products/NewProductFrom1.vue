@@ -132,22 +132,32 @@
                 text-gray-900 dark:text-white capitalize gap-2">
                 Status & Availablity
             </h3>
-            <div class="block p-6 bg-[#FF3860] border 
+            <!-- <div class="block p-6 bg-[#FF3860] border 
                 border-gray-200 shadow-md dark:bg-gray-800 
                 dark:border-gray-700 dark:hover:bg-gray-700">
                 <p class="font-normal text-white dark:text-gray-400 text-sm">
                     To go live, please 
                     <a href="#" class="underline">set up your Stripe account!</a>
                 </p>
-            </div>
-            <button type="button"
+            </div> -->
+            <select id="status" v-model="model.publishedStatus"
+                class="bg-gray-50 border 
+                border-gray-300 text-gray-900 text-sm  
+                focus:ring-blue-500 focus:border-blue-500 block 
+                w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 
+                dark:placeholder-gray-400 dark:text-white 
+                dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option value="Unpublished">Unpublished</option>
+                <option value="Published">Published</option>
+            </select>
+            <!-- <button type="button"
                 class="text-white bg-blue-700 hover:bg-blue-800 
                 focus:ring-0 focus:ring-blue-300 font-medium 
                 text-sm px-5 py-4 mr-2 capitalize mt-6
                 dark:bg-blue-600 dark:hover:bg-blue-700 w-full
                 focus:outline-none dark:focus:ring-blue-800">
                 Add your product to a link page
-            </button>
+            </button> -->
             <!-- Category -->
             <h3 class="block mb-2 text-sm font-medium flex mt-4
                 text-gray-900 dark:text-white capitalize">

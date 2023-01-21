@@ -70,14 +70,10 @@
                                 <span class="bg-green-100 text-green-800 
                                     text-xs font-semibold mr-2 px-2.5 
                                     py-0.5 rounded dark:bg-green-200 
-                                    dark:text-green-900" data-tooltip-target="tooltip-unique-click">
+                                    dark:text-green-900">
                                     <font-awesome-icon icon="fa-solid fa-chart-column" class="mt-0.5 mr-1" />
                                     {{item.uniqueClicks}}
                                 </span>
-                                <div id="tooltip-unique-click" role="tooltip" class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700">
-                                    Total unique clicks
-                                    <div class="tooltip-arrow" data-popper-arrow></div>
-                                </div>
                             </router-link>
                         </div>
                         <!-- Leads -->
@@ -144,6 +140,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import { notify } from 'notiwind';
+import { Tooltip } from 'flowbite-vue'
 import NoProjectContent from '../NoProjectContent.vue';
 import RoundLoader from '../RoundLoader.vue';
 import NewLinkOptions from './NewLinkOptions.vue';

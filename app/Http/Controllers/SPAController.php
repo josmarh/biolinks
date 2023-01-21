@@ -97,6 +97,8 @@ class SPAController extends Controller
             $this->shareWithMailchimp($mailchimp);
         }
 
+        // send to other esp if available
+
         // send to webhook
         if($sectionField->webhookURL) {
             $webhook = [
@@ -171,6 +173,8 @@ class SPAController extends Controller
             ];
             $this->shareWithMailchimp($mailchimp);
         }
+
+        // send to other esp if available
 
         // send to webhook
         if($sectionField->webhookURL) {

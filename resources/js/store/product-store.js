@@ -30,6 +30,11 @@ const productStore = createStore({
         coupon: {
             data: {}
         },
+        orders: {
+            data: [],
+            links: {},
+            meta: {}
+        },
     },
     getters: {},
     actions: {
@@ -164,6 +169,20 @@ const productStore = createStore({
                     return data;
                 })
         },
+        getOrders({ commit }, projectId) {
+            return axiosClient.get(`/orders/${projectId}`)
+                .then(({data}) => {
+                    commit('setOrders', data)
+                    return data;
+                })
+        },
+        paginateOrders({ commit }, url) {
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setOrders', data)
+                    return data;
+                })
+        },
     },
     mutations: {
         setProducts: (state, data) => {
@@ -186,6 +205,9 @@ const productStore = createStore({
         },
         setCoupon: (state, data) => {
             state.coupon = data
+        },
+        setOrders: (state, data) => {
+            state.orders = data
         },
     },
     modules: {}

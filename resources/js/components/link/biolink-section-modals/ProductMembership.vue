@@ -40,10 +40,18 @@ let isDisabled = ref(false)
 let model = ref({
     linkId: route.params.linkId,
     sectionName: 'Product/Membership',
-    buttonText: 'Sign Up',
+    buttonText: 'Purchase my product',
     buttonTextColor: '#000000',
     buttonBckgColor: '#FFFFFF',
-    sectionFields: JSON.stringify({})
+    sectionFields: JSON.stringify({
+        title: 'Purchase my product',
+        description: '',
+        productType: 'simple_product',
+        productSelected: '',
+        productInfo: {},
+        memberPlan: '',
+        schedule: null,
+    })
 })
 
 watch(() => props.showForm, (newVal, oldVal) => {

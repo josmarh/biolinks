@@ -22,8 +22,8 @@
         <hr class="mt-6 w-full">
 
         <!-- Shipping & Weight -->
-        <shipping :data="model.shipping" @updateProduct="updateProduct" />
-        <hr class="mt-6 w-full">
+        <!-- <shipping :data="model.shipping" @updateProduct="updateProduct" /> -->
+        <!-- <hr class="mt-6 w-full"> -->
 
         <!-- Inventory and SKU -->
         <inventory :data="model.inventory" @updateProduct="updateProduct" />

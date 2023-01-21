@@ -6,8 +6,9 @@
                 <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">BioLink</span>
             </a> -->
             <router-link :to="{name: 'Dashboard'}" class="flex items-center">
-                <font-awesome-icon icon="fa-solid fa-link" class="h-3 mr-3 sm:h-4 bg-blue-100 rounded-full p-4"/>
-                <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">BioLink</span>
+                <!-- <font-awesome-icon icon="fa-solid fa-link" class="h-3 mr-3 sm:h-4 bg-blue-100 rounded-full p-4"/>
+                <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">BioLink</span> -->
+                <AppLogo/>
             </router-link>
             <div class="flex md:order-2">
                 <user-dialogue/>
@@ -37,6 +38,16 @@
                         </router-link>
                     </li>
                     <li>
+                        <router-link :to="{name: 'Orders', params: {id: $route.params.id}}"
+                            :class="[$route.name == 'Orders'
+                            ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
+                            : '',
+                            'block py-2 pl-3 pr-4 md:p-0 dark:text-white']" 
+                            aria-current="page">
+                            Orders
+                        </router-link>
+                    </li>
+                    <li>
                         <ProductDropdown />
                     </li>
                     <li>
@@ -50,6 +61,16 @@
                             'block py-2 pl-3 pr-4 md:p-0 dark:text-white']" 
                             aria-current="page">
                             People
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link :to="{name: 'ProjectSettings', params: {id: $route.params.id}}"
+                            :class="[$route.name == 'ProjectSettings'
+                            ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
+                            : '',
+                            'block py-2 pl-3 pr-4 md:p-0 dark:text-white']" 
+                            aria-current="page">
+                            Settings
                         </router-link>
                     </li>
                     <li>
@@ -83,6 +104,7 @@
 import UserDialogue from './UserDialogue.vue'
 import ProductDropdown from './ProductDropdownMenu.vue'
 import MembershipDropdownMenu from './MembershipDropdownMenu.vue';
+import AppLogo from '../AppLogo.vue'
 </script>
 
 <style>

@@ -14,7 +14,7 @@
             <div class="flex">
                 <span class="text-sm font-medium mr-2 px-2.5 py-1.5 
                     rounded dark:bg-yellow-900 dark:text-yellow-300"
-                    :class="[item.publishedStatus=='Upublished'
+                    :class="[item.publishedStatus=='Unpublished'
                     ? 'bg-yellow-100 text-yellow-800'
                     : 'bg-green-100 text-green-800'
                     ]">

@@ -37,13 +37,60 @@
     <!-- Section views -->
     @foreach($section as $item)
         @php $sectionField = json_decode($item['core_section_fields']); @endphp
+        <!-- product/membership -->
+        @if($item->section_name == 'Product/Membership' && $item->status == 1)
+        @if(!$sectionField->schedule || ($sectionField->schedule && $sectionField->schedule >= date('Y-m-d')))
+            <div class="mt-6 mb-4 mx-auto lg:mx-96">
+                <div class="items-center bg-white border rounded-lg p-2
+                    shadow-md md:flex-row cursor-pointer product-modal
+                    dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                    data-modal-toggle="product-modal"
+                    data-section-id="{{$item->section_id}}"
+                    data-description="{{ $sectionField->description }}"
+                    data-form-name="{{$sectionField->title}}"
+                    data-amount="{{ $sectionField->productInfo->cost }}"
+                    style="color: {{$item->button_text_color}};background-color: {{$item->button_bg_color}}">
+                    <div class="flex justify-between">
+                        <div class="flex ">
+                            @if(isset($sectionField->thumbnail))
+                            <img :src="{{asset($sectionField->thumbnail)}}"
+                            class="ml-4 w-14 h-14 mx-auto rounded-full"/>
+                            @else
+                            <span class="ml-4 mt-2 mb-2 bg-orange-500 rounded p-3 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                    <path d="M5.223 2.25c-.497 0-.974.198-1.325.55l-1.3 1.298A3.75 3.75 0 007.5 9.75c.627.47 1.406.75 2.25.75.844 0 1.624-.28 2.25-.75.626.47 1.406.75 2.25.75.844 0 1.623-.28 2.25-.75a3.75 3.75 0 004.902-5.652l-1.3-1.299a1.875 1.875 0 00-1.325-.549H5.223z" />
+                                    <path fill-rule="evenodd" d="M3 20.25v-8.755c1.42.674 3.08.673 4.5 0A5.234 5.234 0 009.75 12c.804 0 1.568-.182 2.25-.506a5.234 5.234 0 002.25.506c.804 0 1.567-.182 2.25-.506 1.42.674 3.08.675 4.5.001v8.755h.75a.75.75 0 010 1.5H2.25a.75.75 0 010-1.5H3zm3-6a.75.75 0 01.75-.75h3a.75.75 0 01.75.75v3a.75.75 0 01-.75.75h-3a.75.75 0 01-.75-.75v-3zm8.25-.75a.75.75 0 00-.75.75v5.25c0 .414.336.75.75.75h3a.75.75 0 00.75-.75v-5.25a.75.75 0 00-.75-.75h-3z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            @endif
+                            <div class="flex flex-col justify-between p-3 leading-normal">
+                                <h5 class="text-lg font-semibold tracking-tight text-gray-900 
+                                dark:text-white truncate">
+                                    {{ $sectionField->title }}
+                                </h5>
+                                @if($sectionField->description)
+                                <div v-if="item.sectionFields.description" 
+                                    class="font-normal text-gray-700 dark:text-gray-400 text-sm">
+                                    {!! $sectionField->description !!}
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="mt-3 px-2">
+                            ${{ $sectionField->productInfo->cost }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+        @endif
         <!-- Donation -->
         @if($item->section_name == 'Donation' && $item->status == 1)
         <!-- Include time schedule -->
             @if(!$sectionField->schedule || ($sectionField->schedule && $sectionField->schedule >= date('Y-m-d')))
-            <div class="mt-6 mb-4 mx-auto lg:mx-[450px] md:mx-[250px]">
+            <div class="mt-6 mb-4 mx-auto lg:mx-96">
                 <div class="items-center bg-white border rounded-lg p-2
-                shadow-md md:flex-row md:max-w-md cursor-pointer donation-modal
+                shadow-md md:flex-row cursor-pointer donation-modal
                 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
                 data-modal-toggle="donation-modal"
                 data-section-id="{{$item->section_id}}"
@@ -84,14 +131,15 @@
         <!-- Fan Request -->
         @if($item->section_name == 'Fan Request' && $item->status == 1)
             @if(!$sectionField->schedule || ($sectionField->schedule && $sectionField->schedule >= date('Y-m-d')))
-            <div class="mt-6 mb-4 mx-auto lg:mx-[450px] md:mx-[250px]">
+            <div class="mt-6 mb-4 mx-auto lg:mx-96">
                 <div class="items-center bg-white border rounded-lg p-2
-                shadow-md md:flex-row md:max-w-md cursor-pointer fanrequest-modal
+                shadow-md md:flex-row cursor-pointer fanrequest-modal
                 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
                 data-modal-toggle="fanrequest-modal"
                 data-section-id="{{$item->section_id}}"
                 data-description="{{ $sectionField->description }}"
                 data-form-name="Request"
+                data-amount="{{$sectionField->requestCost}}"
                 style="color: {{$item->button_text_color}};background-color: {{$item->button_bg_color}}">
                     <div class="flex justify-between">
                         <div class="flex">
@@ -125,7 +173,7 @@
         @endif
          <!-- Vimeo -->
         @if($item->section_name == 'Vimeo' && $item->status == 1)
-        <div class="mt-6 mb-4 mx-auto lg:mx-72">
+        <div class="mt-6 mb-4 mx-auto lg:mx-96">
             <iframe 
                 src="" 
                 frameborder="0" 
@@ -138,7 +186,7 @@
         @endif
         <!-- Youtube -->
         @if($item->section_name == 'Youtube' && $item->status == 1)
-        <div class="mt-6 mb-4 mx-auto lg:mx-72">
+        <div class="mt-6 mb-4 mx-auto lg:mx-96">
             <iframe 
                 src=""
                 frameborder="0" 
@@ -151,7 +199,7 @@
         @endif
         <!-- Spotify -->
         @if($item->section_name == 'Spotify' && $item->status == 1)
-        <div class="mt-6 mb-6 mx-auto lg:mx-72">
+        <div class="mt-6 mb-6 mx-auto lg:mx-96">
             @if(str_contains($sectionField->spotifyUrl, 'show') || str_contains($sectionField->spotifyUrl, 'episode'))
                 <iframe 
                     src="" 
@@ -193,14 +241,14 @@
         @endif
         <!-- Soundcloud -->
         @if($item->section_name == 'Soundcloud' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-72">
+        <div class="mt-6 mb-4 lg:mx-96">
             <iframe class="embed-responsive-item" scrolling="no" frameborder="no" width="100%" height="350"
             src="https://w.soundcloud.com/player/?url={{$sectionField->soundcloudUrl}}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
         </div>
         @endif
         <!-- Twitch -->
         @if($item->section_name == 'Twitch' && $item->status == 1)
-        <div class="mt-6 mb-4 mx-auto lg:mx-72">
+        <div class="mt-6 mb-4 mx-auto lg:mx-96">
             <iframe
                 src=""
                 scrolling="no"
@@ -214,7 +262,7 @@
         @endif
         <!-- Clubhouse -->
         @if($item->section_name == 'Clubhouse' && $item->status == 1)
-        <div class="mt-6 mb-4 mx-auto lg:mx-72">
+        <div class="mt-6 mb-4 mx-auto lg:mx-96">
             <h1 class="font-bold text-3xl text-center" 
                 style="color: {{$sectionField->titleColor}}">
                 {{$sectionField->title}}
@@ -239,7 +287,7 @@
         @endif
         <!-- Text Block -->
         @if($item->section_name == 'Text Block' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-72">
+        <div class="mt-6 mb-4 lg:mx-96">
             @if($sectionField->type == 'image' && isset($sectionField->typeContentImage))
             <img src="{{asset($sectionField->typeContentImage)}}"
                 class="w-32 h-32 mx-auto rounded-full"/>
@@ -289,7 +337,7 @@
         @endif
         <!-- FB Group -->
         @if($item->section_name == 'Facebook Group' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-72">
+        <div class="mt-6 mb-4 lg:mx-96">
             @if($sectionField->type == 'image' && isset($sectionField->typeContentImage))
             <img src="{{asset($sectionField->typeContentImage)}}"
                 class="w-32 h-32 mx-auto rounded-full"/>
@@ -343,7 +391,7 @@
         @endif
         <!-- TikTok -->
         @if($item->section_name == 'TikTok' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-72">
+        <div class="mt-6 mb-4 lg:mx-96">
             <iframe
                 class="embed-responsive-item min-h-[46em] video-iframe"
                 scrolling="no"
@@ -357,7 +405,7 @@
         @endif
         <!-- WhatsApp -->
         @if($item->section_name == 'WhatsApp' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-72">
+        <div class="mt-6 mb-4 lg:mx-96">
             @if($sectionField->type == 'image' && isset($sectionField->typeContentImage))
             <img src="{{asset($sectionField->typeContentImage)}}"
                 class="w-32 h-32 mx-auto rounded-full"/>
@@ -411,7 +459,7 @@
         @endif
         <!-- Calendly -->
         @if($item->section_name == 'Calendly' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-72">
+        <div class="mt-6 mb-4 lg:mx-96">
             <h1 class="font-bold text-3xl text-center mt-6" 
                 style="color: {{$sectionField->titleColor}}">
                 {{$sectionField->title}}
@@ -439,7 +487,7 @@
         @endif
         <!-- FAQ -->
         @if($item->section_name == 'FAQ' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-72">
+        <div class="mt-6 mb-4 lg:mx-96">
             <h1 class="font-bold text-3xl text-center mt-6" 
                 style="color: {{$sectionField->titleColor}}">
                 {{$sectionField->title}}
@@ -507,7 +555,7 @@
         @endif
         <!-- Link -->
         @if($item->section_name == 'Link' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-72 link-section" 
+        <div class="mt-6 mb-4 lg:mx-96 link-section" 
             data-schedule="{{$sectionField->scheduleSwitch}}"
             data-schedule-start="{{$sectionField->scheduleStart}}"
             data-schedule-end="{{$sectionField->scheduleEnd}}">
@@ -533,13 +581,13 @@
         @endif
         <!-- HtmlJsBlock -->
         @if($item->section_name == 'HtmlJsBlock' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-72">
+        <div class="mt-6 mb-4 lg:mx-96">
             {!! $sectionField->codeBlock !!}
         </div>
         @endif
         <!-- Google Reviews -->
         @if($item->section_name == 'GoogleReview' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-72">
+        <div class="mt-6 mb-4 lg:mx-96">
             <div class="google-reviews" 
             data-key="{{$sectionField->googleKey}}" 
             data-placeid="{{$sectionField->googlePlaceId}}"></div>
@@ -547,7 +595,7 @@
         @endif
         <!-- Lead Gen -->
         @if($item->section_name == 'Lead Generation' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-72">
+        <div class="mt-6 mb-4 lg:mx-96">
             <div class="flex justify-center mt-2">
                 <button type="button"
                     class="text-white bg-blue-700 hover:bg-blue-800 
@@ -576,7 +624,7 @@
         @endif
         <!-- Mail Signup -->
         @if($item->section_name == 'Mail signup' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-72">
+        <div class="mt-6 mb-4 lg:mx-96">
             <div class="flex justify-center mt-2">
                 <button type="button"
                     class="text-white bg-blue-700 hover:bg-blue-800 
@@ -898,23 +946,23 @@
                             </div>
                             <!-- paypal slot -->
                             <div class="mt-3" id="paypal-slot" style="display:none">
-                            <form action="{{route('paypal-payment')}}" method="post">
-                                @csrf
-                                <input type="text" value="" name="linkId" id="linkId" style="display:none">
-                                <input type="text" value="" name="sectionId" id="sectionId" style="display:none">
-                                <input type="text" value="" name="description" id="description" style="display:none">
-                                <input type="text" value="paypal" name="type" style="display:none">
-                                <input type="text" value="{{$projectLinkId}}" name="projectlinkid" style="display:none">
-                                <input type="number" value="5.00" name="amount" id="paypal-total-donation" style="display:none">
-                                <button type="submit" id="donation-paypal-submit"
-                                    class="w-full text-white bg-blue-700 hover:bg-blue-800 
-                                    focus:ring-4 focus:outline-none focus:ring-blue-300 
-                                    font-medium rounded-lg text-sm px-5 py-2.5 text-center 
-                                    dark:bg-blue-600 dark:hover:bg-blue-700 
-                                    dark:focus:ring-blue-800">
-                                    Donate
-                                </button>
-                            </form>
+                                <form action="{{route('paypal-payment')}}" method="post">
+                                    @csrf
+                                    <input type="text" value="" name="linkId" id="linkId" style="display:none">
+                                    <input type="text" value="" name="sectionId" id="sectionId" style="display:none">
+                                    <input type="text" value="" name="description" id="description" style="display:none">
+                                    <input type="text" value="paypal" name="type" style="display:none">
+                                    <input type="text" value="{{$projectLinkId}}" name="projectlinkid" style="display:none">
+                                    <input type="number" value="5.00" name="amount" id="paypal-total-donation" style="display:none">
+                                    <button type="submit" id="donation-paypal-submit"
+                                        class="w-full text-white bg-blue-700 hover:bg-blue-800 
+                                        focus:ring-4 focus:outline-none focus:ring-blue-300 
+                                        font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                                        dark:bg-blue-600 dark:hover:bg-blue-700 
+                                        dark:focus:ring-blue-800">
+                                        Donate
+                                    </button>
+                                </form>
                             </div>
                         </div>
                         <button type="button" id="donation-submit"
@@ -932,6 +980,14 @@
                             </span>
                         </button>
                     <!-- </form> -->
+                    <div class="mt-6">
+                        <h4 class="flex justify-center text-center text-green-400 font-bold text-sm uppercase">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2 mb-1">
+                                <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />
+                            </svg>
+                            secure payment by stripe & paypal
+                        </h4>
+                    </div>
                 </div>
             </div>
         </div>
@@ -955,7 +1011,7 @@
                 </button>
                 <div class="px-6 py-6 lg:px-8">
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white" id="fanrequest-form-name"></h3>
-                    <form class="space-y-6">
+                    <!-- <form class="space-y-6"> -->
                         <p id="request-desc" class="text-sm"></p>
                         <textarea id="fanrequest-message" rows="3" 
                         class="block p-2.5 w-full text-sm text-gray-900 
@@ -966,20 +1022,312 @@
                         dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                         placeholder=""></textarea>
 
-                        <button type="button" id="fanrequest-submit"
+                        <!-- Login section -->
+                        <!-- Payment method -->
+                        <div class="mt-4">
+                            <h3 class="mb-4 text-lg font-medium text-gray-900 dark:text-white">
+                                Payment Method
+                            </h3>
+                            <div class="flex gap-3">
+                                <div class="flex items-center pl-4 border w-full
+                                border-gray-200 rounded dark:border-gray-700">
+                                    <input id="request-bordered-radio-1" type="radio" 
+                                    value="card" name="request_payType" 
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 
+                                    focus:ring-blue-500 dark:focus:ring-blue-600 
+                                    dark:ring-offset-gray-800 focus:ring-2 request-payType
+                                    dark:bg-gray-700 dark:border-gray-600"
+                                    checked>
+                                    <label for="request-bordered-radio-1" 
+                                        class="w-full py-4 ml-2 text-sm font-medium 
+                                        text-gray-900 dark:text-gray-300 flex gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                                        </svg>
+                                        <span class="mt-0.5 uppercase md:text-sm text-sm">Credit card</span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center pl-4 border w-full
+                                border-gray-200 rounded dark:border-gray-700">
+                                    <input id="request-bordered-radio-2" type="radio" 
+                                    value="paypal" name="request_payType" 
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 
+                                    border-gray-300 focus:ring-blue-500 request-payType
+                                    dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                                    focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="request-bordered-radio-2" 
+                                        class="w-full py-4 ml-2 text-sm font-medium 
+                                        text-gray-900 dark:text-gray-300 flex gap-2 uppercase">
+                                        <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#00457C" class="w-4 h-4 mt-0.5">
+                                            <title>PayPal</title>
+                                            <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z"/>
+                                        </svg>
+                                        Paypal
+                                    </label>
+                                </div>
+                            </div>
+                            <!-- Creadit card details -->
+                            <div class="mt-3" id="request-credit-card-slot">
+                                <div class="flex rounded-md shadow-sm">
+                                    <input type="text" name="card-number" id="request-card-number" 
+                                    class="block w-full flex-1 rounded-none rounded-l-md 
+                                    border-gray-300 focus:border-indigo-500 
+                                    focus:ring-indigo-500 sm:text-sm" 
+                                    placeholder="Card number">
+                                    <span class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="md:flex gap-2 mt-3">
+                                    <div class="flex input-group w-full">
+                                        <select class="block w-full rounded-none rounded-l-md 
+                                            border-gray-300 focus:border-indigo-500 
+                                            focus:ring-indigo-500 sm:text-sm" name="month" id="request-card-month">
+                                            <option value="">MM</option>
+                                            @foreach(range(1, 12) as $month)
+                                                <option value="{{$month}}">{{$month}}</option>
+                                            @endforeach
+                                        </select>
+                                        <select class="block w-full rounded-none rounded-r-md 
+                                            border-gray-300 focus:border-indigo-500 
+                                            focus:ring-indigo-500 sm:text-sm" name="year" id="request-card-year">
+                                            <option value="">YYYY</option>
+                                            @foreach(range(date('Y'), date('Y') + 10) as $year)
+                                                <option value="{{$year}}">{{$year}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="w-full">
+                                        <input type="text" name="cvv-number" id="request-cvv-number" 
+                                        class="block flex-1 rounded-md 
+                                        border-gray-300 focus:border-indigo-500 
+                                        focus:ring-indigo-500" 
+                                        placeholder="CVV">
+                                    </div>
+                                </div>
+                            </div> 
+                            <!-- Total request -->
+                            <div class="flex gap-2 text-lg mt-6">
+                                <h2 class="font-bold ">Total: </h2>
+                                <span class="total-request font-bold"></span>
+                                <input type="number" value="5.00" id="actual-total-request" style="display:none">
+                            </div>
+                            <!-- paypal slot -->
+                            <div class="mt-3" id="request-paypal-slot" style="display:none">
+                                <form action="{{route('paypal-payment')}}" method="post">
+                                    @csrf
+                                    <input type="text" value="" name="linkId" id="request-linkId" style="display:none">
+                                    <input type="text" value="" name="sectionId" id="request-sectionId" style="display:none">
+                                    <input type="text" value="" name="description" id="request-description" style="display:none">
+                                    <input type="text" value="paypal" name="type" style="display:none">
+                                    <input type="text" value="{{$projectLinkId}}" name="projectlinkid" style="display:none">
+                                    <input type="number" value="" name="amount" id="paypal-total-request" style="display:none">
+                                    <button type="submit" id="request-paypal-submit"
+                                        class="w-full text-white bg-blue-700 hover:bg-blue-800 
+                                        focus:ring-4 focus:outline-none focus:ring-blue-300 
+                                        font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                                        dark:bg-blue-600 dark:hover:bg-blue-700 
+                                        dark:focus:ring-blue-800">
+                                        Continue
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <button type="button" id="request-submit"
                             class="w-full text-white bg-blue-700 hover:bg-blue-800 
                             focus:ring-4 focus:outline-none focus:ring-blue-300 
                             font-medium rounded-lg text-sm px-5 py-2.5 text-center 
                             dark:bg-blue-600 dark:hover:bg-blue-700 
-                            dark:focus:ring-blue-800">
+                            dark:focus:ring-blue-800 mt-3">
                             Continue
+                            <span id="request-loader" style="display:none">
+                                <svg aria-hidden="true" role="status" class="inline w-4 h-4 ml-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+                                </svg>
+                            </span>
                         </button>
-                    </form>
+                        <div class="mt-6">
+                            <h4 class="flex justify-center text-center text-green-400 font-bold text-sm uppercase">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2 mb-1">
+                                    <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />
+                                </svg>
+                                secure payment by stripe & paypal
+                            </h4>
+                        </div>
+                    <!-- </form> -->
                 </div>
             </div>
         </div>
     </div>
+    <!-- Product/membership -->
+    <div id="product-modal" tabindex="-1" aria-hidden="true"
+        class="fixed top-0 left-0 right-0 z-50 hidden w-full 
+        p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
+        <div class="relative w-full h-full max-w-md md:h-auto">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <button type="button"
+                    class="absolute top-3 right-2.5 text-gray-400 bg-transparent 
+                    hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 
+                    ml-auto inline-flex items-center dark:hover:bg-gray-800 
+                    dark:hover:text-white" data-modal-toggle="product-modal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <div class="px-6 py-6 lg:px-8">
+                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white" id="product-form-name"></h3>
+                    <!-- <form class="space-y-6"> -->
+                        <p id="product-desc" class="text-sm"></p>
 
+                        <!-- Login section -->
+                        <!-- Payment method -->
+                        <div class="mt-4">
+                            <h3 class="mb-4 text-lg font-medium text-gray-900 dark:text-white">
+                                Payment Method
+                            </h3>
+                            <div class="flex gap-3">
+                                <div class="flex items-center pl-4 border w-full
+                                border-gray-200 rounded dark:border-gray-700">
+                                    <input id="product-bordered-radio-1" type="radio" 
+                                    value="card" name="product_payType" 
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 
+                                    focus:ring-blue-500 dark:focus:ring-blue-600 
+                                    dark:ring-offset-gray-800 focus:ring-2 product-payType
+                                    dark:bg-gray-700 dark:border-gray-600"
+                                    checked>
+                                    <label for="product-bordered-radio-1" 
+                                        class="w-full py-4 ml-2 text-sm font-medium 
+                                        text-gray-900 dark:text-gray-300 flex gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                                        </svg>
+                                        <span class="mt-0.5 uppercase md:text-sm text-sm">Credit card</span>
+                                    </label>
+                                </div>
+                                <div class="flex items-center pl-4 border w-full
+                                border-gray-200 rounded dark:border-gray-700">
+                                    <input id="product-bordered-radio-2" type="radio" 
+                                    value="paypal" name="product_payType" 
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 
+                                    border-gray-300 focus:ring-blue-500 product-payType
+                                    dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                                    focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="product-bordered-radio-2" 
+                                        class="w-full py-4 ml-2 text-sm font-medium 
+                                        text-gray-900 dark:text-gray-300 flex gap-2 uppercase">
+                                        <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#00457C" class="w-4 h-4 mt-0.5">
+                                            <title>PayPal</title>
+                                            <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z"/>
+                                        </svg>
+                                        Paypal
+                                    </label>
+                                </div>
+                            </div>
+                            <!-- Credit card details -->
+                            <div class="mt-3" id="product-credit-card-slot">
+                                <div class="flex rounded-md shadow-sm">
+                                    <input type="text" name="card-number" id="product-card-number" 
+                                    class="block w-full flex-1 rounded-none rounded-l-md 
+                                    border-gray-300 focus:border-indigo-500 
+                                    focus:ring-indigo-500 sm:text-sm" 
+                                    placeholder="Card number">
+                                    <span class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="md:flex gap-2 mt-3">
+                                    <div class="flex input-group w-full">
+                                        <select class="block w-full rounded-none rounded-l-md 
+                                            border-gray-300 focus:border-indigo-500 
+                                            focus:ring-indigo-500 sm:text-sm" name="month" id="product-card-month">
+                                            <option value="">MM</option>
+                                            @foreach(range(1, 12) as $month)
+                                                <option value="{{$month}}">{{$month}}</option>
+                                            @endforeach
+                                        </select>
+                                        <select class="block w-full rounded-none rounded-r-md 
+                                            border-gray-300 focus:border-indigo-500 
+                                            focus:ring-indigo-500 sm:text-sm" name="year" id="product-card-year">
+                                            <option value="">YYYY</option>
+                                            @foreach(range(date('Y'), date('Y') + 10) as $year)
+                                                <option value="{{$year}}">{{$year}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="w-full">
+                                        <input type="text" name="cvv-number" id="product-cvv-number" 
+                                        class="block flex-1 rounded-md 
+                                        border-gray-300 focus:border-indigo-500 
+                                        focus:ring-indigo-500" 
+                                        placeholder="CVV">
+                                    </div>
+                                </div>
+                            </div> 
+                            <!-- Total amount -->
+                            <div class="flex gap-2 text-lg mt-6">
+                                <h2 class="font-bold ">Total: </h2>
+                                <span class="total-product font-bold"></span>
+                                <input type="number" value="5.00" id="actual-total-product" style="display:none">
+                            </div>
+                            <!-- paypal slot -->
+                            <div class="mt-3" id="product-paypal-slot" style="display:none">
+                                <form action="{{route('paypal-payment')}}" method="post">
+                                    @csrf
+                                    <input type="text" value="" name="linkId" id="product-linkId" style="display:none">
+                                    <input type="text" value="" name="sectionId" id="product-sectionId" style="display:none">
+                                    <input type="text" value="" name="description" id="product-description" style="display:none">
+                                    <input type="text" value="paypal" name="type" style="display:none">
+                                    <input type="text" value="{{$projectLinkId}}" name="projectlinkid" style="display:none">
+                                    <input type="number" value="" name="amount" id="paypal-total-product" style="display:none">
+                                    <button type="submit" id="product-paypal-submit"
+                                        class="w-full text-white bg-blue-700 hover:bg-blue-800 
+                                        focus:ring-4 focus:outline-none focus:ring-blue-300 
+                                        font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                                        dark:bg-blue-600 dark:hover:bg-blue-700 
+                                        dark:focus:ring-blue-800">
+                                        Continue
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+
+                        <button type="button" id="product-submit"
+                            class="w-full text-white bg-blue-700 hover:bg-blue-800 
+                            focus:ring-4 focus:outline-none focus:ring-blue-300 
+                            font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                            dark:bg-blue-600 dark:hover:bg-blue-700 
+                            dark:focus:ring-blue-800 mt-3">
+                            Continue
+                            <span id="product-loader" style="display:none">
+                                <svg aria-hidden="true" role="status" class="inline w-4 h-4 ml-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="mt-6">
+                            <h4 class="flex justify-center text-center text-green-400 font-bold text-sm uppercase">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2 mb-1">
+                                    <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />
+                                </svg>
+                                secure payment by stripe & paypal
+                            </h4>
+                        </div>
+                    <!-- </form> -->
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -1052,6 +1400,7 @@ $(document).ready(function(){
         $('#linkId').val($(this).data('link-id'));
         $('#sectionId').val($(this).data('section-id'));
         $('#description').val($(this).data('title'));
+        // $('input[name=payType]:checked').val('card')
     })
     $('#donation-times').change(function() {
         let total = parseFloat($(this).val()) * 5;
@@ -1138,24 +1487,59 @@ $(document).ready(function(){
             $('#credit-card-slot').show();
             $('#paypal-slot').hide();
             $('#donation-submit').show();
-        }else {
+        }else if($('input[name=payType]:checked').val()=='paypal') {
             $('#credit-card-slot').hide();
             $('#paypal-slot').show();
             $('#donation-submit').hide();
         }
     })
 
+    $('.request-payType').change(function() {
+        if($('input[name=request_payType]:checked').val()=='card') {
+            $('#request-credit-card-slot').show();
+            $('#request-paypal-slot').hide();
+            $('#request-submit').show();
+        }else if($('input[name=request_payType]:checked').val()=='paypal') {
+            $('#request-credit-card-slot').hide();
+            $('#request-paypal-slot').show();
+            $('#request-submit').hide();
+        }
+    });
+    $('.product-payType').change(function() {
+        if($('input[name=product_payType]:checked').val()=='card') {
+            $('#product-credit-card-slot').show();
+            $('#product-paypal-slot').hide();
+            $('#product-submit').show();
+        }else if($('input[name=product_payType]:checked').val()=='paypal') {
+            $('#product-credit-card-slot').hide();
+            $('#product-paypal-slot').show();
+            $('#product-submit').hide();
+        }
+    });
+
     // fanrequest modal
     $('.fanrequest-modal').click(function() {
         model.sectionId = $(this).data('section-id');
         $('#fanrequest-form-name').text($(this).data('form-name'));
         $('#request-desc').html($(this).data('description'));
+        $('.total-request').text('$'+$(this).data('amount').toFixed(2))
+        $('#actual-total-request').val($(this).data('amount').toFixed(2))
+        $('#paypal-total-request').val($(this).data('amount').toFixed(2));
     });
     // fanrequest submit
     $('#fanrequest-submit').click(function() {
         model.fanrequestMessage = $('#fanrequest-message').val()
-        console.log(model.fanrequestMessage)
         $('#fanrequest-message').val('')
+    });
+
+    // product/membership modal
+    $('.product-modal').click(function() {
+        model.sectionId = $(this).data('section-id');
+        $('#product-form-name').text($(this).data('form-name'));
+        $('#product-desc').html($(this).data('description'));
+        $('.total-product').text('$'+$(this).data('amount').toFixed(2))
+        $('#actual-total-product').val($(this).data('amount').toFixed(2))
+        $('#paypal-total-product').val($(this).data('amount').toFixed(2));
     });
 
     // toogle leads modal

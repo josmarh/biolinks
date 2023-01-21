@@ -43,7 +43,8 @@ class ProductController extends Controller
             'shipping' => $request->shipping,
             'inventory' => $request->inventory,
             'files' => $request->prodFiles,
-            'external_link' => $request->extLink
+            'external_link' => $request->extLink,
+            'published_status' => 'Unpublished'
         ]);
 
         return response([
@@ -67,7 +68,8 @@ class ProductController extends Controller
             'shipping' => $product->shipping,
             'inventory' => $product->inventory,
             'files' => $product->files,
-            'external_link' => $product->external_link
+            'external_link' => $product->external_link,
+            'published_status' => $product->published_status
         ]);
 
         // check if product has category and insert into it
@@ -130,7 +132,8 @@ class ProductController extends Controller
             'shipping' => $request->shipping,
             'inventory' => $request->inventory,
             'files' => json_encode($newFileList),
-            'external_link' => $request->extLink
+            'external_link' => $request->extLink,
+            'published_status' => $request->publishedStatus
         ]);
 
         // Add or update category

@@ -37,6 +37,44 @@
         <!-- Section views -->
         <div v-if="section.length" class="mt-10">
             <div v-for="item in section" :key="item.id">
+                <!-- Product/Membership -->
+                <div v-if="item.section.name=='Product/Membership'" class="mt-2 mb-4">
+                    <div class="items-center bg-white border rounded-lg 
+                    shadow-md md:flex-row md:max-w-xl cursor-pointer
+                    dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                    :style="{color: item.buttonTextColor,
+                        'background-color': item.buttonBgColor
+                    }">
+                        <div class="flex justify-between">
+                            <div class="flex ">
+                                <div v-if="item.sectionFields.thumbnail">
+                                    <img :src="item.sectionFields.thumbnail.includes('biolink') 
+                                    ? helper.applink + item.sectionFields.thumbnail
+                                    : item.sectionFields.thumbnail"
+                                    class="ml-4 w-14 h-14 mx-auto rounded-full"/>
+                                </div>
+                                <div v-else >
+                                    <font-awesome-icon
+                                    icon="fa-solid fa-store"
+                                    class="ml-2 mt-2 bg-blue-600 rounded p-3 text-white w-4 h-4"/>
+                                </div>
+                                <div class="flex flex-col justify-between p-3 leading-normal">
+                                    <h5 class="text-lg font-semibold tracking-tight text-gray-900 
+                                    dark:text-white truncate"
+                                    :title="item.sectionFields.title">
+                                        {{ item.sectionFields.title.replace(/(.{26})..+/, "$1…") }}
+                                    </h5>
+                                    <div v-if="item.sectionFields.description" 
+                                    class="font-normal text-gray-700 dark:text-gray-400 text-sm"
+                                    v-html="item.sectionFields.description"></div>
+                                </div>
+                            </div>
+                            <div class="mt-3 px-2">
+                                ${{ item.sectionFields.productInfo.cost }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Donation -->
                 <div v-if="item.section.name=='Donation'" class="mt-2 mb-4">
                     <div class="items-center bg-white border rounded-lg 

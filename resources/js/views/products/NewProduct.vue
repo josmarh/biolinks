@@ -95,6 +95,7 @@ let productModel = ref({
     files: [],
     extLink: '',
     linkId: null,
+    publishedStatus: 'Upublished'
 })
 
 watch(product, (newVal, oldVal) => {
@@ -123,7 +124,8 @@ function updateProduct() {
             shipping: JSON.stringify(productModel.value.shipping),
             inventory: JSON.stringify(productModel.value.inventory),
             prodFiles: JSON.stringify(productModel.value.files),
-            extLink: productModel.value.extLink
+            extLink: productModel.value.extLink,
+            publishedStatus: productModel.value.publishedStatus
         })
         .then((res) => {
             notify({

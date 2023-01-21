@@ -6,8 +6,7 @@
                 <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">BioLink</span>
             </a> -->
             <router-link :to="{name: 'Dashboard'}" class="flex items-center">
-                <font-awesome-icon icon="fa-solid fa-link" class="h-3 mr-3 sm:h-4 bg-blue-100 rounded-full p-4"/>
-                <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">BioLink</span>
+                <AppLogo/>
             </router-link>
             <div class="flex md:order-2">
                 <user-dialogue/>
@@ -68,6 +67,7 @@
 
 <script setup>
 import UserDialogue from './UserDialogue.vue'
+import AppLogo from '../AppLogo.vue'
 </script>
 
 <style>

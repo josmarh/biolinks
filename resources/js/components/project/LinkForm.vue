@@ -164,7 +164,8 @@ function createLink() {
                 router.push({
                     name: 'Link',
                     params: {
-                        id: res.link.id
+                        id: route.params.id,
+                        linkId: res.link.id
                     }
                 });
             }, 1500);

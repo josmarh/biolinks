@@ -33,6 +33,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\MembershipBlogController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\IntegrationController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +52,18 @@ Route::middleware('auth:sanctum')->group(function() {
         return $request->user();
     });
 
+    // Orders
+    Route::get('/orders/{projectId}', [OrderController::class, 'index']);
+
+    // Integrations
+    Route::group(['prefix' => 'integration'], function () {
+        Route::get('/payment/show/{projectId}', [IntegrationController::class, 'paymentChannel']);
+        Route::post('/payment/store', [IntegrationController::class, 'storePaymentChannel']);
+        Route::get('/esp/show/{projectId}', [IntegrationController::class, 'mailChannel']);
+        Route::post('/esp/store', [IntegrationController::class, 'storeMailChannel']);
+    });
+
+    // Product routes
     Route::get('/products/{projectId}', [ProductController::class, 'index']);
     Route::get('/product/categories/{projectId}', [ProductCategoryController::class, 'index']);
     Route::get('/product/coupons/{projectId}', [ProductCouponController::class, 'index']);
@@ -71,6 +85,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::delete('/coupon/delete/{id}', [ProductCouponController::class, 'destroy']);
     });
 
+    // Memebership routes
     Route::group(['prefix' => 'membership'], function () {
         Route::get('/posts/{projectId}', [PostController::class, 'index']);
         Route::group(['prefix' => 'post'], function () {
@@ -118,6 +133,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::delete('/{projectId}/member', [ProjectTeamController::class, 'removeMember']);
     });
 
+    // Links
     Route::get('/links', [ProjectLinksController::class, 'index']);
     Route::group(['prefix' => 'link'], function () {
         Route::post('/store', [ProjectLinksController::class, 'store']);

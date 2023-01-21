@@ -125,7 +125,7 @@ const listOptions = [
     {label: 'Clubhouse', type: 'clubhouse', color:'text-blue-800'},
     {label: 'Product/Membership', type: 'purchase', color:'text-indigo-800'},
     {label: 'Donation', type: 'donation', color:'text-green-800'},
-    {label: 'Take Custom Fan Request', type: 'fan-request', color:'text-orange-500'},
+    {label: 'Take Fan Request', type: 'fan-request', color:'text-orange-500'},
 ];
 </script>
 

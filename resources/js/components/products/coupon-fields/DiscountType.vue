@@ -15,7 +15,7 @@
             dark:focus:border-blue-500">
             <option value="percentage_off">Percentage Off</option>
             <option value="dollars_off">Dollars Off</option>
-            <option value="free_shipping">Free Shipping</option>
+            <!-- <option value="free_shipping">Free Shipping</option> -->
         </select>
     </div>
     <div class="mt-4" v-if="model.discount.type=='percentage_off'">

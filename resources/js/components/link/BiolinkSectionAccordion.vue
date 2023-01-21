@@ -97,6 +97,10 @@
                         v-if="title == 'Fan Request'"
                         icon="fa-solid fa-mug-hot"
                         class="mt-1 mr-2 bg-orange-500 rounded-full p-2 text-white w-4"/>
+                        <font-awesome-icon
+                        v-if="title == 'Product/Membership'"
+                        icon="fa-solid fa-store"
+                        class="mt-1 mr-2 bg-blue-700 rounded-full p-2 text-white w-4"/>
                         
                         <span class="mt-2 hover:underline">{{title}}</span>
                     </span>
