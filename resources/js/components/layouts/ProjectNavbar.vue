@@ -73,7 +73,7 @@
                             Settings
                         </router-link>
                     </li>
-                    <li>
+                    <li class="hidden">
                         <router-link :to="{name: 'Users'}" 
                             :class="[$route.name == 'Users'
                             ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 

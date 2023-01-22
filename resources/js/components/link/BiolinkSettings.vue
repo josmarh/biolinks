@@ -112,6 +112,7 @@ function reloadSettings() {
     else
         biolinksection.dispatch('getSections', route.params.linkId)
     emit('reloadLinkInfo')
+    
 }
 
 function getBiolinkSettings() {

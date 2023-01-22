@@ -48,7 +48,7 @@
                     data-section-id="{{$item->section_id}}"
                     data-description="{{ $sectionField->description }}"
                     data-form-name="{{$sectionField->title}}"
-                    data-amount="{{ $sectionField->productInfo->cost }}"
+                    data-amount="{{ $sectionField->productInfo->cost ?? 0}}"
                     style="color: {{$item->button_text_color}};background-color: {{$item->button_bg_color}}">
                     <div class="flex justify-between">
                         <div class="flex ">
@@ -77,7 +77,7 @@
                             </div>
                         </div>
                         <div class="mt-3 px-2">
-                            ${{ $sectionField->productInfo->cost }}
+                            ${{ $sectionField->productInfo->cost ?? 0 }}
                         </div>
                     </div>
                 </div>

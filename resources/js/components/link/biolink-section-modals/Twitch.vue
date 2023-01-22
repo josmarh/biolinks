@@ -94,6 +94,7 @@ function newTwitch() {
                 title: "Success",
                 text: res.message
             }, 4000);
+            window.location.reload();
         })
         .catch((err) => {
             isDisabled.value = false

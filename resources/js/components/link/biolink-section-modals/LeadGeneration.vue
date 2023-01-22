@@ -65,12 +65,12 @@ function newLeadGeneration() {
         .then((res) => {
             isDisabled.value = false
             emit('closeForm');
-
             notify({
                 group: "success",
                 title: "Success",
                 text: res.message
             }, 4000);
+            window.location.reload();
         })
         .catch((err) => {
             isDisabled.value = false
