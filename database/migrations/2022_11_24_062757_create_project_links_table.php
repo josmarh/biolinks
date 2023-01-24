@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('bl_project_links', function (Blueprint $table) {
             $table->id();
             $table->integer('project_id')->length(5);
-            $table->string('link_id');
+            $table->string('link_id')->unique();
             $table->enum('type', ['biolink','link']);
             $table->text('long_url')->nullable();
             $table->bigInteger('total_leads')->default(0);

@@ -66,7 +66,7 @@ let model = ref(props.data)
 
 watch(() => props.data, (newVal, oldVal) => {
     model.value = newVal
-})
+}, {deep: true})
 
 let isDisabled = ref(false)
 

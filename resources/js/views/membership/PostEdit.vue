@@ -29,7 +29,7 @@
                         dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
                         dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                         placeholder="">
-                        <div class="flex gap-4 w-full">
+                        <!-- <div class="flex gap-4 w-full">
                             <font-awesome-icon icon="fa-up-right-from-square" class="h-4 w-4 mt-3" />
                             <select id="underline_select" 
                             class="block py-2.5 px-0 w-full text-sm 
@@ -42,7 +42,7 @@
                                 <option value="subscriber">View as subscriber</option>
                                 <option value="guest">View as guest</option>
                             </select>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="flex flex-wrap mt-8 block p-4 bg-white 
@@ -106,6 +106,22 @@
                     :disabled="isDisabled">
                     Save Changes
                 </button>
+                <div class="mt-6">
+                    <h3 class="block mb-2 text-sm font-medium flex
+                        text-gray-900 dark:text-white capitalize gap-2">
+                        Status & Availablity
+                    </h3>
+                    <select id="status" v-model="postModel.publishedStatus"
+                        class="bg-gray-50 border 
+                        border-gray-300 text-gray-900 text-sm  
+                        focus:ring-blue-500 focus:border-blue-500 block 
+                        w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 
+                        dark:placeholder-gray-400 dark:text-white 
+                        dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="Draft">Draft</option>
+                        <option value="Published">Published</option>
+                    </select>
+                </div>
                 <div class="mt-6">
                     <label for="excerpt" class="block mb-2 text-sm 
                     font-medium text-gray-900 dark:text-white">

@@ -28,6 +28,12 @@ class ProjectLinksController extends Controller
             'link.projectId' => 'required|numeric',
             'link.type' => 'required|string',
         ]);
+        
+        if($request->link['linkId']) {
+            $request->validate([
+                'link.linkId' => 'required|string|unique:bl_project_links'
+            ]);
+        }
 
         $user = $request->user();
         $linkId = $request->link['linkId']; 

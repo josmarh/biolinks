@@ -4,7 +4,7 @@
             class="flex justify-between w-full p-4 
             text-center bg-white border shadow-md mb-4
             sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-            <div class="flex gap-6">                
+            <div class="flex gap-6 truncate">                
                 <router-link :to="{name: 'PlanUpdate', query: {pid: item.id}}"
                     class="text-2xl font-semibold text-gray-900 dark:text-white hover:underline">
                     {{ item.title }}

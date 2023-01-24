@@ -5,16 +5,16 @@
         shadow-md dark:bg-gray-800 dark:border-gray-700 w-full
         dark:hover:bg-gray-700 mt-6">
             <p class="text-gray-600 text-sm font-semibold">
-                Select the products or courses you'd like to attach to this post. 
+                Select the products you'd like to attach to this post. 
                 Anyone who has access to this post will have access to these products.
             </p>
-            <div class="p-4 mb-4 text-sm text-yellow-700 
+            <!-- <div class="p-4 mb-4 text-sm text-yellow-700 
             bg-yellow-100 rounded-lg dark:bg-gray-800 
             dark:text-yellow-300 text-gray-700 mt-4 font-normal" role="alert">
                 <span class="font-medium">Warning:</span> 
                 Only digital products that are of the "simple" 
                 type are allowed here (variant & multi-variant products will not work)
-            </div>
+            </div> -->
             <div class="mt-6">
                 <label for="featured_image_style" 
                     class="block mb-2 text-sm 

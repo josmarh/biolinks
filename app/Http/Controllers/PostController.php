@@ -127,7 +127,8 @@ class PostController extends Controller
                 $relativePath = $this->saveFile('post-media', $file->file);
                 array_push($newMediaList, (object)[
                     'name' => $file->name, 
-                    'file' => $relativePath
+                    'file' => $relativePath,
+                    'type' => $file->type,
                 ]);
             }else {
                 array_push($newMediaList, $file);

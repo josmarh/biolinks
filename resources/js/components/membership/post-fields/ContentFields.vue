@@ -80,6 +80,10 @@ const init = reactive({
 
 let model = ref(props.data)
 
+watch(() => props.data, (newVal, oldVal) => {
+    model.value = newVal
+}, {deep: true})
+
 watch(model, (newVal, oldVal) => {
     emit('updateModel', model.value)
 }, {deep: true})

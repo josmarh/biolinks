@@ -25,7 +25,7 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string'
+            'name' => 'required|string|unique:bl_projects'
         ]);
         $user = $request->user();
         $customId = rand(11111, 99999);

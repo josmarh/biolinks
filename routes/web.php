@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SPAController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\MemberAreaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +17,20 @@ use App\Http\Controllers\PaymentController;
 */
 
 Route::get('/w/{linkId}', [SPAController::class, 'biolinkPage'])->name('biolink-webpage');
-Route::post('/link-password/{settingId}', [SPAController::class, 'linkPasswordValidate'])->name('link-password.validate');
+Route::get('/w/{projectName}/login', [MemberAreaController::class, 'login'])->name('member-login');
+Route::get('/w/{projectName}/member-signup', [MemberAreaController::class, 'register'])->name('member-register');
+Route::get('/w/{projectName}/library', [MemberAreaController::class, 'library'])->name('member-library');
+Route::get('/w/{projectName}/account', [MemberAreaController::class, 'account'])->name('member-account');
+Route::get('/w/{projectName}/orders', [MemberAreaController::class, 'orders'])->name('member-orders');
+Route::get('/w/{projectName}/post/{slug}', [MemberAreaController::class, 'post'])->name('member-post');
+Route::get('/w/{projectName}/{routeName}', [MemberAreaController::class, 'index'])->name('member-index');
 
+Route::post('/w/{projectName}/login', [MemberAreaController::class, 'loginMember'])->name('post-login');
+Route::post('/w/{projectName}/signup', [MemberAreaController::class, 'registerMember'])->name('post-register');
+Route::post('/w/{projectName}/logout', [MemberAreaController::class, 'logoutMember'])->name('member-logout');
+Route::put('/w/{projectName}/account', [MemberAreaController::class, 'updateAccount'])->name('member-account-update');
+
+Route::post('/link-password/{settingId}', [SPAController::class, 'linkPasswordValidate'])->name('link-password.validate');
 Route::group(['prefix' => 'paypal'], function () {
     Route::view('/failed','paypal.failed')->name('paypalFailed');
     Route::view('/successful','paypal.success')->name('paypalSuccessful');

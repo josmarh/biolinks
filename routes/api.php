@@ -131,6 +131,8 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('/invitation', [ProjectInvitationController::class, 'sendInvitation']);
         Route::get('/{projectId}/team', [ProjectTeamController::class, 'projectMembers']);
         Route::delete('/{projectId}/member', [ProjectTeamController::class, 'removeMember']);
+        Route::get('/{projectId}/customers', [ProjectTeamController::class, 'customerLeads']);
+        Route::post('/{projectId}/customer-export', [ProjectTeamController::class, 'exportCustomerLeads']);
     });
 
     // Links
@@ -213,6 +215,7 @@ Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword']
 Route::get('/project/invitation/{id}', [ProjectInvitationController::class, 'getInvitationInfo']);
 Route::post('/register/{id}', [RegisterController::class, 'registerMember']);
 Route::post('/mail-signup', [SPAController::class, 'mailSignup']);
+Route::post('/mail-signup-blog', [SPAController::class, 'mailSignupBlog']);
 Route::post('/leadgen', [SPAController::class, 'leadgen']);
 Route::post('/visits', [SPAController::class, 'storeVisits']);
 Route::post('/donation', [PaymentController::class, 'donation']);

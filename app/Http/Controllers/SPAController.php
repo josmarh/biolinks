@@ -11,6 +11,7 @@ use App\Models\BioLinkSection;
 use App\Models\LeadStat;
 use App\Models\Visitor;
 use App\Models\Project;
+use App\Models\CustomerLead;
 use App\Jobs\LeadsGenJob;
 use App\Jobs\MailSignupJob;
 use App\Services\LeadShareService;
@@ -46,8 +47,9 @@ class SPAController extends Controller
                 'branding' => json_decode($settings->branding),
             ];
             $projectLinkId = $linkId;
+            $projectId = $project->custom_id;
             
-            return view('biolinkpage.biolink', compact('settings','custom','section','jdecoded','projectLinkId'));
+            return view('biolinkpage.biolink', compact('settings','custom','section','jdecoded','projectLinkId','projectId'));
         }elseif($projectLink && $projectLink->type === 'link') {
             $linkSetting = LinkSetting::where('link_id', $projectLink->id)->first();
 
@@ -123,8 +125,40 @@ class SPAController extends Controller
             'total_leads' => $leads
         ]);
 
+        CustomerLead::create([
+            'email' => $request->email,
+            'name' => '',
+            'status' => 'Email Lead',
+            'orders' => 0,
+            'lifetime_value' => 0.00,
+            'project_id' => $request->projectId
+        ]);
+
         return response([
             'message' => $sectionField->thankYouMsg
+        ]);
+    }
+
+    public function mailSignupBlog(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|string|email',
+            'projectId' => 'required|numeric'
+        ]);
+
+        CustomerLead::create([
+            'email' => $data['email'],
+            'name' => '',
+            'status' => 'Email Lead',
+            'orders' => 0,
+            'lifetime_value' => 0.00,
+            'project_id' => $data['projectId']
+        ]);
+
+        // send to esp
+
+        return response([
+            'message' => 'Email signup successfully'
         ]);
     }
 
@@ -203,6 +237,15 @@ class SPAController extends Controller
             'total_leads' => $leads
         ]);
 
+        CustomerLead::create([
+            'email' => $request->email,
+            'name' => $request->name,
+            'status' => 'Email Lead',
+            'orders' => 0,
+            'lifetime_value' => 0.00,
+            'project_id' => $request->projectId
+        ]);
+
         return response([
             'message' => $sectionField->thankYouMsg
         ]);
@@ -253,4 +296,6 @@ class SPAController extends Controller
             return redirect()->route('biolink-webpage', $linkSetting->link_id)->with('status', 'Wrong password!');
         }
     }
+
+    
 }

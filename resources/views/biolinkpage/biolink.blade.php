@@ -1612,7 +1612,8 @@ $(document).ready(function(){
                     name: model.name,
                     phone: model.phone,
                     email: model.email, 
-                    sectionId: model.sectionId 
+                    sectionId: model.sectionId,
+                    projectId: {!! $projectId !!} 
                 },
                 success: function(res) {
                     $('#name').val('')
@@ -1678,7 +1679,7 @@ $(document).ready(function(){
             $.ajax({
                 url: '/api/mail-signup',
                 method: 'post',
-                data: { email: model.mailEmail, sectionId: model.sectionId },
+                data: { email: model.mailEmail, sectionId: model.sectionId, projectId: {!! $projectId !!} },
                 success: function(res) {
                     $('#mail-email').val('')
                     setSuccessAlert(res.message)

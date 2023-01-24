@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('bl_projects', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->bigInteger('custom_id');
             $table->bigInteger('total_links')->default(0);
             $table->bigInteger('total_unique_clicks')->default(0);

@@ -8,6 +8,11 @@ const project = createStore({
         },
         projectTeams: {
             data: []
+        },
+        customerLeads: {
+            data: [],
+            meta: {},
+            links: {}
         }
     },
     getters: {},
@@ -69,6 +74,26 @@ const project = createStore({
                     return data;
                 })
         },
+        getCustomerLeads({ commit }, projectId) {
+            return axiosClient.get(`/project/${projectId}/customers`)
+                .then(({data}) => {
+                    commit('setCustomerLeads', data)
+                    return data;
+                })
+        },
+        exportCustomerLeads({ }, leads) {
+            return axiosClient.post(`/project/${leads.projectId}/customer-export`, leads)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        getCustomerLeadsPag({ commit }, url) {
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setCustomerLeads', data)
+                    return data;
+                })
+        },
     },
     mutations: {
         setProjects: (state, data) => {
@@ -77,6 +102,9 @@ const project = createStore({
         setProjectTeam: (state, data) => {
             state.projectTeams = data;
         },
+        setCustomerLeads: (state, data) => {
+            state.customerLeads = data
+        }
     },
     modules: {}
 });

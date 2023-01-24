@@ -100,7 +100,7 @@ let productModel = ref({
 
 watch(product, (newVal, oldVal) => {
     productModel.value = newVal.data
-})
+},{deep:true})
 
 function toggleTabs(tabNumber) {
     openTab.value = tabNumber

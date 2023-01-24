@@ -152,7 +152,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import EditMediaNameModal from './EditMediaNameModal.vue'
 import draggable from 'vuedraggable'
 import helper from '../../../helpers'
@@ -232,8 +232,10 @@ function setMediaFiles(file) {
                 let fsize;
                 model.value.media.push({
                     name: fileNam,
-                    file: fileUrl
-                })
+                    file: fileUrl,
+                    type: fileType
+                });
+                console.log(model.value.media)
             }
             reader.readAsDataURL(f);
         }
@@ -267,6 +269,10 @@ function updateMediaName(name) {
         }
     }
 }
+
+// onMounted(() => {
+    
+// })
 </script>
 
 <style>

@@ -87,6 +87,10 @@ let pricing = ref({
     type: 'pricing'
 })
 
+watch(() => props.data, (newVal, oldVal) => {
+    pricing.value.pricing = newVal
+})
+
 watch(() => pricing.value.pricing.paymentType, (newVal, oldVal) => {
     if(newVal == 'free')
         pricing.value.pricing.price = 0
@@ -94,7 +98,7 @@ watch(() => pricing.value.pricing.paymentType, (newVal, oldVal) => {
 
 watch(pricing, (newVal, oldVal) => {
     emit('updateProduct', pricing.value)
-})
+}, {deep:true})
 </script>
 
 <style>

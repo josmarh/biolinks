@@ -1,0 +1,1 @@
+{{ auth()->guard('subscriber')->user()->name }}
