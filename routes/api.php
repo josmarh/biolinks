@@ -219,3 +219,5 @@ Route::post('/mail-signup-blog', [SPAController::class, 'mailSignupBlog']);
 Route::post('/leadgen', [SPAController::class, 'leadgen']);
 Route::post('/visits', [SPAController::class, 'storeVisits']);
 Route::post('/donation', [PaymentController::class, 'donation']);
+Route::post('/fanrequest', [PaymentController::class, 'fanRequest']);
+Route::post('/fanrequest-auth', [PaymentController::class, 'fanRequestWithAuth']);

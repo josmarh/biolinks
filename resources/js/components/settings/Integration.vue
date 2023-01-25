@@ -6,8 +6,7 @@
                     Payment Integration
                 </h3>
                 <p class="mt-1 text-sm text-gray-600">
-                    Set-up your Stripe or Paypal integration here. 
-                    You can only set-up one payment gateway per project.
+                    Set-up your Stripe or Paypal integration here.
                 </p>
             </div>
         </div>

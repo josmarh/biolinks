@@ -16,7 +16,15 @@ use App\Http\Controllers\MemberAreaController;
 |
 */
 
+
 Route::get('/w/{linkId}', [SPAController::class, 'biolinkPage'])->name('biolink-webpage');
+Route::post('/w/{linkId}/link/logout', [SPAController::class, 'logoutMember'])->name('member-link-logout');
+Route::post('/w/{linkId}/link/login', [SPAController::class, 'loginMember'])->name('member-link-login');
+Route::post('/w/{linkId}/link/fan-request', [PaymentController::class, 'fanRequest'])->name('fan-request');
+Route::post('/w/{linkId}/link/fan-request-auth', [PaymentController::class, 'fanRequestWithAuth'])->name('fan-request-auth');
+Route::post('/w/{linkId}/link/product', [PaymentController::class, 'product'])->name('product');
+Route::post('/w/{linkId}/link/product-auth', [PaymentController::class, 'productWithAuth'])->name('product-auth');
+
 Route::get('/w/{projectName}/login', [MemberAreaController::class, 'login'])->name('member-login');
 Route::get('/w/{projectName}/member-signup', [MemberAreaController::class, 'register'])->name('member-register');
 Route::get('/w/{projectName}/library', [MemberAreaController::class, 'library'])->name('member-library');

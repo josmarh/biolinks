@@ -19,7 +19,7 @@
                 text-sm px-3 py-2.5 text-center mr-2 mb-2 
                 dark:border-blue-500 dark:text-blue-500 flex gap-2
                 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
-                    <img src="/temps/mailchimp.png" alt="MailChimp" class="w-28">
+                    <img :src="helper.applink + '/temps/mailchimp.png'" alt="MailChimp" class="w-28">
                     <font-awesome-icon 
                     v-if="model.mailchimp.apikey && model.mailchimp.listid"
                     icon="fa-solid fa-circle-check" 
@@ -32,7 +32,7 @@
                 text-sm px-3 py-2.5 text-center mr-2 mb-2 
                 dark:border-blue-500 dark:text-blue-500 flex gap-2
                 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
-                    <img src="/temps/getresponse.png" alt="Get Response" class="w-28">
+                    <img :src="helper.applink + '/temps/getresponse.png'" alt="Get Response" class="w-28">
                     <font-awesome-icon 
                     v-if="model.getresponse.apikey && model.getresponse.campaignId"
                     icon="fa-solid fa-circle-check" 
@@ -45,7 +45,7 @@
                 text-sm px-3 py-2.5 text-center mr-2 mb-2 
                 dark:border-blue-500 dark:text-blue-500 flex gap-2
                 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
-                    <img src="/temps/octopus.png" alt="Email Octopus" class="w-28">
+                    <img :src="helper.applink + '/temps/octopus.png'" alt="Email Octopus" class="w-28">
                     <font-awesome-icon 
                     v-if="model.emailoctopus.apikey && model.emailoctopus.listid"
                     icon="fa-solid fa-circle-check" 
@@ -58,7 +58,7 @@
                 text-sm px-2 py-2.5 text-center mr-2 mb-2 
                 dark:border-blue-500 dark:text-blue-500 flex gap-2
                 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
-                    <img src="/temps/convertkit.png" alt="ConverterKit" class="w-28">
+                    <img :src="helper.applink + '/temps/convertkit.png'" alt="ConverterKit" class="w-28">
                     <font-awesome-icon 
                     v-if="model.converterkit.apikey && model.converterkit.formId"
                     icon="fa-solid fa-circle-check" 
@@ -74,7 +74,7 @@
                 text-sm px-3 py-2.5 text-center mr-2 mb-2 
                 dark:border-blue-500 dark:text-blue-500 flex gap-2
                 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
-                    <img src="/temps/mailerlite.png" alt="mailerlite" class="w-28">
+                    <img :src="helper.applink + '/temps/mailerlite.png'" alt="mailerlite" class="w-28">
                     <font-awesome-icon 
                     v-if="model.mailerlite.apikey && model.mailerlite.groupId"
                     icon="fa-solid fa-circle-check" 
@@ -309,6 +309,7 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import helper from '../../helpers'
 
 const props = defineProps({
     data: Object,
