@@ -7,14 +7,14 @@
                 <!-- <font-awesome-icon icon="fa-solid fa-link" 
                 class="w-5 h-5 bg-blue-100 rounded-full p-2"/>
                 <span class="mt-1">BioLink</span> -->
-                <img src="/temps/logo.png" alt="SociLinks" class="w-32 h-14">
+                <img :src="helper.applink + '/temps/logo.png'" alt="SociLinks" class="w-32 h-14">
             </router-link>
         </h5>
     </div>
 </template>
 
-<script>
-
+<script setup>
+import helper from '../helpers';
 </script>
 
 <style>

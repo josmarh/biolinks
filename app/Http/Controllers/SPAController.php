@@ -7,14 +7,17 @@ use App\Models\ProjectLink;
 use App\Models\BiolinkSetting;
 use App\Models\LinkSetting;
 use App\Models\BiolinkCustomSetting;
-use App\Models\BioLinkSection;
+use App\Models\BiolinkSection;
 use App\Models\LeadStat;
 use App\Models\Visitor;
 use App\Models\Project;
+use App\Models\MembershipBlog;
 use App\Models\CustomerLead;
+use App\Models\PaymentIntegration;
 use App\Jobs\LeadsGenJob;
 use App\Jobs\MailSignupJob;
 use App\Services\LeadShareService;
+use Illuminate\Support\Facades\Auth;
 
 class SPAController extends Controller
 {
@@ -32,7 +35,7 @@ class SPAController extends Controller
         if($projectLink && $projectLink->type === 'biolink') {
             $settings = BiolinkSetting::where('link_id', $projectLink->id)->first();
             $custom = BiolinkCustomSetting::where('link_id', $projectLink->id)->first();
-            $section = BioLinkSection::where('bl_biolink_sections.link_id', $projectLink->id)
+            $section = BiolinkSection::where('bl_biolink_sections.link_id', $projectLink->id)
                 ->join('bl_biolink_section_settings as sect','bl_biolink_sections.section_id','=','sect.id')
                 ->with('section')
                 ->orderBy('sect.section_position','asc')
@@ -47,9 +50,23 @@ class SPAController extends Controller
                 'branding' => json_decode($settings->branding),
             ];
             $projectLinkId = $linkId;
-            $projectId = $project->custom_id;
+            $projectId = $projectLink->project_id;
+
+            $project = Project::where('custom_id', $projectId)->first();
+            $blog = MembershipBlog::where('project_id', $project->custom_id)->first();
+            $blogSetting = json_decode($blog->main_setting);
+            $blogRouteName = $blogSetting->urlPath;
+
+            $isPaymentGatewaySet = PaymentIntegration::where('project_id', $projectId)->first();
+
+            $proj = [
+                'pname' => $project->name,
+                'routename' => $blogRouteName,
+                'stripe' => $isPaymentGatewaySet && $isPaymentGatewaySet->stripe_secret ? true : false,
+                'paypal' => $isPaymentGatewaySet && $isPaymentGatewaySet->paypal_client && $isPaymentGatewaySet->paypal_secret ? true : false
+            ];
             
-            return view('biolinkpage.biolink', compact('settings','custom','section','jdecoded','projectLinkId','projectId'));
+            return view('biolinkpage.biolink', compact('settings','custom','section','jdecoded','projectLinkId','projectId','proj'));
         }elseif($projectLink && $projectLink->type === 'link') {
             $linkSetting = LinkSetting::where('link_id', $projectLink->id)->first();
 
@@ -68,7 +85,7 @@ class SPAController extends Controller
             'sectionId' => 'required|numeric'
         ]);
 
-        $section = BioLinkSection::where('section_id', $data['sectionId'])->first();
+        $section = BiolinkSection::where('section_id', $data['sectionId'])->first();
 
         if(!$section) {
             return response([
@@ -169,7 +186,7 @@ class SPAController extends Controller
             'sectionId' => 'required|numeric'
         ]);
 
-        $section = BioLinkSection::where('section_id', $data['sectionId'])->first();
+        $section = BiolinkSection::where('section_id', $data['sectionId'])->first();
 
         if(!$section) {
             return response([
@@ -297,5 +314,28 @@ class SPAController extends Controller
         }
     }
 
-    
+    public function loginMember(Request $request, $linkId)
+    {  
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
+        
+        if(Auth::guard('subscriber')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
+            return redirect()->intended('/w/'.$linkId);
+        }else {
+            return back()->withInput($request->only('email', 'remember'))->with('error', 'Login failed');
+        }
+    }
+
+    public function logoutMember(Request $request, $projectLinkId)
+    {
+        Auth::guard('subscriber')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect()->route('biolink-webpage', $projectLinkId);
+    }
 }

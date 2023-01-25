@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('fulfilled')->nullable();
             $table->string('status')->nullable();
             $table->string('description')->nullable();
+            $table->bigInteger('product_id')->nullable();
+            $table->string('product_source')->nullable();
             $table->bigInteger('link_id')->nullable();
             $table->bigInteger('section_id')->nullable();
             $table->bigInteger('project_id')->nullable();

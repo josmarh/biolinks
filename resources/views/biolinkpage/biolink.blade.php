@@ -1,6 +1,15 @@
 @extends('biolinkpage.biolinklayout')
 
 @section('content')
+@if (\Session::has('success'))
+    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        {!! \Session::get('success') !!}
+    </div>
+@elseif(\Session::has('error'))
+    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+        {!! \Session::get('error') !!}
+    </div>
+@endif
 
 <div class="mt-14">
     <!-- Top Logo -->
@@ -49,6 +58,9 @@
                     data-description="{{ $sectionField->description }}"
                     data-form-name="{{$sectionField->title}}"
                     data-amount="{{ $sectionField->productInfo->cost ?? 0}}"
+                    data-link-id="{{$settings->link_id}}"
+                    data-product-id="{{$sectionField->productInfo->id}}"
+                    data-product-type="{{$sectionField->productType}}"
                     style="color: {{$item->button_text_color}};background-color: {{$item->button_bg_color}}">
                     <div class="flex justify-between">
                         <div class="flex ">
@@ -138,6 +150,8 @@
                 data-modal-toggle="fanrequest-modal"
                 data-section-id="{{$item->section_id}}"
                 data-description="{{ $sectionField->description }}"
+                data-title="{{ $sectionField->title }}"
+                data-link-id="{{$settings->link_id}}"
                 data-form-name="Request"
                 data-amount="{{$sectionField->requestCost}}"
                 style="color: {{$item->button_text_color}};background-color: {{$item->button_bg_color}}">
@@ -858,8 +872,9 @@
                                 Payment Method
                             </h3>
                             <div class="flex gap-3">
+                                @if($proj['stripe'])
                                 <div class="flex items-center pl-4 border w-full
-                                border-gray-200 rounded dark:border-gray-700">
+                                    border-gray-200 rounded dark:border-gray-700">
                                     <input id="bordered-radio-1" type="radio" 
                                     value="card" name="payType" 
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 
@@ -876,6 +891,8 @@
                                         <span class="mt-0.5 uppercase md:text-sm text-sm">Credit card</span>
                                     </label>
                                 </div>
+                                @endif
+                                @if($proj['paypal'])
                                 <div class="flex items-center pl-4 border w-full
                                 border-gray-200 rounded dark:border-gray-700">
                                     <input id="bordered-radio-2" type="radio" 
@@ -894,8 +911,10 @@
                                         Paypal
                                     </label>
                                 </div>
+                                @endif
                             </div>
                             <!-- Creadit card details -->
+                            @if($proj['stripe'])
                             <div class="mt-3" id="credit-card-slot">
                                 <div class="flex rounded-md shadow-sm">
                                     <input type="text" name="card-number" id="card-number" 
@@ -937,6 +956,7 @@
                                     </div>
                                 </div>
                             </div> 
+                            @endif
                             
                             <!-- Total donation -->
                             <div class="flex gap-2 text-lg mt-6">
@@ -1011,35 +1031,108 @@
                 </button>
                 <div class="px-6 py-6 lg:px-8">
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white" id="fanrequest-form-name"></h3>
-                    <!-- <form class="space-y-6"> -->
+                    @if(!auth()->guard('subscriber')->check())
+                    <form class="space-y-6" action="{{route('fan-request', $projectLinkId)}}" method="post">
+                    @else
+                    <form class="space-y-6" action="{{route('fan-request-auth', $projectLinkId)}}" method="post">
+                    @endif
+                    @csrf
                         <p id="request-desc" class="text-sm"></p>
-                        <textarea id="fanrequest-message" rows="3" 
+                        <p class="text-gray-500 text-sm message-warn mt-2"></p>
+                        <div class="p-4 mb-4 text-sm rounded-lg hidden alert" role="alert"></div>
+                        <textarea id="fanrequest-message" rows="2" name="requestMessage"
                         class="block p-2.5 w-full text-sm text-gray-900 
-                        bg-gray-50 rounded-lg border border-gray-300 
+                        rounded-lg border border-gray-300 mt-2
                         focus:ring-blue-500 focus:border-blue-500 
                         dark:bg-gray-700 dark:border-gray-600 
                         dark:placeholder-gray-400 dark:text-white 
                         dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                        placeholder=""></textarea>
+                        placeholder="" required></textarea>
+                        @if(!auth()->guard('subscriber')->check())
+                        <!-- Login/signup section -->
+                        <div class="mt-4">
+                            <div id="new-account-request">
+                                <div class="flex justify-between">
+                                    <h3 class="text-md font-medium text-gray-900 dark:text-white">
+                                        Create A Login
+                                    </h3>
+                                    <!-- <span id="to-login-request" class="font-normal mt-0.5 text-blue-500 text-sm cursor-pointer">
+                                        Already have an account? Login
+                                    </span> -->
+                                </div>
+                                <div class="mt-2">
+                                    <p class="text-gray-500 text-sm warn"></p>
+                                    <input type="email" name="email" 
+                                    id="email_signup_request" 
+                                    class="block flex-1 rounded-md 
+                                    border-gray-300 focus:border-indigo-500 
+                                    focus:ring-indigo-500 w-full" 
+                                    placeholder="name@company.com">
+                                    <input type="password" name="password" 
+                                    id="password_signup_request" 
+                                    class="block flex-1 rounded-md mt-3
+                                    border-gray-300 focus:border-indigo-500 
+                                    focus:ring-indigo-500 w-full" 
+                                    placeholder="**********">
+                                </div>
+                            </div>
+                            <!-- <div id="login-request" style="display:none">
+                                <div class="flex justify-between">
+                                    <h3 class="text-md font-medium text-gray-900 dark:text-white">
+                                        Login
+                                    </h3>
+                                    <span id="to-signup-request" class="font-normal mt-0.5 text-blue-500 text-sm cursor-pointer">
+                                        Don't have an account? Signup
+                                    </span>
+                                </div>
+                                <div class="mt-2">
+                                    <p class="text-gray-500 text-sm warn"></p>
+                                    <input type="email" name="email_login_request" 
+                                    id="email_login_request" 
+                                    class="block flex-1 rounded-md 
+                                    border-gray-300 focus:border-indigo-500 
+                                    focus:ring-indigo-500 w-full" 
+                                    placeholder="name@company.com">
+                                    <input type="password" name="password_login_request" 
+                                    id="password_login_request" 
+                                    class="block flex-1 rounded-md mt-3
+                                    border-gray-300 focus:border-indigo-500 
+                                    focus:ring-indigo-500 w-full" 
+                                    placeholder="**********">
+                                </div>
+                            </div> -->
+                        </div>
+                        @endif
 
-                        <!-- Login section -->
+                        <!-- data fields -->
+                        <input type="text" name="linkId" value="{{$settings->link_id}}" style="display:none">
+                        <input type="text" name="sectionId" value="" id="section-id-request" style="display:none">
+                        <input type="number" name="amount" value="" id="actual-total-request" style="display:none">
+                        <input type="text" name="description" value="" id="payment-description" style="display:none">
+                        <input type="text" value="{{$projectLinkId}}" name="projectlinkid" style="display:none">
                         <!-- Payment method -->
                         <div class="mt-4">
-                            <h3 class="mb-4 text-lg font-medium text-gray-900 dark:text-white">
+                            <h3 class="mb-2 text-md font-medium text-gray-900 dark:text-white">
                                 Payment Method
                             </h3>
+                            @if(auth()->guard('subscriber')->check())
+                            <p class="mt-1 mb-1 text-sm text-gray-500">
+                                You can leave empty if you have added your card to your account.
+                            </p>
+                            @endif
                             <div class="flex gap-3">
+                                @if($proj['stripe'])
                                 <div class="flex items-center pl-4 border w-full
-                                border-gray-200 rounded dark:border-gray-700">
+                                    border-gray-200 rounded dark:border-gray-700">
                                     <input id="request-bordered-radio-1" type="radio" 
-                                    value="card" name="request_payType" 
+                                    value="card" name="type" 
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 
                                     focus:ring-blue-500 dark:focus:ring-blue-600 
-                                    dark:ring-offset-gray-800 focus:ring-2 request-payType
+                                    dark:ring-offset-gray-800 focus:ring-0 request-payType
                                     dark:bg-gray-700 dark:border-gray-600"
                                     checked>
                                     <label for="request-bordered-radio-1" 
-                                        class="w-full py-4 ml-2 text-sm font-medium 
+                                        class="w-full py-1 ml-2 text-sm font-medium 
                                         text-gray-900 dark:text-gray-300 flex gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
@@ -1047,16 +1140,18 @@
                                         <span class="mt-0.5 uppercase md:text-sm text-sm">Credit card</span>
                                     </label>
                                 </div>
+                                @endif
+                                @if($proj['paypal'])
                                 <div class="flex items-center pl-4 border w-full
-                                border-gray-200 rounded dark:border-gray-700">
+                                    border-gray-200 rounded dark:border-gray-700">
                                     <input id="request-bordered-radio-2" type="radio" 
-                                    value="paypal" name="request_payType" 
+                                    value="paypal" name="type" 
                                     class="w-4 h-4 text-blue-600 bg-gray-100 
                                     border-gray-300 focus:ring-blue-500 request-payType
                                     dark:focus:ring-blue-600 dark:ring-offset-gray-800 
                                     focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="request-bordered-radio-2" 
-                                        class="w-full py-4 ml-2 text-sm font-medium 
+                                        class="w-full py-1 ml-2 text-sm font-medium 
                                         text-gray-900 dark:text-gray-300 flex gap-2 uppercase">
                                         <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#00457C" class="w-4 h-4 mt-0.5">
                                             <title>PayPal</title>
@@ -1065,11 +1160,13 @@
                                         Paypal
                                     </label>
                                 </div>
+                                @endif
                             </div>
                             <!-- Creadit card details -->
+                            @if($proj['stripe'])
                             <div class="mt-3" id="request-credit-card-slot">
                                 <div class="flex rounded-md shadow-sm">
-                                    <input type="text" name="card-number" id="request-card-number" 
+                                    <input type="text" name="cardNumber" id="request-card-number" 
                                     class="block w-full flex-1 rounded-none rounded-l-md 
                                     border-gray-300 focus:border-indigo-500 
                                     focus:ring-indigo-500 sm:text-sm" 
@@ -1100,7 +1197,7 @@
                                         </select>
                                     </div>
                                     <div class="w-full">
-                                        <input type="text" name="cvv-number" id="request-cvv-number" 
+                                        <input type="text" name="cvv" id="request-cvv-number" 
                                         class="block flex-1 rounded-md 
                                         border-gray-300 focus:border-indigo-500 
                                         focus:ring-indigo-500" 
@@ -1108,15 +1205,15 @@
                                     </div>
                                 </div>
                             </div> 
+                            @endif
                             <!-- Total request -->
-                            <div class="flex gap-2 text-lg mt-6">
-                                <h2 class="font-bold ">Total: </h2>
-                                <span class="total-request font-bold"></span>
-                                <input type="number" value="5.00" id="actual-total-request" style="display:none">
+                            <div class="flex gap-2 text-md mt-6">
+                                <h2 class="font-medium ">Total: </h2>
+                                <span class="total-request font-medium"></span>
                             </div>
                             <!-- paypal slot -->
                             <div class="mt-3" id="request-paypal-slot" style="display:none">
-                                <form action="{{route('paypal-payment')}}" method="post">
+                                <!-- <form action="{{route('paypal-payment')}}" method="post">
                                     @csrf
                                     <input type="text" value="" name="linkId" id="request-linkId" style="display:none">
                                     <input type="text" value="" name="sectionId" id="request-sectionId" style="display:none">
@@ -1132,11 +1229,11 @@
                                         dark:focus:ring-blue-800">
                                         Continue
                                     </button>
-                                </form>
+                                </form> -->
                             </div>
                         </div>
-
-                        <button type="button" id="request-submit"
+                        
+                        <button type="submit" id=""
                             class="w-full text-white bg-blue-700 hover:bg-blue-800 
                             focus:ring-4 focus:outline-none focus:ring-blue-300 
                             font-medium rounded-lg text-sm px-5 py-2.5 text-center 
@@ -1150,7 +1247,7 @@
                                 </svg>
                             </span>
                         </button>
-                        <div class="mt-6">
+                        <div class="mt-4">
                             <h4 class="flex justify-center text-center text-green-400 font-bold text-sm uppercase">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2 mb-1">
                                     <path fill-rule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clip-rule="evenodd" />
@@ -1158,11 +1255,12 @@
                                 secure payment by stripe & paypal
                             </h4>
                         </div>
-                    <!-- </form> -->
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Product/membership -->
     <div id="product-modal" tabindex="-1" aria-hidden="true"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full 
@@ -1182,18 +1280,61 @@
                 </button>
                 <div class="px-6 py-6 lg:px-8">
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white" id="product-form-name"></h3>
-                    <!-- <form class="space-y-6"> -->
+                    @if(!auth()->guard('subscriber')->check())
+                    <form class="space-y-6" action="{{route('product', $projectLinkId)}}" method="post">
+                    @else
+                    <form class="space-y-6" action="{{route('product-auth', $projectLinkId)}}" method="post">
+                    @endif
+                        @csrf
                         <p id="product-desc" class="text-sm"></p>
 
                         <!-- Login section -->
+                        @if(!auth()->guard('subscriber')->check())
+                        <!-- signup section -->
+                        <div class="mt-4">
+                            <div id="new-account-request">
+                                <div class="flex justify-between">
+                                    <h3 class="text-md font-medium text-gray-900 dark:text-white">
+                                        Create A Login
+                                    </h3>
+                                </div>
+                                <div class="mt-2">
+                                    <p class="text-gray-500 text-sm warn"></p>
+                                    <input type="email" name="email" 
+                                    class="block flex-1 rounded-md 
+                                    border-gray-300 focus:border-indigo-500 
+                                    focus:ring-indigo-500 w-full" 
+                                    placeholder="name@company.com">
+                                    <input type="password" name="password"
+                                    class="block flex-1 rounded-md mt-3
+                                    border-gray-300 focus:border-indigo-500 
+                                    focus:ring-indigo-500 w-full" 
+                                    placeholder="**********">
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        <!-- data fields -->
+                        <input type="text" name="linkId" value="{{$settings->link_id}}" style="display:none">
+                        <input type="text" name="sectionId" value="" id="section-id-product" style="display:none">
+                        <input type="number" name="amount" value="" id="actual-total-product" style="display:none">
+                        <input type="text" name="description" value="" id="payment-description-product" style="display:none">
+                        <input type="text" name="projectlinkid" value="{{$projectLinkId}}" style="display:none">
+                        <input type="text" name="product_id" value="" id="product-id" style="display:none">
+                        <input type="text" name="product_source" value="" id="product-source" style="display:none">
                         <!-- Payment method -->
                         <div class="mt-4">
                             <h3 class="mb-4 text-lg font-medium text-gray-900 dark:text-white">
                                 Payment Method
                             </h3>
+                            @if(auth()->guard('subscriber')->check())
+                            <p class="mt-1 mb-1 text-sm text-gray-500">
+                                You can leave empty if you have added your card to your account.
+                            </p>
+                            @endif
                             <div class="flex gap-3">
                                 <div class="flex items-center pl-4 border w-full
-                                border-gray-200 rounded dark:border-gray-700">
+                                    border-gray-200 rounded dark:border-gray-700">
                                     <input id="product-bordered-radio-1" type="radio" 
                                     value="card" name="product_payType" 
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 
@@ -1232,7 +1373,7 @@
                             <!-- Credit card details -->
                             <div class="mt-3" id="product-credit-card-slot">
                                 <div class="flex rounded-md shadow-sm">
-                                    <input type="text" name="card-number" id="product-card-number" 
+                                    <input type="text" name="cardNumber" id="product-card-number" 
                                     class="block w-full flex-1 rounded-none rounded-l-md 
                                     border-gray-300 focus:border-indigo-500 
                                     focus:ring-indigo-500 sm:text-sm" 
@@ -1263,7 +1404,7 @@
                                         </select>
                                     </div>
                                     <div class="w-full">
-                                        <input type="text" name="cvv-number" id="product-cvv-number" 
+                                        <input type="text" name="cvv" id="product-cvv-number" 
                                         class="block flex-1 rounded-md 
                                         border-gray-300 focus:border-indigo-500 
                                         focus:ring-indigo-500" 
@@ -1275,32 +1416,13 @@
                             <div class="flex gap-2 text-lg mt-6">
                                 <h2 class="font-bold ">Total: </h2>
                                 <span class="total-product font-bold"></span>
-                                <input type="number" value="5.00" id="actual-total-product" style="display:none">
                             </div>
                             <!-- paypal slot -->
                             <div class="mt-3" id="product-paypal-slot" style="display:none">
-                                <form action="{{route('paypal-payment')}}" method="post">
-                                    @csrf
-                                    <input type="text" value="" name="linkId" id="product-linkId" style="display:none">
-                                    <input type="text" value="" name="sectionId" id="product-sectionId" style="display:none">
-                                    <input type="text" value="" name="description" id="product-description" style="display:none">
-                                    <input type="text" value="paypal" name="type" style="display:none">
-                                    <input type="text" value="{{$projectLinkId}}" name="projectlinkid" style="display:none">
-                                    <input type="number" value="" name="amount" id="paypal-total-product" style="display:none">
-                                    <button type="submit" id="product-paypal-submit"
-                                        class="w-full text-white bg-blue-700 hover:bg-blue-800 
-                                        focus:ring-4 focus:outline-none focus:ring-blue-300 
-                                        font-medium rounded-lg text-sm px-5 py-2.5 text-center 
-                                        dark:bg-blue-600 dark:hover:bg-blue-700 
-                                        dark:focus:ring-blue-800">
-                                        Continue
-                                    </button>
-                                </form>
                             </div>
-
                         </div>
 
-                        <button type="button" id="product-submit"
+                        <button type="submit" id=""
                             class="w-full text-white bg-blue-700 hover:bg-blue-800 
                             focus:ring-4 focus:outline-none focus:ring-blue-300 
                             font-medium rounded-lg text-sm px-5 py-2.5 text-center 
@@ -1322,7 +1444,7 @@
                                 secure payment by stripe & paypal
                             </h4>
                         </div>
-                    <!-- </form> -->
+                    </form>
                 </div>
 
             </div>
@@ -1378,6 +1500,7 @@ $(document).ready(function(){
         isAgreementChecked: false,
         formName: '',
         fanrequestMessage: '',
+        authType: ''
     };
 
     let payment = {
@@ -1401,7 +1524,7 @@ $(document).ready(function(){
         $('#sectionId').val($(this).data('section-id'));
         $('#description').val($(this).data('title'));
         // $('input[name=payType]:checked').val('card')
-    })
+    });
     $('#donation-times').change(function() {
         let total = parseFloat($(this).val()) * 5;
         $('.total-donation').text('$'+ total.toFixed(2));
@@ -1493,13 +1616,12 @@ $(document).ready(function(){
             $('#donation-submit').hide();
         }
     })
-
     $('.request-payType').change(function() {
-        if($('input[name=request_payType]:checked').val()=='card') {
+        if($('input[name=type]:checked').val()=='card') {
             $('#request-credit-card-slot').show();
             $('#request-paypal-slot').hide();
             $('#request-submit').show();
-        }else if($('input[name=request_payType]:checked').val()=='paypal') {
+        }else if($('input[name=type]:checked').val()=='paypal') {
             $('#request-credit-card-slot').hide();
             $('#request-paypal-slot').show();
             $('#request-submit').hide();
@@ -1520,29 +1642,193 @@ $(document).ready(function(){
     // fanrequest modal
     $('.fanrequest-modal').click(function() {
         model.sectionId = $(this).data('section-id');
+        $('#section-id-request').val($(this).data('section-id'));
         $('#fanrequest-form-name').text($(this).data('form-name'));
         $('#request-desc').html($(this).data('description'));
         $('.total-request').text('$'+$(this).data('amount').toFixed(2))
         $('#actual-total-request').val($(this).data('amount').toFixed(2))
         $('#paypal-total-request').val($(this).data('amount').toFixed(2));
+        payment.description = $(this).data('title');
+        $('#payment-description').val($(this).data('title'));
+    });
+    $('#to-login-request').click(function() {
+        $('#new-account-request').hide();
+        $('#login-request').show();
+    });
+    $('#to-signup-request').click(function() {
+        $('#new-account-request').show();
+        $('#login-request').hide();
     });
     // fanrequest submit
-    $('#fanrequest-submit').click(function() {
-        model.fanrequestMessage = $('#fanrequest-message').val()
-        $('#fanrequest-message').val('')
+    $('#request-submit').click(function() {
+        model.fanrequestMessage = $('#fanrequest-message').val();
+
+        // validate forms
+        if($('#new-account-request').css('display') == 'none') {
+            model.authType = 'login';
+            if(!$('#email_login_request').val() || !$('#password_login_request').val()) {
+                $('.warn').text('Please enter login details.');
+                setTimeout(() => {
+                    $('.warn').text('');
+                }, 2000);
+                return false;
+            }
+        }else if($('#login-request').css('display') == 'none') {
+            model.authType = 'signup';
+            if(!$('#email_signup_request').val() || !$('#password_signup_request').val()) {
+                $('.warn').text('Please signup to continue.');
+                setTimeout(() => {
+                    $('.warn').text('');
+                }, 2000);
+                return false;
+            }
+        }else if(!$('#fanrequest-message').val()) {
+            $('.message-warn').text('Please describe your request.');
+            return false;
+        }
+
+        // send fan request
+        $('#request-loader').show();
+        $(this).attr('disabled', true);
+
+        if(model.authType == 'signup') {
+            $.ajax({
+                url: '/api/fanrequest',
+                method: 'post',
+                data: { 
+                    linkId: {!! $settings->link_id !!},
+                    sectionId: model.sectionId,
+                    type: $('input[name=request_payType]:checked').val(), 
+                    amount: $('#actual-total-request').val(),
+                    cardNumber: $('#request-card-number').val(),
+                    cvv: $('#request-cvv-number').val(),
+                    month: $('#request-card-month').val(),
+                    year: $('#request-card-year').val(),
+                    description: payment.description,
+                    requestMessage: $('#fanrequest-message').val(),
+                    authType: model.authType,
+                    email: $('#email_signup_request').val(),
+                    password: $('#password_signup_request').val()
+                },
+                success: function(res) {
+                    $('#request-loader').hide();
+                    $('#request-submit').attr('disabled', false)
+                    $('#request-card-number').val('')
+                    $('#request-cvv-number').val('')
+                    $('#request-card-month').val('')
+                    $('#request-card-year').val('')
+                    $('#fanrequest-message').val('')
+
+                    if($('#new-account-request').css('display') == 'none') {
+                        $('#email_login_request').val('')
+                        $('#password_login_request').val('')
+                    }else{
+                        $('#email_signup_request').val('') 
+                        $('#password_signup_request').val('')
+                    }
+
+                    setSuccessAlert(res.message);
+                },
+                error: function(err) {
+                    $('#request-loader').hide();
+                    $('#request-submit').attr('disabled', false)
+                    
+                    if(err.hasOwnProperty('responseJSON')) {
+                        $('.message-warn').text(err.responseJSON.message);
+                        setErrorAlert(err.responseJSON.message);
+                    }else if(err.hasOwnProperty('statusText')) {
+                        setErrorAlert(err.statusText);
+                        $('.message-warn').text(err.statusText);
+                    }else {
+                        console.log(err)
+                    }
+                    setTimeout(() => {
+                        $('.message-warn').text('');
+                    }, 2000);
+                }
+            });
+        }else {
+            $.ajax({
+                url: '/api/fanrequest-auth',
+                method: 'post',
+                data: { 
+                    linkId: {!! $settings->link_id !!},
+                    sectionId: model.sectionId,
+                    type: $('input[name=request_payType]:checked').val(), 
+                    amount: $('#actual-total-request').val(),
+                    cardNumber: $('#request-card-number').val(),
+                    cvv: $('#request-cvv-number').val(),
+                    month: $('#request-card-month').val(),
+                    year: $('#request-card-year').val(),
+                    description: payment.description,
+                    requestMessage: $('#fanrequest-message').val(),
+                    authType: model.authType,
+                    email: $('#email_login_request').val(),
+                    password: $('#password_login_request').val()
+                },
+                success: function(res) {
+                    $('#request-loader').hide();
+                    $('#request-submit').attr('disabled', false)
+                    $('#request-card-number').val('')
+                    $('#request-cvv-number').val('')
+                    $('#request-card-month').val('')
+                    $('#request-card-year').val('')
+                    $('#fanrequest-message').val('')
+
+                    if($('#new-account-request').css('display') == 'none') {
+                        $('#email_login_request').val('')
+                        $('#password_login_request').val('')
+                    }else{
+                        $('#email_signup_request').val('') 
+                        $('#password_signup_request').val('')
+                    }
+
+                    setSuccessAlert(res.message)
+                },
+                error: function(err) {
+                    $('#request-loader').hide();
+                    $('#request-submit').attr('disabled', false)
+                    
+                    if(err.hasOwnProperty('responseJSON')) {
+                        $('.message-warn').text(err.responseJSON.message);
+                        setErrorAlert(err.responseJSON.message);
+                    }else if(err.hasOwnProperty('statusText')) {
+                        setErrorAlert(err.statusText);
+                        $('.message-warn').text(err.statusText);
+                    }else if(err.response) {
+                        if (err.response.data) {
+                            if (err.response.data.hasOwnProperty("message"))
+                                setErrorAlert(err.response.data.message);
+                            else
+                                setErrorAlert(err.response.data.error);
+                        }
+                    }else {
+                        console.log(err)
+                    }
+                    console.log(err)
+                    setTimeout(() => {
+                        $('.message-warn').text('');
+                    }, 2000);
+                    
+                }
+            });
+        }
     });
 
     // product/membership modal
     $('.product-modal').click(function() {
         model.sectionId = $(this).data('section-id');
+        $('#section-id-product').val($(this).data('section-id'));
         $('#product-form-name').text($(this).data('form-name'));
         $('#product-desc').html($(this).data('description'));
         $('.total-product').text('$'+$(this).data('amount').toFixed(2))
         $('#actual-total-product').val($(this).data('amount').toFixed(2))
-        $('#paypal-total-product').val($(this).data('amount').toFixed(2));
+        $('#payment-description-product').val($(this).data('title'));
+        $('#product-id').val($(this).data('product-id'));
+        $('#product-source').val($(this).data('product-type')); 
     });
 
-    // toogle leads modal
+    // toogle leads gen modal
     $('.leadgen-modal').click(function() {
         model.sectionId = $(this).data('section-id');
         model.showPhone = $(this).data('show-phone');
@@ -1582,7 +1868,7 @@ $(document).ready(function(){
         model.isAgreementChecked = ev.target.checked;
     })
 
-    // submit leads
+    // submit leads gen form
     $('#leadgen-submit').click(function() {
         model.name = $('#name').val()
         model.phone = $('#phone').val()
@@ -1636,7 +1922,7 @@ $(document).ready(function(){
         }
     })
 
-    // Submit mail
+    // toogle mail signup modal
     $('.mailsignup-modal').click(function() {
         model.sectionId = $(this).data('section-id');
         model.showAgreement = $(this).data('show-agreement');
@@ -1662,6 +1948,7 @@ $(document).ready(function(){
         model.isAgreementChecked = ev.target.checked;
     })
 
+    // submit mail signup form
     $('#mail-submit').click(function() {
         model.mailEmail = $('#mail-email').val()
         $(this).attr('disabled', true)

@@ -31,7 +31,7 @@ class ProjectLinksController extends Controller
         
         if($request->link['linkId']) {
             $request->validate([
-                'link.linkId' => 'required|string|unique:bl_project_links'
+                'link.linkId' => 'required|string|unique:bl_project_links,link_id'
             ]);
         }
 
