@@ -21,6 +21,11 @@ const memberStore = createStore({
         },
         blog: {
             data: {}
+        },
+        subscribers: {
+            data: [],
+            links: {},
+            meta: {}
         }
     },
     getters: {},
@@ -136,6 +141,26 @@ const memberStore = createStore({
                     return data;
                 })
         },
+        getSubscribers({ commit }, projectId) {
+            return axiosClient.get(`/membership/subscribers/${projectId}/list`)
+                .then(({data}) => {
+                    commit('setSubscribers', data)
+                    return data;
+                })
+        },
+        removeSubscriber({ }, payload) {
+            return axiosClient.put(`/membership/subscribers/${payload.projectId}/remove`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        paginateSubscribers({ commit }, url) {
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setSubscribers', data)
+                    return data;
+                })
+        },
     },
     mutations: {
         setPosts: (state, data) => {
@@ -152,6 +177,9 @@ const memberStore = createStore({
         },
         setPlan: (state, data) => {
             state.plan = data
+        },
+        setSubscribers: (state, data) => {
+            state.subscribers = data
         },
     },
     modules: {}

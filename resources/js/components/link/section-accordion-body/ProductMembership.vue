@@ -159,8 +159,7 @@ watch(() => model.value.sectionFields.productSelected, (newVal, oldVal) => {
         model.value.sectionFields.productInfo['cost'] = newVal.pricing.price
     }else {
         if(newVal.annualPricing=='yes' && newVal.monthlyPricing=='yes') {
-            let cost = parseFloat(newVal.monthlyPrice) + parseFloat(newVal.annualPrice);
-            model.value.sectionFields.productInfo['cost'] = cost
+            model.value.sectionFields.productInfo['cost'] = parseFloat(newVal.monthlyPrice)
         }else if(newVal.annualPricing=='yes' && newVal.monthlyPricing=='no') {
             model.value.sectionFields.productInfo['cost'] = parseFloat(newVal.annualPrice);
         }else if(newVal.annualPricing=='no' && newVal.monthlyPricing=='yes') {

@@ -1,6 +1,16 @@
 @extends('member-portal.layout')
 
 @section('content')
+@if (\Session::has('success'))
+    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        {!! \Session::get('success') !!}
+    </div>
+@elseif(\Session::has('error'))
+    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+        {!! \Session::get('error') !!}
+    </div>
+@endif
+
 @php $settings = json_decode($blog->main_setting); @endphp
 @php $media = json_decode($blog->smedia); @endphp
 
@@ -17,7 +27,14 @@
             {{ $blog->sub_heading }}
         </p>
     </div>
+
     <!-- Add member count and member name if exist -->
+    @if($settings->showTotalSubscribers == 'yes')
+    <div class="mt-6 font-bold text-center text-xl" 
+        style="color: {{$blog->text_color}}">
+        {{ $totalSubs->count() }} {{ $memberName }}
+    </div>
+    @endif
 
     <!-- socials -->
     <div class="flex justify-center gap-3 mt-10">

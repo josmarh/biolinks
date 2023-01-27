@@ -52,7 +52,7 @@ class PaymentController extends Controller
         if($data['type'] == 'card') {
             $payment = $stripe->payment($data);
         }else {
-            $payment = $paypal->pay($data);
+            
             $forPaypal = [
                 'sectionid'     => $data['sectionId'],
                 'linkid'        => $data['linkId'],
@@ -64,10 +64,15 @@ class PaymentController extends Controller
                 'productId'     => null,
                 'productSource' => null,
                 'requestMessage' => null,
+                'paymentFrom'   => 'link-area',
+                'projectName'   => null, 
+                'blogPath'      => null,
                 'successMessage' => 'Your donation has successfully been completed. Thank you.'
             ];
 
             Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(5));
+
+            $paypal->pay($data);
         }
         
         if($payment['message'] == 'Payment completed.') {            
@@ -168,7 +173,7 @@ class PaymentController extends Controller
         if($data['type'] == 'card') {
             $payment = $stripe->payment($data);
         }else {
-            $payment = $paypal->pay($data);
+            
             $forPaypal = [
                 'sectionid'     => $data['sectionId'],
                 'linkid'        => $data['linkId'],
@@ -180,6 +185,9 @@ class PaymentController extends Controller
                 'productId'     => null,
                 'productSource' => null,
                 'requestMessage' => $data['requestMessage'],
+                'paymentFrom'   => 'link-area',
+                'projectName'   => null, 
+                'blogPath'      => null,
                 'successMessage' => 'Payment successful. Your request has been sent, thank you.'
             ];
 
@@ -189,6 +197,8 @@ class PaymentController extends Controller
             ]);
 
             Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(5));
+
+            $paypal->pay($data);
         }
 
         if($payment['message'] == 'Payment completed.') {            
@@ -320,7 +330,7 @@ class PaymentController extends Controller
                 $payment = $stripe->payment($data);
             }
         }else {
-            $payment = $paypal->pay($data);
+            
             $forPaypal = [
                 'sectionid'     => $data['sectionId'],
                 'linkid'        => $data['linkId'],
@@ -332,10 +342,15 @@ class PaymentController extends Controller
                 'productId'     => null,
                 'productSource' => null,
                 'requestMessage' => $data['requestMessage'],
+                'paymentFrom'   => 'link-area',
+                'projectName'   => null, 
+                'blogPath'      => null,
                 'successMessage' => 'Payment successful. Your request has been sent, thank you.'
             ];
 
             Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(10));
+
+            $paypal->pay($data);
         }
 
         if($payment['message'] == 'Payment completed.') {            
@@ -417,12 +432,13 @@ class PaymentController extends Controller
             'linkId' => 'required',
             'sectionId' => 'required',
             'product_payType' => 'required',
-            'amount' => 'required',
+            'product_amount' => 'required',
             'email' => 'required|email|string|unique:bl_subscribers,email',
             'password' => 'required',
             'product_id' => 'required',
             'product_source' => 'required'
         ]);
+        $data['amount'] = $data['product_amount'];
 
         // create customer account
         $customer = Subscriber::create([
@@ -460,7 +476,7 @@ class PaymentController extends Controller
         if($data['product_payType'] == 'card') {
             $payment = $stripe->payment($data);
         }else {
-            $payment = $paypal->pay($data);
+            
             $forPaypal = [
                 'sectionid'     => $data['sectionId'],
                 'linkid'        => $data['linkId'],
@@ -472,6 +488,9 @@ class PaymentController extends Controller
                 'productId'     => $data['product_id'],
                 'productSource' => $data['product_source'],
                 'requestMessage' => null,
+                'paymentFrom'   => 'link-area',
+                'projectName'   => null, 
+                'blogPath'      => null,
                 'successMessage' => 'Payment successful. You can access your purchased item in your member account, thank you.'
             ];
 
@@ -481,6 +500,8 @@ class PaymentController extends Controller
             ]);
 
             Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(10));
+
+            $paypal->pay($data);
         }
 
         if($payment['message'] == 'Payment completed.') {            
@@ -525,7 +546,7 @@ class PaymentController extends Controller
                 'project_id' => $project->project_id
             ]);
 
-            $message = $payment['message'] . ' Request sent';
+            $message = $payment['message'] . ' You can access your purchased item in your member account, thank you.';
 
             // send mail for completed purchased
 
@@ -558,10 +579,11 @@ class PaymentController extends Controller
             'linkId' => 'required',
             'sectionId' => 'required',
             'product_payType' => 'required',
-            'amount' => 'required',
+            'product_amount' => 'required',
             'product_id' => 'required',
             'product_source' => 'required'
         ]);
+        $data['amount'] = $data['product_amount'];
 
         if(!Auth::guard('subscriber')->check()) {
             $request->validate([
@@ -616,7 +638,6 @@ class PaymentController extends Controller
                 $payment = $stripe->payment($data);
             }
         }else {
-            $payment = $paypal->pay($data);
             $forPaypal = [
                 'sectionid'     => $data['sectionId'],
                 'linkid'        => $data['linkId'],
@@ -628,10 +649,15 @@ class PaymentController extends Controller
                 'requestMessage' => null,
                 'productId'     => $data['product_id'],
                 'productSource' => $data['product_source'],
+                'paymentFrom'   => 'link-area',
+                'projectName'   => null, 
+                'blogPath'      => null,
                 'successMessage' => 'Payment successful. You can access your purchased item in your member account, thank you.'
             ];
 
             Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(10));
+
+            $paypal->pay($data);
         }
 
         if($payment['message'] == 'Payment completed.') {            
@@ -710,9 +736,10 @@ class PaymentController extends Controller
 
     public function paypalSuccess(Request $request, PaypalPayment $paypal)
     {
+        $forPaypal = json_decode(Cache::get(session()->getId()));
+
         if ($request->input('paymentId') && $request->input('PayerID')) {
             $payment = $paypal->success($request->input('PayerID'), $request->input('paymentId'));
-            $forPaypal = json_decode(Cache::get(session()->getId()));
             
             if($payment['status'] == 'success') {
                 $order = Order::create([
@@ -756,25 +783,38 @@ class PaymentController extends Controller
                     ]);
                 }else {
                     CustomerLead::create([
-                        'email' => $payment['arr']['payer']['payer_info']['email'],
+                        'email' => $email,
                         'name' => '',
-                        'status' => $forPaypal->paymentFor,
+                        'status' => $forPaypal->paymentFor == 'Membership Plan' || $forPaypal->paymentFor == 'Digital Product' ? 'Paying Customer' : $forPaypal->paymentFor,
                         'orders' => $forPaypal->paymentFor == 'Donation' ? 0 : 1,
                         'lifetime_value' => $payment['arr']['transactions'][0]['amount']['total'],
                         'project_id' => $forPaypal->projectid
                     ]);
                 }
-
-                return redirect()->route('biolink-webpage', $forPaypal->projectlinkid)->with('success', $forPaypal->successMessage);
+                
+                if($forPaypal->paymentFrom == 'member-area') {
+                    return redirect()->route('member-index', [$forPaypal->projectName, $forPaypal->blogPath])->with('success', $forPaypal->successMessage);
+                }else {
+                    return redirect()->route('biolink-webpage', $forPaypal->projectlinkid)->with('success', $forPaypal->successMessage);
+                }
+                
                 // return view('paypal.success', compact('forPaypal'));
                 // return redirect()->route('paypalSuccessful')->with([
                 //     'projectlinkid' => $forPaypal->projectlinkid
                 // ]);
             }else {
-                return redirect()->route('biolink-webpage', $forPaypal->projectlinkid)->with('error', $payment['message']);
+                if($forPaypal->paymentFrom == 'member-area') {
+                    return redirect()->route('member-index', [$forPaypal->projectName, $forPaypal->blogPath])->with('error', $payment['message']);
+                }else {
+                    return redirect()->route('biolink-webpage', $forPaypal->projectlinkid)->with('error', $payment['message']);
+                }
             }
         }else {
-            return redirect()->route('biolink-webpage', $forPaypal->projectlinkid)->with('error', 'Payment declined!!');
+            if($forPaypal->paymentFrom == 'member-area') {
+                return redirect()->route('member-index', [$forPaypal->projectName, $forPaypal->blogPath])->with('error', 'Payment declined!!');
+            }else {
+                return redirect()->route('biolink-webpage', $forPaypal->projectlinkid)->with('error', 'Payment declined!!');
+            }
         }
     }
 

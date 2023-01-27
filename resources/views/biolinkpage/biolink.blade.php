@@ -61,6 +61,8 @@
                     data-link-id="{{$settings->link_id}}"
                     data-product-id="{{$sectionField->productInfo->id}}"
                     data-product-type="{{$sectionField->productType}}"
+                    data-product-name="{{$sectionField->productInfo->title}}"
+                    data-product-selected="{{json_encode($sectionField->productSelected)}}"
                     style="color: {{$item->button_text_color}};background-color: {{$item->button_bg_color}}">
                     <div class="flex justify-between">
                         <div class="flex ">
@@ -962,7 +964,7 @@
                             <div class="flex gap-2 text-lg mt-6">
                                 <h2 class="font-bold ">Total: </h2>
                                 <span class="total-donation font-bold">$5.00</span>
-                                <input type="number" value="5.00" id="actual-total-donation" style="display:none">
+                                <input type="number" step=0.01 value="5.00" id="actual-total-donation" style="display:none">
                             </div>
                             <!-- paypal slot -->
                             <div class="mt-3" id="paypal-slot" style="display:none">
@@ -1107,7 +1109,7 @@
                         <!-- data fields -->
                         <input type="text" name="linkId" value="{{$settings->link_id}}" style="display:none">
                         <input type="text" name="sectionId" value="" id="section-id-request" style="display:none">
-                        <input type="number" name="amount" value="" id="actual-total-request" style="display:none">
+                        <input type="number" step=0.01 name="amount" value="" id="actual-total-request" style="display:none">
                         <input type="text" name="description" value="" id="payment-description" style="display:none">
                         <input type="text" value="{{$projectLinkId}}" name="projectlinkid" style="display:none">
                         <!-- Payment method -->
@@ -1260,7 +1262,6 @@
             </div>
         </div>
     </div>
-
     <!-- Product/membership -->
     <div id="product-modal" tabindex="-1" aria-hidden="true"
         class="fixed top-0 left-0 right-0 z-50 hidden w-full 
@@ -1281,17 +1282,52 @@
                 <div class="px-6 py-6 lg:px-8">
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white" id="product-form-name"></h3>
                     @if(!auth()->guard('subscriber')->check())
-                    <form class="space-y-6" action="{{route('product', $projectLinkId)}}" method="post">
+                    <form class="space-y-3" action="{{route('product', $projectLinkId)}}" method="post">
                     @else
-                    <form class="space-y-6" action="{{route('product-auth', $projectLinkId)}}" method="post">
+                    <form class="space-y-3" action="{{route('product-auth', $projectLinkId)}}" method="post">
                     @endif
                         @csrf
                         <p id="product-desc" class="text-sm"></p>
-
+                        <!-- Display product -->
+                        <div class="mt-4">
+                            <h3 class="mb-4 text-md font-medium text-gray-900 dark:text-white" id="product-title"></h3>
+                            <!-- if it's a membership plan product -->
+                            <div class="flex gap-3" id="product-plans" style="display:none">
+                                <div id="product-plan-monthly"
+                                    class="flex items-center pl-4 border w-full
+                                    border-gray-200 rounded dark:border-gray-700">
+                                    <input id="product-plan-month" type="radio" 
+                                    value="" step="0.01" name="product_planType" 
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 
+                                    focus:ring-blue-500 dark:focus:ring-blue-600 
+                                    dark:ring-offset-gray-800 focus:ring-2
+                                    dark:bg-gray-700 dark:border-gray-600 product_planType"
+                                    checked>
+                                    <label for="product-plan-month" id="monthly-plan-label"
+                                        class="w-full py-1 ml-2 text-sm font-medium 
+                                        text-gray-900 dark:text-gray-300 flex gap-2">
+                                    </label>
+                                </div>
+                                <div id="product-plan-annually"
+                                    class="flex items-center pl-4 border w-full
+                                    border-gray-200 rounded dark:border-gray-700">
+                                    <input id="product-plan-annual" type="radio" 
+                                    value="" step="0.01" name="product_planType" 
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 
+                                    border-gray-300 focus:ring-blue-500
+                                    dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                                    focus:ring-2 dark:bg-gray-700 dark:border-gray-600 product_planType">
+                                    <label for="product-plan-annual" id="annual-plan-label"
+                                        class="w-full py-1 ml-2 text-sm font-medium 
+                                        text-gray-900 dark:text-gray-300 flex gap-2">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Login section -->
                         @if(!auth()->guard('subscriber')->check())
                         <!-- signup section -->
-                        <div class="mt-4">
+                        <div class="mt-2">
                             <div id="new-account-request">
                                 <div class="flex justify-between">
                                     <h3 class="text-md font-medium text-gray-900 dark:text-white">
@@ -1317,14 +1353,15 @@
                         <!-- data fields -->
                         <input type="text" name="linkId" value="{{$settings->link_id}}" style="display:none">
                         <input type="text" name="sectionId" value="" id="section-id-product" style="display:none">
-                        <input type="number" name="amount" value="" id="actual-total-product" style="display:none">
                         <input type="text" name="description" value="" id="payment-description-product" style="display:none">
                         <input type="text" name="projectlinkid" value="{{$projectLinkId}}" style="display:none">
                         <input type="text" name="product_id" value="" id="product-id" style="display:none">
                         <input type="text" name="product_source" value="" id="product-source" style="display:none">
+                        <input type="number" step=0.01 name="product_amount" id="actual-total-product" style="display:none">
+                        
                         <!-- Payment method -->
                         <div class="mt-4">
-                            <h3 class="mb-4 text-lg font-medium text-gray-900 dark:text-white">
+                            <h3 class="mb-4 text-md font-medium text-gray-900 dark:text-white">
                                 Payment Method
                             </h3>
                             @if(auth()->guard('subscriber')->check())
@@ -1343,7 +1380,7 @@
                                     dark:bg-gray-700 dark:border-gray-600"
                                     checked>
                                     <label for="product-bordered-radio-1" 
-                                        class="w-full py-4 ml-2 text-sm font-medium 
+                                        class="w-full py-1 ml-2 text-sm font-medium 
                                         text-gray-900 dark:text-gray-300 flex gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
@@ -1360,7 +1397,7 @@
                                     dark:focus:ring-blue-600 dark:ring-offset-gray-800 
                                     focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="product-bordered-radio-2" 
-                                        class="w-full py-4 ml-2 text-sm font-medium 
+                                        class="w-full py-1 ml-2 text-sm font-medium 
                                         text-gray-900 dark:text-gray-300 flex gap-2 uppercase">
                                         <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#00457C" class="w-4 h-4 mt-0.5">
                                             <title>PayPal</title>
@@ -1413,21 +1450,20 @@
                                 </div>
                             </div> 
                             <!-- Total amount -->
-                            <div class="flex gap-2 text-lg mt-6">
-                                <h2 class="font-bold ">Total: </h2>
-                                <span class="total-product font-bold"></span>
+                            <div class="flex gap-2 text-md mt-4">
+                                <h2 class="font-medium ">Total: </h2>
+                                <span class="total-product font-medium"></span>
                             </div>
                             <!-- paypal slot -->
-                            <div class="mt-3" id="product-paypal-slot" style="display:none">
-                            </div>
+                            <div class="mt-3" id="product-paypal-slot" style="display:none"></div>
                         </div>
 
-                        <button type="submit" id=""
+                        <button type="submit" 
                             class="w-full text-white bg-blue-700 hover:bg-blue-800 
                             focus:ring-4 focus:outline-none focus:ring-blue-300 
                             font-medium rounded-lg text-sm px-5 py-2.5 text-center 
                             dark:bg-blue-600 dark:hover:bg-blue-700 
-                            dark:focus:ring-blue-800 mt-3">
+                            dark:focus:ring-blue-800 mt-1">
                             Continue
                             <span id="product-loader" style="display:none">
                                 <svg aria-hidden="true" role="status" class="inline w-4 h-4 ml-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1500,7 +1536,8 @@ $(document).ready(function(){
         isAgreementChecked: false,
         formName: '',
         fanrequestMessage: '',
-        authType: ''
+        authType: '',
+        currentPlanPrice: 0
     };
 
     let payment = {
@@ -1822,11 +1859,41 @@ $(document).ready(function(){
         $('#product-form-name').text($(this).data('form-name'));
         $('#product-desc').html($(this).data('description'));
         $('.total-product').text('$'+$(this).data('amount').toFixed(2))
-        $('#actual-total-product').val($(this).data('amount').toFixed(2))
-        $('#payment-description-product').val($(this).data('title'));
+        $('#actual-total-product').val(parseFloat($(this).data('amount').toFixed(2)))
+        $('#payment-description-product').val($(this).data('product-name'));
         $('#product-id').val($(this).data('product-id'));
         $('#product-source').val($(this).data('product-type')); 
+
+        if($(this).data('product-type') == 'member_product') {
+            $('#product-title').text('Subscription: ' + $(this).data('product-name'));
+            $('#product-plans').show();
+            let productSelected = $(this).data('product-selected');
+
+            if(productSelected.monthlyPricing == 'no'){
+                $('#product-plan-monthly').hide()
+            }else if(productSelected.monthlyPricing == 'yes'){
+                $('#product-plan-month').val(productSelected.monthlyPrice);
+                $('#monthly-plan-label').text('$' + productSelected.monthlyPrice + ' / Month');
+                $('#product-plan-monthly').show();
+            }
+
+            if(productSelected.annualPricing == 'no'){
+                $('#product-plan-annually').hide()
+            }else if(productSelected.annualPricing == 'yes'){
+                $('#product-plan-annual').val(productSelected.annualPrice);
+                $('#annual-plan-label').text('$' + productSelected.annualPrice + ' / Year');
+                $('#product-plan-annually').show();
+            }
+        }else {
+            $('#product-title').text('Product: ' + $(this).data('product-name'));
+            $('#product-plans').hide();
+        }
     });
+
+    $('.product_planType').change(function() {
+        $('.total-product').text('$' + $(this).val())
+        $('#actual-total-product').val($(this).val())
+    })
 
     // toogle leads gen modal
     $('.leadgen-modal').click(function() {

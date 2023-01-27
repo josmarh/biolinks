@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MembershipBlog;
+use App\Models\Order;
 use App\Http\Resources\MembershipBlogResource;
+use App\Http\Resources\SubscriberResource;
 
 class MembershipBlogController extends Controller
 {
@@ -75,6 +77,39 @@ class MembershipBlogController extends Controller
         return response([
             'data' => new MembershipBlogResource($blog),
             'message' => 'Blog updated.'
+        ]);
+    }
+
+    public function subscribers($projectId)
+    {
+        $subscribers = Order::selectRaw('distinct email')
+            ->where('project_id', $projectId)
+            ->where('product_source', 'member_product')
+            ->where('status', 'success')
+            ->paginate(15);
+
+        return SubscriberResource::collection($subscribers);
+    }
+
+    public function removeSubscriberAccess(Request $request)
+    {
+        $projectId = $request->projectId;
+        $subscriber = $request->subscriber;
+
+        $subs = Order::where('project_id', $projectId)
+            ->where('product_source', 'member_product')
+            ->where('status', 'success')
+            ->where('email', $subscriber)
+            ->get();
+
+        foreach($subs as $sub) {
+            $sub->update([
+                'status' => 'access_revoked'
+            ]);
+        }
+
+        return response([
+            'message' => 'Access Removed'
         ]);
     }
 }

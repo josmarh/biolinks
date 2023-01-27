@@ -13,6 +13,7 @@
             </div>
         </div>
         <!-- main content -->
+        <subscriber-list :data="subscribers.data" :meta="subscribers.meta" />
     </div>
 </template>
 
@@ -21,14 +22,18 @@ import { onMounted, computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { notify } from 'notiwind';
 import ProjectBreadcrumbs from '../../components/ProjectBreadcrumbs.vue';
+import SubscriberList from '../../components/membership/SubscriberList.vue';
 import project from '../../store/project';
+import memberStore from '../../store/membership-store';
 
 const route = useRoute();
 const router = useRouter();
 const projectInfo = computed(() => project.state.projects)
+const subscribers = computed(() => memberStore.state.subscribers)
 
 onMounted(() => {
     project.dispatch('getProjectInfo', route.params.id)
+    memberStore.dispatch('getSubscribers', route.params.id)
 })
 </script>
 

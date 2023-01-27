@@ -54,6 +54,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
     // Orders
     Route::get('/orders/{projectId}', [OrderController::class, 'index']);
+    Route::get('/orders/{projectId}/subscriptions', [OrderController::class, 'subscription']);
 
     // Integrations
     Route::group(['prefix' => 'integration'], function () {
@@ -100,6 +101,9 @@ Route::middleware('auth:sanctum')->group(function() {
             Route::post('/store', [MembershipBlogController::class, 'store']);
             Route::get('/show/{projectId}', [MembershipBlogController::class, 'show']);
         });
+
+        Route::get('/subscribers/{projectId}/list', [MembershipBlogController::class, 'subscribers']);
+        Route::put('/subscribers/{projectId}/remove', [MembershipBlogController::class, 'removeSubscriberAccess']);
 
         Route::get('/plans/{projectId}', [PlanController::class, 'index']);
         Route::group(['prefix' => 'plan'], function () {

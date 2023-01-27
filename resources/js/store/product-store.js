@@ -35,6 +35,11 @@ const productStore = createStore({
             links: {},
             meta: {}
         },
+        subscriptions: {
+            data: [],
+            links: {},
+            meta: {}
+        }
     },
     getters: {},
     actions: {
@@ -183,6 +188,20 @@ const productStore = createStore({
                     return data;
                 })
         },
+        getSubscriptions({ commit }, projectId) {
+            return axiosClient.get(`/orders/${projectId}/subscriptions`)
+                .then(({data}) => {
+                    commit('setSubscriptions', data)
+                    return data;
+                })
+        },
+        paginateSubscriptions({ commit }, url) {
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setSubscriptions', data)
+                    return data;
+                })
+        },
     },
     mutations: {
         setProducts: (state, data) => {
@@ -208,6 +227,9 @@ const productStore = createStore({
         },
         setOrders: (state, data) => {
             state.orders = data
+        },
+        setSubscriptions: (state, data) => {
+            state.subscriptions = data
         },
     },
     modules: {}

@@ -27,6 +27,8 @@ Route::post('/w/{linkId}/link/product-auth', [PaymentController::class, 'product
 
 Route::get('/w/{projectName}/login', [MemberAreaController::class, 'login'])->name('member-login');
 Route::get('/w/{projectName}/member-signup', [MemberAreaController::class, 'register'])->name('member-register');
+Route::post('/w/{projectName}/member-subscribe', [MemberAreaController::class, 'subscribeToPlan'])->name('member-subscribe');
+Route::post('/w/{projectName}/member-subscribe-auth', [MemberAreaController::class, 'subscribeToPlanWithAuth'])->name('member-subscribe-auth');
 Route::get('/w/{projectName}/library', [MemberAreaController::class, 'library'])->name('member-library');
 Route::get('/w/{projectName}/account', [MemberAreaController::class, 'account'])->name('member-account');
 Route::get('/w/{projectName}/orders', [MemberAreaController::class, 'orders'])->name('member-orders');
@@ -37,6 +39,7 @@ Route::post('/w/{projectName}/login', [MemberAreaController::class, 'loginMember
 Route::post('/w/{projectName}/signup', [MemberAreaController::class, 'registerMember'])->name('post-register');
 Route::post('/w/{projectName}/logout', [MemberAreaController::class, 'logoutMember'])->name('member-logout');
 Route::put('/w/{projectName}/account', [MemberAreaController::class, 'updateAccount'])->name('member-account-update');
+Route::put('/w/{projectName}/paymethod', [MemberAreaController::class, 'updatePaymethod'])->name('member-paymethod-update');
 
 Route::post('/link-password/{settingId}', [SPAController::class, 'linkPasswordValidate'])->name('link-password.validate');
 Route::group(['prefix' => 'paypal'], function () {
