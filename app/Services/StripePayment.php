@@ -10,9 +10,9 @@ class StripePayment
 {
     private $stripe;
 
-    public function __construct()
+    public function __construct($secretKey)
     {
-        $this->stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
+        $this->stripe = new StripeClient($secretKey);
     }
 
     public function payment($paymentInfo)

@@ -14,6 +14,7 @@ use App\Models\Project;
 use App\Models\MembershipBlog;
 use App\Models\CustomerLead;
 use App\Models\PaymentIntegration;
+use App\Models\EmailProviderIntegration;
 use App\Jobs\LeadsGenJob;
 use App\Jobs\MailSignupJob;
 use App\Services\LeadShareService;
@@ -117,6 +118,9 @@ class SPAController extends Controller
         }
 
         // send to other esp if available
+        $project = ProjectLink::where('id', $section->link_id)->first();
+        $esp = EmailProviderIntegration::where('project_id', $project->project_id)->first();
+        $this->shareWithESP($esp, $request->email);   
 
         // send to webhook
         if($sectionField->webhookURL) {
@@ -173,6 +177,8 @@ class SPAController extends Controller
         ]);
 
         // send to esp
+        $esp = EmailProviderIntegration::where('project_id', $projectId)->first();
+        $this->shareWithESP($esp, $request->email);  
 
         return response([
             'message' => 'Email signup successfully'
@@ -225,7 +231,10 @@ class SPAController extends Controller
             $this->shareWithMailchimp($mailchimp);
         }
 
-        // send to other esp if available
+        // send to esp
+        $project = ProjectLink::where('id', $section->link_id)->first();
+        $esp = EmailProviderIntegration::where('project_id', $project->project_id)->first();
+        $this->shareWithESP($esp, $request->email, $request->name); 
 
         // send to webhook
         if($sectionField->webhookURL) {

@@ -8,11 +8,11 @@ class PaypalPayment
 {
     private $gateway;
 
-    public function __construct()
+    public function __construct($client, $secret)
     {
         $this->gateway = Omnipay::create('PayPal_Rest');
-    	$this->gateway->setClientId(env('PAYPAL_SANDBOX_CLIENT_ID'));
-    	$this->gateway->setSecret(env('PAYPAL_SANDBOX_SECRET'));
+    	$this->gateway->setClientId($client);
+    	$this->gateway->setSecret($secret);
     	$this->gateway->setTestMode(true);
     }
 

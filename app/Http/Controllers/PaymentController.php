@@ -15,11 +15,13 @@ use App\Models\Subscriber;
 use App\Models\CustomerPaymentMethod;
 use App\Models\CustomerLead;
 use App\Models\PaymentIntegration;
+use App\Models\Project;
+use App\Jobs\OrderJob;
 use Log;
 
 class PaymentController extends Controller
 {
-    public function donation(Request $request, StripePayment $stripe, PaypalPayment $paypal)
+    public function donation(Request $request)
     {
         $data = $request->validate([
             'linkId' => 'required',
@@ -42,6 +44,8 @@ class PaymentController extends Controller
         }
         $data['description'] = $request->description. ' (Donation)';
         $project = ProjectLink::find($data['linkId']);
+        $projectMain = Project::where('custom_id', $project->project_id)->with('user')->first();
+        $getPaymentProviderKey = PaymentIntegration::where('project_id', $project->project_id)->first();
         // $paymentGatways  = PaymentIntegration::where('project_id', $project->project_id)->first();
 
         // if($paymentGatways) {
@@ -50,8 +54,19 @@ class PaymentController extends Controller
         // }
 
         if($data['type'] == 'card') {
+            if(!$getPaymentProviderKey->stripe_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+ 
+            $stripe = new StripePayment($getPaymentProviderKey->stripe_secret);
+
             $payment = $stripe->payment($data);
         }else {
+            if(!$getPaymentProviderKey->paypal_client && !$getPaymentProviderKey->paypal_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+
+            $paypal = new PaypalPayment($getPaymentProviderKey->paypal_client, $getPaymentProviderKey->paypal_secret);
             
             $forPaypal = [
                 'sectionid'     => $data['sectionId'],
@@ -60,19 +75,22 @@ class PaymentController extends Controller
                 'description'   => $request->description,
                 'projectlinkid' => $request->projectlinkid,
                 'paymentFor'    => 'Donation',
-                'userEmail'     => '',
+                'userEmail'     => null,
                 'productId'     => null,
                 'productSource' => null,
                 'requestMessage' => null,
                 'paymentFrom'   => 'link-area',
-                'projectName'   => null, 
+                'projectName'   => strtolower($projectMain->name), 
                 'blogPath'      => null,
+                'projectOwner' => $projectMain->user->name,
                 'successMessage' => 'Your donation has successfully been completed. Thank you.'
             ];
 
             Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(5));
 
-            $paypal->pay($data);
+            $payment = $paypal->pay($data);
+
+            return back()->with('error', $payment);
         }
         
         if($payment['message'] == 'Payment completed.') {            
@@ -104,6 +122,9 @@ class PaymentController extends Controller
                 'pg_tranx_id' => $payment['balance_transaction'],
                 'payment_id' => $payment['id'],
             ]);
+
+            // send order mail
+
         }else if($payment['message'] == 'Payment failed.') {
             Transaction::create([
                 'link_id' => $data['linkId'],
@@ -127,7 +148,7 @@ class PaymentController extends Controller
         ], 201);
     }
 
-    public function fanRequest(Request $request, StripePayment $stripe, PaypalPayment $paypal)
+    public function fanRequest(Request $request)
     {
         $data = $request->validate([
             'linkId' => 'required',
@@ -169,10 +190,23 @@ class PaymentController extends Controller
         }
         $data['description'] = $request->description . ' (Fan Request)';
         $project = ProjectLink::find($data['linkId']);
+        $getPaymentProviderKey = PaymentIntegration::where('project_id', $project->project_id)->first();
+        $projectMain = Project::where('custom_id', $project->project_id)->with('user')->first();
 
         if($data['type'] == 'card') {
+            if(!$getPaymentProviderKey->stripe_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+ 
+            $stripe = new StripePayment($getPaymentProviderKey->stripe_secret);
+
             $payment = $stripe->payment($data);
         }else {
+            if(!$getPaymentProviderKey->paypal_client && !$getPaymentProviderKey->paypal_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+
+            $paypal = new PaypalPayment($getPaymentProviderKey->paypal_client, $getPaymentProviderKey->paypal_secret);
             
             $forPaypal = [
                 'sectionid'     => $data['sectionId'],
@@ -186,8 +220,9 @@ class PaymentController extends Controller
                 'productSource' => null,
                 'requestMessage' => $data['requestMessage'],
                 'paymentFrom'   => 'link-area',
-                'projectName'   => null, 
+                'projectName'   => strtolower($projectMain->name), 
                 'blogPath'      => null,
+                'projectOwner' => $projectMain->user->name,
                 'successMessage' => 'Payment successful. Your request has been sent, thank you.'
             ];
 
@@ -198,7 +233,9 @@ class PaymentController extends Controller
 
             Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(5));
 
-            $paypal->pay($data);
+            $payment = $paypal->pay($data);
+
+            return back()->with('error', $payment);
         }
 
         if($payment['message'] == 'Payment completed.') {            
@@ -245,6 +282,15 @@ class PaymentController extends Controller
             $message = $payment['message'] . ' Request sent';
 
             // send mail for completed purchased
+            $order = [
+                'email' => $data['email'],
+                'productType' => 'fan_request',
+                'productName' => $request->description,
+                'price' => $data['amount'],
+                'projectName' => strtolower($projectMain->name),
+                'projectOwner' => $projectMain->user->name
+            ];
+            dispatch(new OrderJob($order))->delay(3);
 
         }else if($payment['message'] == 'Payment failed.') {
             Transaction::create([
@@ -268,7 +314,7 @@ class PaymentController extends Controller
         return redirect()->route('biolink-webpage', $project->link_id)->with('success', $message);
     }
 
-    public function fanRequestWithAuth(Request $request, StripePayment $stripe, PaypalPayment $paypal)
+    public function fanRequestWithAuth(Request $request)
     {
         $data = $request->validate([
             'linkId' => 'required',
@@ -294,8 +340,16 @@ class PaymentController extends Controller
         $data['email'] = Auth::guard('subscriber')->user()->email;
         $data['description'] = $request->description . ' (Fan Request)';
         $project = ProjectLink::find($data['linkId']);
+        $projectMain = Project::where('custom_id', $project->project_id)->with('user')->first();
+        $getPaymentProviderKey = PaymentIntegration::where('project_id', $project->project_id)->first();
 
         if($data['type'] == 'card') {
+            if(!$getPaymentProviderKey->stripe_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+ 
+            $stripe = new StripePayment($getPaymentProviderKey->stripe_secret);
+
             if(!$request->cardNumber) {
                 $customer = Subscriber::where('email', $data['email'])->first();
                 $isPaySet = CustomerPaymentMethod::where('user_id', $customer->id)->first();
@@ -330,7 +384,12 @@ class PaymentController extends Controller
                 $payment = $stripe->payment($data);
             }
         }else {
-            
+            if(!$getPaymentProviderKey->paypal_client && !$getPaymentProviderKey->paypal_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+
+            $paypal = new PaypalPayment($getPaymentProviderKey->paypal_client, $getPaymentProviderKey->paypal_secret);
+
             $forPaypal = [
                 'sectionid'     => $data['sectionId'],
                 'linkid'        => $data['linkId'],
@@ -343,14 +402,17 @@ class PaymentController extends Controller
                 'productSource' => null,
                 'requestMessage' => $data['requestMessage'],
                 'paymentFrom'   => 'link-area',
-                'projectName'   => null, 
+                'projectName'   => strtolower($projectMain->name), 
                 'blogPath'      => null,
+                'projectOwner' => $projectMain->user->name,
                 'successMessage' => 'Payment successful. Your request has been sent, thank you.'
             ];
 
             Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(10));
 
-            $paypal->pay($data);
+            $payment = $paypal->pay($data);
+
+            return back()->with('error', $payment);
         }
 
         if($payment['message'] == 'Payment completed.') {            
@@ -404,6 +466,17 @@ class PaymentController extends Controller
             
             $message = $payment['message'] . ' Request sent';
 
+            // send mail for completed purchased
+            $order = [
+                'email' => $data['email'],
+                'productType' => 'fan_request',
+                'productName' => $request->description,
+                'price' => $data['amount'],
+                'projectName' => strtolower($projectMain->name),
+                'projectOwner' => $projectMain->user->name
+            ];
+            dispatch(new OrderJob($order))->delay(3);
+
         }else if($payment['message'] == 'Payment failed.') {
             Transaction::create([
                 'link_id' => $data['linkId'],
@@ -426,7 +499,7 @@ class PaymentController extends Controller
         return redirect()->route('biolink-webpage', $project->link_id)->with('success', $message);
     }
 
-    public function product(Request $request, StripePayment $stripe, PaypalPayment $paypal)
+    public function product(Request $request)
     {
         $data = $request->validate([
             'linkId' => 'required',
@@ -472,11 +545,24 @@ class PaymentController extends Controller
         $productType = $data['product_source'] == 'member_product' ? 'Membership Plan' : 'Digital Product';
         $data['description'] = $request->description . ' ('.$productType.')';
         $project = ProjectLink::find($data['linkId']);
+        $projectMain = Project::where('custom_id', $project->project_id)->with('user')->first();
+        $getPaymentProviderKey = PaymentIntegration::where('project_id', $project->project_id)->first();
 
         if($data['product_payType'] == 'card') {
+            if(!$getPaymentProviderKey->stripe_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+ 
+            $stripe = new StripePayment($getPaymentProviderKey->stripe_secret);
+
             $payment = $stripe->payment($data);
         }else {
-            
+            if(!$getPaymentProviderKey->paypal_client && !$getPaymentProviderKey->paypal_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+
+            $paypal = new PaypalPayment($getPaymentProviderKey->paypal_client, $getPaymentProviderKey->paypal_secret);
+
             $forPaypal = [
                 'sectionid'     => $data['sectionId'],
                 'linkid'        => $data['linkId'],
@@ -489,8 +575,9 @@ class PaymentController extends Controller
                 'productSource' => $data['product_source'],
                 'requestMessage' => null,
                 'paymentFrom'   => 'link-area',
-                'projectName'   => null, 
+                'projectName'   => strtolower($projectMain->name), 
                 'blogPath'      => null,
+                'projectOwner' => $projectMain->user->name,
                 'successMessage' => 'Payment successful. You can access your purchased item in your member account, thank you.'
             ];
 
@@ -501,7 +588,9 @@ class PaymentController extends Controller
 
             Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(10));
 
-            $paypal->pay($data);
+            $payment = $paypal->pay($data);
+
+            return back()->with('error', $payment);
         }
 
         if($payment['message'] == 'Payment completed.') {            
@@ -549,6 +638,15 @@ class PaymentController extends Controller
             $message = $payment['message'] . ' You can access your purchased item in your member account, thank you.';
 
             // send mail for completed purchased
+            $order = [
+                'email' => $data['email'],
+                'productType' => $data['product_source'],
+                'productName' => $request->description,
+                'price' => $data['amount'],
+                'projectName' => strtolower($projectMain->name),
+                'projectOwner' => $projectMain->user->name
+            ];
+            dispatch(new OrderJob($order))->delay(3);
 
         }else if($payment['message'] == 'Payment failed.') {
             Transaction::create([
@@ -573,7 +671,7 @@ class PaymentController extends Controller
 
     }
 
-    public function productWithAuth(Request $request, StripePayment $stripe, PaypalPayment $paypal)
+    public function productWithAuth(Request $request)
     {
         $data = $request->validate([
             'linkId' => 'required',
@@ -602,8 +700,16 @@ class PaymentController extends Controller
         $data['email'] = Auth::guard('subscriber')->user()->email;
         $data['description'] = $request->description . ' ('.$productType.')';
         $project = ProjectLink::find($data['linkId']);
+        $projectMain = Project::where('custom_id', $project->project_id)->with('user')->first();
+        $getPaymentProviderKey = PaymentIntegration::where('project_id', $project->project_id)->first();
 
         if($data['product_payType'] == 'card') {
+            if(!$getPaymentProviderKey->stripe_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+ 
+            $stripe = new StripePayment($getPaymentProviderKey->stripe_secret);
+
             if(!$request->cardNumber) {
                 $customer = Subscriber::where('email', $data['email'])->first();
                 $isPaySet = CustomerPaymentMethod::where('user_id', $customer->id)->first();
@@ -638,6 +744,12 @@ class PaymentController extends Controller
                 $payment = $stripe->payment($data);
             }
         }else {
+            if(!$getPaymentProviderKey->paypal_client && !$getPaymentProviderKey->paypal_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+
+            $paypal = new PaypalPayment($getPaymentProviderKey->paypal_client, $getPaymentProviderKey->paypal_secret);
+
             $forPaypal = [
                 'sectionid'     => $data['sectionId'],
                 'linkid'        => $data['linkId'],
@@ -650,14 +762,17 @@ class PaymentController extends Controller
                 'productId'     => $data['product_id'],
                 'productSource' => $data['product_source'],
                 'paymentFrom'   => 'link-area',
-                'projectName'   => null, 
+                'projectName'   => strtolower($projectMain->name), 
                 'blogPath'      => null,
+                'projectOwner' => $projectMain->user->name,
                 'successMessage' => 'Payment successful. You can access your purchased item in your member account, thank you.'
             ];
 
             Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(10));
 
-            $paypal->pay($data);
+            $payment = $paypal->pay($data);
+
+            return back()->with('error', $payment);
         }
 
         if($payment['message'] == 'Payment completed.') {            
@@ -712,6 +827,17 @@ class PaymentController extends Controller
             
             $message = $payment['message'] . ' You can access your purchased item in your member account, thank you.';
 
+            // send mail for completed purchased
+            $order = [
+                'email' => $data['email'],
+                'productType' => $data['product_source'],
+                'productName' => $request->description,
+                'price' => $data['amount'],
+                'projectName' => strtolower($projectMain->name),
+                'projectOwner' => $projectMain->user->name
+            ];
+            dispatch(new OrderJob($order))->delay(3);
+
         }else if($payment['message'] == 'Payment failed.') {
             Transaction::create([
                 'link_id' => $data['linkId'],
@@ -734,9 +860,11 @@ class PaymentController extends Controller
         return redirect()->route('biolink-webpage', $project->link_id)->with('success', $message);
     }
 
-    public function paypalSuccess(Request $request, PaypalPayment $paypal)
+    public function paypalSuccess(Request $request)
     {
         $forPaypal = json_decode(Cache::get(session()->getId()));
+        $getPaymentProviderKey = PaymentIntegration::where('project_id', $forPaypal->projectid)->first();
+        $paypal = new PaypalPayment($getPaymentProviderKey->paypal_client, $getPaymentProviderKey->paypal_secret);
 
         if ($request->input('paymentId') && $request->input('PayerID')) {
             $payment = $paypal->success($request->input('PayerID'), $request->input('paymentId'));
@@ -791,6 +919,17 @@ class PaymentController extends Controller
                         'project_id' => $forPaypal->projectid
                     ]);
                 }
+
+                // send mail for completed purchased
+                $order = [
+                    'email' => $forPaypal->paymentFor == 'Donation' ? $payment['arr']['payer']['payer_info']['email'] : $forPaypal->userEmail,
+                    'productType' => $forPaypal->productSource,
+                    'productName' => $forPaypal->description,
+                    'price' => $payment['arr']['transactions'][0]['amount']['total'],
+                    'projectName' => $forPaypal->projectName,
+                    'projectOwner' => $forPaypal->projectOwner
+                ];
+                dispatch(new OrderJob($order))->delay(3);
                 
                 if($forPaypal->paymentFrom == 'member-area') {
                     return redirect()->route('member-index', [$forPaypal->projectName, $forPaypal->blogPath])->with('success', $forPaypal->successMessage);

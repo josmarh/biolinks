@@ -14,10 +14,12 @@ use App\Models\Product;
 
 use App\Models\Order;
 use App\Models\Transaction;
-use App\Services\StripePayment;
-use App\Services\PaypalPayment;
 use App\Models\CustomerPaymentMethod;
 use App\Models\CustomerLead;
+use App\Models\PaymentIntegration;
+use App\Services\StripePayment;
+use App\Services\PaypalPayment;
+use App\Jobs\OrderJob;
 use Log;
 
 
@@ -271,9 +273,8 @@ class MemberAreaController extends Controller
         return view('member-portal.post', compact('project','blog','post','author'));
     }
 
-    public function subscribeToPlan(Request $request, StripePayment $stripe, PaypalPayment $paypal)
+    public function subscribeToPlan(Request $request)
     {
-        
         $data = $request->validate([
             'product_payType' => 'required',
             'product_amount' => 'required',
@@ -304,24 +305,28 @@ class MemberAreaController extends Controller
             $data['month'] = $request->month;
             $data['year'] = $request->year;
 
-            // save card details
-            CustomerPaymentMethod::create([
-                'user_id' => $customer->id,
-                'card_number' => $data['cardNumber'],
-                'card_month' => $data['month'],
-                'card_year' => $data['year'],
-                'card_cvv' => $data['cvv']
-            ]);
         }
 
         $productType = $data['product_source'] == 'member_product' ? 'Membership Plan' : 'Digital Product';
         $data['description'] = $request->description . ' ('.$productType.')';
-        $project = Project::where('name', $request->project_name)->first();
-
+        $project = Project::where('name', $request->project_name)->with('user')->first();
+        $getPaymentProviderKey = PaymentIntegration::where('project_id', $project->custom_id)->first();
+        
         if($data['product_payType'] == 'card') {
+            if(!$getPaymentProviderKey->stripe_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+ 
+            $stripe = new StripePayment($getPaymentProviderKey->stripe_secret);
+
             $payment = $stripe->payment($data);
         }else {
-            
+            if(!$getPaymentProviderKey->paypal_client && !$getPaymentProviderKey->paypal_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+
+            $paypal = new PaypalPayment($getPaymentProviderKey->paypal_client, $getPaymentProviderKey->paypal_secret);
+
             $forPaypal = [
                 'sectionid'     => $request->sectionId,
                 'linkid'        => $request->linkId,
@@ -334,8 +339,9 @@ class MemberAreaController extends Controller
                 'productSource' => $data['product_source'],
                 'requestMessage' => null,
                 'paymentFrom'   => 'member-area',
-                'projectName'   => $request->project_name, 
+                'projectName'   => strtolower($request->project_name), 
                 'blogPath'      => $request->blog_path,
+                'projectOwner' => $project->user->name,
                 'successMessage' => 'You have successfully subscribe to plan '. $data['plan_name'].', thank you.'
             ];
 
@@ -346,7 +352,9 @@ class MemberAreaController extends Controller
 
             Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(10));
 
-            $paypal->pay($data);
+            $payment = $paypal->pay($data);
+
+            return back()->with('error', $payment);
         }
 
         if($payment['message'] == 'Payment completed.') {            
@@ -381,6 +389,15 @@ class MemberAreaController extends Controller
                 'payment_id'    => $payment['id'],
             ]);
 
+            // save card details
+            CustomerPaymentMethod::create([
+                'user_id' => $customer->id,
+                'card_number' => $data['cardNumber'],
+                'card_month' => $data['month'],
+                'card_year' => $data['year'],
+                'card_cvv' => $data['cvv']
+            ]);
+
             // add to customer leads
             CustomerLead::create([
                 'email' => $data['email'],
@@ -394,6 +411,15 @@ class MemberAreaController extends Controller
             $message = $payment['message'] . 'You have successfully subscribe to plan '. $data['plan_name'].', thank you.';
 
             // send mail for completed purchased
+            $order = [
+                'email' => $request->email,
+                'productType' => $data['product_source'],
+                'productName' => $request->description,
+                'price' => $data['amount'],
+                'projectName' => strtolower($request->project_name),
+                'projectOwner' => $project->user->name
+            ];
+            dispatch(new OrderJob($order))->delay(3);
 
         }else if($payment['message'] == 'Payment failed.') {
             Transaction::create([
@@ -421,7 +447,7 @@ class MemberAreaController extends Controller
         return redirect()->route('member-index', [$request->project_name, $request->blog_path])->with('success', $message);
     }
 
-    public function subscribeToPlanWithAuth(Request $request, StripePayment $stripe, PaypalPayment $paypal)
+    public function subscribeToPlanWithAuth(Request $request)
     {
         $data = $request->validate([
             'product_payType' => 'required',
@@ -448,9 +474,16 @@ class MemberAreaController extends Controller
         $productType = $data['product_source'] == 'member_product' ? 'Membership Plan' : 'Digital Product';
         $data['email'] = Auth::guard('subscriber')->user()->email;
         $data['description'] = $request->description . ' ('.$productType.')';
-        $project = Project::where('name', $request->project_name)->first();
+        $project = Project::where('name', $request->project_name)->with('user')->first();
+        $getPaymentProviderKey = PaymentIntegration::where('project_id', $project->custom_id)->first();
 
         if($data['product_payType'] == 'card') {
+            if(!$getPaymentProviderKey->stripe_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+ 
+            $stripe = new StripePayment($getPaymentProviderKey->stripe_secret);
+
             if(!$request->cardNumber) {
                 $customer = Subscriber::where('email', $data['email'])->first();
                 $isPaySet = CustomerPaymentMethod::where('user_id', $customer->id)->first();
@@ -485,6 +518,11 @@ class MemberAreaController extends Controller
                 $payment = $stripe->payment($data);
             }
         }else {
+            if(!$getPaymentProviderKey->paypal_client && !$getPaymentProviderKey->paypal_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+
+            $paypal = new PaypalPayment($getPaymentProviderKey->paypal_client, $getPaymentProviderKey->paypal_secret);
             
             $forPaypal = [
                 'sectionid'     => $request->sectionId,
@@ -498,14 +536,17 @@ class MemberAreaController extends Controller
                 'productId'     => $data['product_id'],
                 'productSource' => $data['product_source'],
                 'paymentFrom'   => 'member-area',
-                'projectName'   => $request->project_name, 
+                'projectName'   => strtolower($request->project_name), 
                 'blogPath'      => $request->blog_path,
+                'projectOwner' => $project->user->name,
                 'successMessage' => 'Payment successful. You have successfully subscribe to plan '. $data['plan_name'].', thank you.'
             ];
 
             Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(10));
 
-            $paypal->pay($data);
+            $payment = $paypal->pay($data);
+
+            return back()->with('error', $payment);
         }
 
         if($payment['message'] == 'Payment completed.') {            
@@ -559,6 +600,17 @@ class MemberAreaController extends Controller
             }
             
             $message = $payment['message'] . ' You have successfully subscribe to plan '. $data['plan_name'].', thank you.';
+
+            // send mail for completed purchased
+            $order = [
+                'email' => $data['email'],
+                'productType' => $data['product_source'],
+                'productName' => $request->description,
+                'price' => $data['amount'],
+                'projectName' => strtolower($project->name),
+                'projectOwner' => $project->user->name
+            ];
+            dispatch(new OrderJob($order))->delay(3);
 
         }else if($payment['message'] == 'Payment failed.') {
             Transaction::create([
