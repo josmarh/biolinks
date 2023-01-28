@@ -26,7 +26,7 @@
     @endif
     <!-- Description -->
     @if($settings->description)
-    <div class="mt-4 text-center font-semibold"
+    <div class="mt-4 text-center font-medium lg:mx-96"
     style="color: {{$settings->text_color}}; 'font-family': {{$settings->font}}">
         {!! $settings->description !!}
     </div>
@@ -92,6 +92,15 @@
                         </div>
                         <div class="mt-3 px-2">
                             ${{ $sectionField->productInfo->cost ?? 0 }}
+                            @if($sectionField->productType == 'simple_product')
+                                @if($sectionField->productSelected->pricing->comparePrice)
+                                <h3 class="line-through decoration-gray-500">
+                                    <span class="text-base font-normal leading-tight text-gray-500">
+                                        {{$sectionField->productSelected->pricing->comparePrice}}
+                                    </span>
+                                </h3>
+                                @endif
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -112,6 +121,7 @@
                 data-title="{{$sectionField->title}}"
                 data-link-id="{{$settings->link_id}}"
                 data-form-name="Donation"
+                data-amount="{{$sectionField->donationAmount == 0 ? 5 : $sectionField->donationAmount}}"
                 style="color: {{$item->button_text_color}};background-color: {{$item->button_bg_color}}">
                     <div class="flex justify-between">
                         <div class="flex">
@@ -129,14 +139,14 @@
                                 <p class="text-lg font-semibold tracking-tight text-gray-900 dark:text-white truncate">
                                     {{ $sectionField->title }}
                                 </p>
-                                <!-- @if($sectionField->description)
+                                @if($sectionField->description)
                                 <div class="font-normal text-gray-700 dark:text-gray-400 text-sm">
                                     {!! $sectionField->description !!}
                                 </div>
-                                @endif -->
+                                @endif
                             </div>
                         </div>
-                        <span class="mt-4 px-4">$</span>
+                        <span class="mt-4 px-4">${{ $sectionField->donationAmount }}</span>
                     </div>
                 </div>
             </div>
@@ -174,11 +184,11 @@
                                 <p class="text-lg font-semibold tracking-tight text-gray-900 dark:text-white truncate">
                                     {{ $sectionField->title }}
                                 </p>
-                                <!-- @if($sectionField->description)
+                                @if($sectionField->description)
                                 <div class="font-normal text-gray-700 dark:text-gray-400 text-sm">
                                     {!! $sectionField->description !!}
                                 </div>
-                                @endif -->
+                                @endif
                             </div>
                         </div>
                         <span class="mt-4 px-4">${{ $sectionField->requestCost }}</span>
@@ -189,7 +199,7 @@
         @endif
          <!-- Vimeo -->
         @if($item->section_name == 'Vimeo' && $item->status == 1)
-        <div class="mt-6 mb-4 mx-auto lg:mx-96">
+        <div class="mt-2 mb-4 mx-auto lg:mx-96">
             <iframe 
                 src="" 
                 frameborder="0" 
@@ -202,9 +212,9 @@
         @endif
         <!-- Youtube -->
         @if($item->section_name == 'Youtube' && $item->status == 1)
-        <div class="mt-6 mb-4 mx-auto lg:mx-96">
+        <div class="mt-2 mb-4 mx-auto lg:mx-96">
             <iframe 
-                src=""
+                src="{{$sectionField->youtubeUrl}}"
                 frameborder="0" 
                 width="100%" 
                 height="350"
@@ -215,7 +225,7 @@
         @endif
         <!-- Spotify -->
         @if($item->section_name == 'Spotify' && $item->status == 1)
-        <div class="mt-6 mb-6 mx-auto lg:mx-96">
+        <div class="mt-2 mb-4 mx-auto lg:mx-96">
             @if(str_contains($sectionField->spotifyUrl, 'show') || str_contains($sectionField->spotifyUrl, 'episode'))
                 <iframe 
                     src="" 
@@ -237,6 +247,7 @@
                     class="video-iframe" 
                     data-url="{{$sectionField->spotifyUrl}}"
                     width="100%"
+                    height="85"
                 ></iframe>
             </div>
             @endif
@@ -257,14 +268,14 @@
         @endif
         <!-- Soundcloud -->
         @if($item->section_name == 'Soundcloud' && $item->status == 1)
-        <div class="mt-6 mb-4 lg:mx-96">
+        <div class="mt-2 mb-4 lg:mx-96">
             <iframe class="embed-responsive-item" scrolling="no" frameborder="no" width="100%" height="350"
             src="https://w.soundcloud.com/player/?url={{$sectionField->soundcloudUrl}}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
         </div>
         @endif
         <!-- Twitch -->
         @if($item->section_name == 'Twitch' && $item->status == 1)
-        <div class="mt-6 mb-4 mx-auto lg:mx-96">
+        <div class="mt-2 mb-4 mx-auto lg:mx-96">
             <iframe
                 src=""
                 scrolling="no"
@@ -304,6 +315,14 @@
         <!-- Text Block -->
         @if($item->section_name == 'Text Block' && $item->status == 1)
         <div class="mt-6 mb-4 lg:mx-96">
+            <h1 class="font-bold text-2xl text-center mt-6" 
+                style="color: {{$sectionField->titleColor}}">
+                {{$sectionField->title}}
+            </h1>
+            <div class="text-center text-md mt-2" 
+            style="color: {{$sectionField->titleColor}}">
+            {!! $sectionField->description !!}
+            </div>
             @if($sectionField->type == 'image' && isset($sectionField->typeContentImage))
             <img src="{{asset($sectionField->typeContentImage)}}"
                 class="w-32 h-32 mx-auto rounded-full"/>
@@ -330,10 +349,7 @@
                 ></iframe>
                 @endif
             @endif
-            <h1 class="font-bold text-3xl text-center mt-6" 
-                style="color: {{$sectionField->titleColor}}">
-                {{$sectionField->title}}
-            </h1>
+            
             @if(isset($sectionField->link) && isset($item->button_text))
             <div class="flex justify-center mt-4">
                 <a href="{{$sectionField->link}}" 
@@ -504,7 +520,7 @@
         <!-- FAQ -->
         @if($item->section_name == 'FAQ' && $item->status == 1)
         <div class="mt-6 mb-4 lg:mx-96">
-            <h1 class="font-bold text-3xl text-center mt-6" 
+            <h1 class="font-bold text-2xl text-center mt-6" 
                 style="color: {{$sectionField->titleColor}}">
                 {{$sectionField->title}}
             </h1>
@@ -847,16 +863,16 @@
                                 <option value="100">100</option>
                             </select>
                             <span class="font-semibold mt-2 px-2">x</span>
-                            <span class="font-semibold mt-2">$5</span>
+                            <span class="font-semibold mt-2" id="static-field">$5</span>
                             <span class="font-semibold mt-2 pl-2">=</span>
                             <span class="font-semibold mt-2 total-donation">$5</span>
-                            <span id="to-custom-amount" class="font-semibold mt-2 pl-6 text-blue-400 cursor-pointer">
+                            <span id="to-custom-amount" class="font-semibold text-sm mt-2 pl-6 text-blue-400 cursor-pointer">
                                 Custom amount?
                             </span>
                         </div>
                         <div class="flex gap-2" id="custom-amount" style="display:none">
                             <span class="font-semibold mt-2 px-2">$</span>
-                            <input type="number" id="custom-amount-field" value="5"
+                            <input type="number" id="custom-amount-field" value="5" step="0.01"
                             class="bg-gray-50 border border-gray-300 
                             text-gray-900 text-sm rounded-lg 
                             focus:ring-blue-500 focus:border-blue-500 
@@ -864,7 +880,7 @@
                             dark:border-gray-600 dark:placeholder-gray-400 
                             dark:text-white dark:focus:ring-blue-500 
                             dark:focus:border-blue-500">
-                            <span id="to-regular-amount" class="font-semibold mt-2 pl-4 text-blue-400 cursor-pointer">
+                            <span id="to-regular-amount" class="font-semibold mt-2 text-sm pl-4 text-blue-400 cursor-pointer">
                                 To regular amount?
                             </span>
                         </div>
@@ -1561,9 +1577,16 @@ $(document).ready(function(){
         $('#sectionId').val($(this).data('section-id'));
         $('#description').val($(this).data('title'));
         // $('input[name=payType]:checked').val('card')
+
+        $('.custom-amount-field').val($(this).data('amount').toFixed(2));
+        $('#static-field').text('$'+ $(this).data('amount').toFixed(2));
+        $('.total-donation').text('$'+ $(this).data('amount').toFixed(2));
+        $('#actual-total-donation').val($(this).data('amount').toFixed(2));
+        $('#paypal-total-donation').val($(this).data('amount').toFixed(2));
     });
     $('#donation-times').change(function() {
-        let total = parseFloat($(this).val()) * 5;
+        let static = $('#static-field').text().split('$');
+        let total = parseFloat($(this).val()) * parseFloat(static[1]);
         $('.total-donation').text('$'+ total.toFixed(2));
         $('#custom-amount-field').val(total);
         $('#actual-total-donation').val(total.toFixed(2));

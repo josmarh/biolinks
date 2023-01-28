@@ -110,7 +110,7 @@
                 dark:text-white dark:focus:ring-blue-500 
                 dark:focus:border-blue-500" 
                 placeholder="Enter your email" required>
-                <button type="submit" id="mail-submit"
+                <button type="button" id="mail-submit"
                 class="absolute top-0 right-0 p-2.5 text-sm 
                 font-medium text-white bg-blue-500 rounded-r-lg 
                 hover:bg-blue-800 focus:ring-0 
@@ -215,7 +215,7 @@
 
 <script>
 $(function() {
-    $('form').on('submit', function(e){
+    $('form#email-form').on('submit', function(e){
         e.preventDefault();
 
         $.ajax({

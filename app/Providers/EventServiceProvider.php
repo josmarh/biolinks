@@ -6,10 +6,14 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
-use App\Observers\ProjectLinkObserver;
+
 use App\Models\ProjectLink;
-use App\Observers\BiolinkSectionSettingObserver;
 use App\Models\BiolinkSectionSetting;
+use App\Models\Project;
+
+use App\Observers\ProjectLinkObserver;
+use App\Observers\BiolinkSectionSettingObserver;
+use App\Observers\ProjectObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -46,6 +50,7 @@ class EventServiceProvider extends ServiceProvider
     {
         ProjectLink::observe(ProjectLinkObserver::class);
         BiolinkSectionSetting::observe(BiolinkSectionSettingObserver::class);
+        Project::observe(ProjectObserver::class);
     }
 
     /**

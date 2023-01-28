@@ -150,6 +150,7 @@
                 {{ $orders->links() }}
             </div>
             <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                @if($paymentMethod)
                 <form action="{{route('member-paymethod-update', $project->name)}}" method="post" class="mt-4">
                     @csrf
                     @method('put')
@@ -202,6 +203,7 @@
                         <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-0 focus:ring-indigo-500 focus:ring-offset-2">Save</button>
                     </div>
                 </form>
+                @endif
             </div>
             <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="contacts" role="tabpanel" aria-labelledby="contacts-tab">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-4">
@@ -231,7 +233,7 @@
                         @endforelse
                     </tbody>
                 </table>
-                {{ $orders->links() }}
+                {{ $subscriptions->links() }}
             </div>
         </div>
     </div>

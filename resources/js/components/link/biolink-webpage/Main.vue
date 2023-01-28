@@ -106,7 +106,7 @@
                                     v-html="item.sectionFields.description"></div>
                                 </div>
                             </div>
-                            <span class="mt-4 px-4">$</span>
+                            <span class="mt-4 px-4">${{ item.sectionFields.donationAmount }}</span>
                         </div>
                     </div>
                 </div>
@@ -135,7 +135,7 @@
                                     <h5 class="text-lg font-semibold tracking-tight text-gray-900 
                                     dark:text-white truncate"
                                     :title="item.sectionFields.title">
-                                        {{ item.sectionFields.title.replace(/(.{26})..+/, "$1…") }}
+                                        {{ item.sectionFields.title.replace(/(.{20})..+/, "$1…") }}
                                     </h5>
                                     <div v-if="item.sectionFields.description" 
                                     class="font-normal text-gray-700 dark:text-gray-400 text-sm"
@@ -221,6 +221,12 @@
                 </div>
                 <!-- Text Block -->
                 <div v-if="item.section.name=='Text Block'" class="mt-2 mb-4">
+                    <h1 class="font-bold text-3xl text-center" 
+                        :style="{color: item.sectionFields.titleColor}">
+                        {{item.sectionFields.title}}
+                    </h1>
+                    <div v-html="item.sectionFields.description" class="text-center text-md"
+                    :style="{color: item.sectionFields.titleColor}"></div>
                     <img v-if="item.sectionFields.type=='image'" 
                         :src="item.sectionFields.typeContentImage.includes('biolink') 
                         ? helper.applink + item.sectionFields.typeContentImage 
@@ -237,10 +243,8 @@
                             <video-display :url="item.sectionFields.typeContentVideoUrl" fheight="232"/>
                         </div>
                     </div>
-                    <h1 class="font-bold text-3xl text-center" 
-                        :style="{color: item.sectionFields.titleColor}">
-                        {{item.sectionFields.title}}
-                    </h1>
+                    
+                    
                     <div v-if="item.sectionFields.link" class="flex justify-center mt-2">
                         <button type="button" 
                             @click="openExternalLink(item.sectionFields.link)"
@@ -258,7 +262,7 @@
                 </div>
                 <!-- FB Group -->
                 <div v-if="item.section.name=='Facebook Group'" class="mt-2 mb-4">
-                    <img v-if="item.sectionFields.type=='image'" 
+                    <img v-if="item.sectionFields.typeContentImage && item.sectionFields.type=='image'" 
                         :src="item.sectionFields.typeContentImage.includes('biolink') 
                         ? helper.applink + item.sectionFields.typeContentImage 
                         : item.sectionFields.typeContentImage"
@@ -410,7 +414,7 @@
                 </div>
                 <!-- FAQ -->
                 <div v-if="item.section.name=='FAQ'" class="mt-2 mb-4">
-                    <h1 class="font-bold text-3xl text-center" 
+                    <h1 class="font-bold text-xl text-center" 
                         :style="{color: item.sectionFields.titleColor}">
                         {{item.sectionFields.title}}
                     </h1>

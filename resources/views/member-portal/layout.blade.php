@@ -126,10 +126,10 @@
                                     Past Orders
                                 </a>
                             </li> -->
-                            <li >
-                                <form action="{{route('member-logout', $project->name)}}" method="post">
+                            <li>
+                                <form action="{{route('member-logout', strtolower($project->name))}}" method="post">
                                     @csrf
-                                    <button class="block px-4 py-2 hover:bg-gray-100 text-start w-full">
+                                    <button type="submit" class="block px-4 py-2 hover:bg-gray-100 text-start w-full">
                                         Logout
                                     </button>
                                 </form>

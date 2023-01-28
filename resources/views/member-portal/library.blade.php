@@ -10,7 +10,7 @@
                 Digital library / products
             </h5>
         </div>
-        {{ $product }}
+        
         <div class="grid grid-cols-12 gap-4 mt-16">
             @foreach($plans as $membership)
                 <div class="col-span-3">

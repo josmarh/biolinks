@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SPAController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MemberAreaController;
+use App\Http\Controllers\JVZooIPNController;
+use App\Http\Controllers\MemberForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +17,12 @@ use App\Http\Controllers\MemberAreaController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/w/{projectName}/forget-password', [MemberForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
+Route::post('/w/{projectName}/forget-password', [MemberForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post'); 
+Route::get('/w/{projectName}/reset-password/{token}', [MemberForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+Route::post('/w/{projectName}/reset-password', [MemberForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
-
+Route::post('/ipn/jvzoo', [JVZooIPNController::class, 'JVZoo'])->name('jvzoo');
 Route::get('/w/{linkId}', [SPAController::class, 'biolinkPage'])->name('biolink-webpage');
 Route::post('/w/{linkId}/link/logout', [SPAController::class, 'logoutMember'])->name('member-link-logout');
 Route::post('/w/{linkId}/link/login', [SPAController::class, 'loginMember'])->name('member-link-login');
