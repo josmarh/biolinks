@@ -33,7 +33,7 @@ class PostResource extends JsonResource
             'postPaymentSettings' => $this->payment_setting,
             'otp' => $this->otp,
             'contentPreview' => $this->content_preview,
-            'plans' => $this->plans,
+            'plans' => json_decode($this->plans),
             'publishedStatus' => $this->published_status
         ];
     }

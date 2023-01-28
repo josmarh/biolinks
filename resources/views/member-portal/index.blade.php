@@ -132,6 +132,7 @@
         @if($blog->posts == 'single post')
             @forelse ($posts as $post)
                 @if($post->published_status != 'Draft')
+                @if(!$post->published_date || $post->published_date && date('Y-m-d') >= \Carbon\Carbon::create($post->published_date)->toDateString())
                     @php $images = json_decode($post->images); @endphp
                     <a href="{{route('member-post', [strtolower($project->name), $post->slug])}}">
                         <div class="bg-white border border-gray-200
@@ -147,19 +148,20 @@
                             </a>
                             <div class="p-5">
                                 <a href="{{route('member-post', [strtolower($project->name), $post->slug])}}">
-                                    <h5 class="mb-2 text-2xl font-bold tracking-tight 
+                                    <h5 class="mb-2 text-xl font-bold tracking-tight 
                                     text-gray-900 dark:text-white"
                                     style="color: {{$blog->headline_color}}">
                                         {{ $post->title }}
                                     </h5>
                                 </a>
-                                <div class="mb-3 font-normal text-gray-700 truncate"
+                                <div class="mb-3 font-normal text-gray-700 "
                                 style="color: {{$blog->text_color}}">
                                     {!! $post->post !!}
                                 </div>
                             </div>
                         </div>
                     </a>
+                @endif
                 @endif
             @empty
                 <p class="font-normal text-gray-700 text-center text-lg mt-4">
@@ -169,8 +171,9 @@
         @else
         <div class="lg:grid grid-cols-12 gap-4 lg:px-40">
             @forelse ($posts as $post)
-                @php $images = json_decode($post->images); @endphp
                 @if($post->published_status != 'Draft')
+                @if(!$post->published_date || $post->published_date && date('Y-m-d') >= \Carbon\Carbon::create($post->published_date)->toDateString())
+                    @php $images = json_decode($post->images); @endphp
                     <div class="col-span-4">
                         <a href="{{route('member-post', [strtolower($project->name), $post->slug])}}">
                             <div class="md:max-w-sm w-full bg-white border border-gray-200 h-80
@@ -186,7 +189,7 @@
                                 </a>
                                 <div class="p-5">
                                     <a href="{{route('member-post', [strtolower($project->name), $post->slug])}}">
-                                        <h5 class="mb-2 text-2xl font-bold tracking-tight 
+                                        <h5 class="mb-2 text-xl font-bold tracking-tight 
                                         text-gray-900 dark:text-white"
                                         style="color: {{$blog->headline_color}}">
                                             {{ $post->title }}
@@ -201,6 +204,7 @@
                         </a>
                     </div>
                 @endif
+                @endif
             @empty
                 <p class="font-normal text-gray-700 text-center text-lg mt-4">
                     Currently, there are no posts to show.
@@ -210,7 +214,78 @@
         @endif
     </div>
     <!-- Subscribe Alert -->
+    @if($blog->subsscriber_alert == 'show')
+    @if(!auth()->guard('subscriber')->check())
+        <div style="background-color: {{$blog->subsscriber_alert_color}}" 
+            class="mt-6 mx-40">
+            <div id="toast-interactive" class="w-full p-4 text-center bg-white border rounded-lg shadow-md sm:p-8" 
+                role="alert" style="background-color: {{$blog->subsscriber_alert_color}}">
+                <div class="flex justify-center items w-full">
+                    <div class="items-center justify-center md:mx-48">
+                        <div class="flex items-center justify-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                            <a href="{{route('member-register', strtolower($project->name))}}"
+                                class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-0 
+                                focus:outline-none focus:ring-blue-200 dark:focus:ring-blue-900 
+                                font-medium text-sm px-5 py-4 inline-flex 
+                                justify-center text-center "
+                                style="background-color: {{$blog->button_color}}">
+                                Subscribe 
+                                @if($planPrice['price']) 
+                                    for as low as ${{ $planPrice['price'] }} / {{ $planPrice['type'] }}
+                                @endif
+                            </a>
+                        </div>
+                        <div class="mt-8">
+                            <p class="text-sm flex justify-center text-center" :style="{color: data.textColor}"> 
+                                Or login if you've already purchased 
+                            </p>
+                            <form action="{{route('post-login', strtolower($project->name))}}" method="post">
+                                @csrf
+                                <input type="hidden" name="remember" value="true">
+                                <input id="remember-me" name="remember" type="checkbox" value="{{ old('remember') }}" class="hidden">
+                                <div class="sm:flex flex items-center justify-center gap-3 mt-4">
+                                    <div>
+                                        <input type="email" id="email" name="email"
+                                        class="bg-gray-50 border border-gray-300 
+                                        text-gray-900 text-sm focus:ring-blue-500 
+                                        focus:border-blue-500 block w-full p-2.5 
+                                        dark:bg-gray-700 dark:border-gray-600 
+                                        dark:placeholder-gray-400 dark:text-white 
+                                        dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                        placeholder="email@example.com" required>
+                                    </div>
+                                    <div>
+                                        <input type="password" id="password" name="password"
+                                        class="bg-gray-50 border border-gray-300 
+                                        text-gray-900 text-sm focus:ring-blue-500  
+                                        block w-full p-2.5 dark:bg-gray-700 focus:border-blue-500
+                                        dark:border-gray-600 dark:placeholder-gray-400 
+                                        dark:text-white dark:focus:ring-blue-500 
+                                        dark:focus:border-blue-500" 
+                                        placeholder="password" required>
+                                    </div>
+                                    <button type="submit" 
+                                        class="text-white bg-black hover:bg-black 
+                                        focus:ring-0 focus:outline-none focus:ring-blue-300 
+                                        font-medium text-sm w-full sm:w-auto px-5 
+                                        py-2.5 text-center
+                                        dark:focus:ring-blue-800">
+                                        Login
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
 
+        </div>
+    @endif
+    @endif
 </div>
 
 <script>

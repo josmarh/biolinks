@@ -27,7 +27,7 @@
                     md:font-medium md:border-0 md:bg-white 
                     dark:bg-gray-800 md:dark:bg-gray-900 
                     dark:border-gray-700">
-                    <li>
+                    <li v-if="permissions.includes('Dashboard')">
                         <router-link :to="{name: 'Dashboard'}" 
                             :class="[$route.name == 'Dashboard'
                             ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
@@ -37,7 +37,7 @@
                             Dashboard
                         </router-link>
                     </li>
-                    <li>
+                    <li v-if="permissions.includes('Orders')">
                         <router-link :to="{name: 'Orders', params: {id: $route.params.id}}"
                             :class="[$route.name == 'Orders'
                             ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
@@ -47,13 +47,13 @@
                             Orders
                         </router-link>
                     </li>
-                    <li>
+                    <li v-if="permissions.includes('Products')">
                         <ProductDropdown />
                     </li>
-                    <li>
+                    <li v-if="permissions.includes('Membership Blog')">
                         <MembershipDropdownMenu />
                     </li>
-                    <li>
+                    <li v-if="permissions.includes('People')">
                         <router-link :to="{name: 'People', params: {id: $route.params.id}}"
                             :class="[$route.name == 'People'
                             ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
@@ -63,7 +63,7 @@
                             People
                         </router-link>
                     </li>
-                    <li>
+                    <li v-if="permissions.includes('Settings')">
                         <router-link :to="{name: 'ProjectSettings', params: {id: $route.params.id}}"
                             :class="[$route.name == 'ProjectSettings'
                             ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
@@ -73,7 +73,7 @@
                             Settings
                         </router-link>
                     </li>
-                    <li class="hidden">
+                    <li v-if="permissions.includes('Admin Menu')">
                         <router-link :to="{name: 'Users'}" 
                             :class="[$route.name == 'Users'
                             ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
@@ -83,7 +83,7 @@
                             Admin
                         </router-link>
                     </li>
-                    <li class="hidden">
+                    <li v-if="permissions.includes('Reseller Menu')">
                         <router-link :to="{name: 'Reseller'}" 
                             :class="[$route.name == 'Reseller'
                             ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
@@ -101,10 +101,14 @@
 </template>
 
 <script setup>
+import {computed} from 'vue'
 import UserDialogue from './UserDialogue.vue'
 import ProductDropdown from './ProductDropdownMenu.vue'
 import MembershipDropdownMenu from './MembershipDropdownMenu.vue';
 import AppLogo from '../AppLogo.vue'
+import store from '../../store'
+
+const permissions = computed(() => store.state.user.permissions)
 </script>
 
 <style>

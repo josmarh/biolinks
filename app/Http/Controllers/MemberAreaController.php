@@ -54,8 +54,17 @@ class MemberAreaController extends Controller
         }else {
             $memberName = $blogSetting->memberNickName ? $blogSetting->memberNickName : 'Member';
         }
-        
-        return view('member-portal.index', compact('blog','posts','project','memberName','totalSubs'));
+
+        $plan = Plan::where('project_id', $project->custom_id)->first();
+        if($plan && $plan->monthly_pricing == 'yes') {
+            $planPrice = [ 'price' => $plan->monthly_price, 'type' => 'month'];
+        }elseif($plan && $plan->annual_pricing == 'yes') {
+            $planPrice = [ 'price' => $plan->annual_price, 'type' => 'year'];
+        }else {
+            $planPrice = [ 'price' => '', 'type' => ''];
+        }
+
+        return view('member-portal.index', compact('blog','posts','project','memberName','totalSubs','planPrice'));
     }
 
     public function login($projectName)
@@ -270,7 +279,74 @@ class MemberAreaController extends Controller
             return view('errors.404');
         }
 
-        return view('member-portal.post', compact('project','blog','post','author'));
+        // validate publish date and gated post
+        if(!$post->published_date 
+        || $post->published_date 
+        && date('Y-m-d') >= \Carbon\Carbon::create($post->published_date)->toDateString()) {
+            if($post->payment_setting == 'free') {
+
+                return view('member-portal.post', compact('project','blog','post','author'));
+
+            }else if($post->payment_setting == 'subscription') {
+                if(Auth::guard('subscriber')->check()) {
+                    // check if subscriber purchased a plan
+                    $orders = Order::where('email', Auth::guard('subscriber')->user()->email)
+                        ->where('product_source', 'member_product')
+                        ->where('project_id', $project->custom_id)
+                        ->get();
+                    
+                    if(!$orders) {
+                        return view('member-portal.post-subscriber-gated', compact('project','blog','post','author'));
+                    }else {
+                        // Also check if plan ordered matches the required post->plan to access the post
+                        $postPlans = json_decode($post->plans);
+                        $planCheckCounter = 0;
+                        foreach ($orders as $purchasedPlan) {                            
+                            foreach($postPlans as $postPlan) {
+                                if($postPlan === $purchasedPlan->product_id) { 
+                                    $planCheckCounter = 1;
+                                }
+                            }
+                        }
+                        if($planCheckCounter == 1) {
+                            return view('member-portal.post', compact('project','blog','post','author'));
+                        }
+                        return view('member-portal.post-subscriber-gated', compact('project','blog','post','author'));
+                    }
+                }else {
+                    // return to page with preview or no-preview gated post
+                    return view('member-portal.post-subscriber-gated', compact('project','blog','post','author'));
+                }
+            }else {
+                // every user pays 
+                if(Auth::guard('subscriber')->check()) {
+                    // check if subscriber purchased a plan
+                    $orders = Order::where('email', Auth::guard('subscriber')->user()->email)
+                        ->where('product_source', 'member_post')
+                        ->where('project_id', $project->custom_id)
+                        ->get();
+
+                    if(!$orders) {
+                        return view('member-portal.post-otp-gated', compact('project','blog','post','author'));
+                    }else {
+                        $postCheckCounter = 0;
+                        foreach ($orders as $purchasedPost) {
+                            if($post->id === $purchasedPost->product_id) { 
+                                $postCheckCounter = 1;
+                            }
+                        }
+                        if($planCheckCounter == 1) {
+                            return view('member-portal.post', compact('project','blog','post','author'));
+                        }
+                        return view('member-portal.post-otp-gated', compact('project','blog','post','author'));
+                    }
+                }else {
+                    return view('member-portal.post-otp-gated', compact('project','blog','post','author'));
+                }
+            }
+        }
+
+        return view('errors.404-post');
     }
 
     public function subscribeToPlan(Request $request)
@@ -582,7 +658,9 @@ class MemberAreaController extends Controller
             ]);
 
             // update/create to customer leads
-            $customer = CustomerLead::where('email', $data['email'])->first();
+            $customer = CustomerLead::where('email', $data['email'])
+                ->where('project_id', $project->custom_id)
+                ->first();
             if($customer) {
                 $customer->update([
                     'orders' => $customer->orders + 1,
@@ -632,5 +710,15 @@ class MemberAreaController extends Controller
         }
 
         return redirect()->route('member-index', [$request->project_name, $request->blog_path])->with('success', $message);
+    }
+
+    public function orderPost(Request $request)
+    {
+        
+    }
+
+    public function orderPostWithAuth(Request $request)
+    {
+        
     }
 }

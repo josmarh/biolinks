@@ -91,7 +91,9 @@ import NoProjectContent from '../NoProjectContent.vue';
 import ProjectForm from './ProjectForm.vue';
 import ProjectListOptions from './ProjectListOptions.vue';
 import project from '../../store/project'
+import store from '../../store'
 
+const permissions = computed(() => store.state.user.permissions)
 const projects = computed(() => project.state.projects);
 const isProjectSet = ref(0)
 const showForm = ref(false)

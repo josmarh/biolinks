@@ -68,13 +68,15 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { notify } from 'notiwind'
 import store from '../../store'
 
-const router = useRouter()
+const router = useRouter();
 let userSurffix = store.state.user.data.name.split('')[0];
 
 function logout() {
     store.dispatch('logout')
         .then((res) => {
-            router.push({name: 'Login'});
+            router.push({
+                name: 'Login'
+            });
         })
         .catch((err) => {
             if(err.response) {

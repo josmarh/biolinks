@@ -49,6 +49,7 @@ class PostController extends Controller
             'published_date' => $request->publishedDate,
             'author' => $user->id,
             'categories' => $request->categories,
+            'plans' => $request->plans,
             'payment_setting' => $request->postPaymentSettings,
             'published_status' => $request->publishedStatus
         ]);

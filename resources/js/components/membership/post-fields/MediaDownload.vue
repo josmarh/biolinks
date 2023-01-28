@@ -84,7 +84,7 @@
             focus:outline-none focus:ring-0 focus:ring-offset-2 focus:ring-indigo-500 mb-2">
                 <input type="file"
                     class="absolute left-0 top-0 right-0 bottom-0 opacity-0 cursor-pointer"
-                    @change="onMediaChoose">
+                    @change="onMediaChoose" accept="image/video, image/audio">
                 <font-awesome-icon icon="fa-solid fa-plus" class="mr-1.5" />
                 Add Media
             </button>

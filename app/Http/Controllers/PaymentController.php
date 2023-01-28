@@ -447,7 +447,9 @@ class PaymentController extends Controller
             ]);
 
             // update/create to customer leads
-            $customer = CustomerLead::where('email', $data['email'])->first();
+            $customer = CustomerLead::where('email', $data['email'])
+                ->where('project_id', $project->project_id)
+                ->first();
             if($customer) {
                 $customer->update([
                     'orders' => $customer->orders + 1,
@@ -808,7 +810,9 @@ class PaymentController extends Controller
             ]);
 
             // update/create to customer leads
-            $customer = CustomerLead::where('email', $data['email'])->first();
+            $customer = CustomerLead::where('email', $data['email'])
+                ->where('project_id', $project->project_id)
+                ->first();
             if($customer) {
                 $customer->update([
                     'orders' => $customer->orders + 1,
@@ -902,7 +906,9 @@ class PaymentController extends Controller
                 ]);
 
                 $email = $forPaypal->paymentFor == 'Donation' ? $payment['arr']['payer']['payer_info']['email'] : $forPaypal->userEmail;
-                $customer = CustomerLead::where('email', $email)->first();
+                $customer = CustomerLead::where('email', $email)
+                    ->where('project_id', $forPaypal->projectid)
+                    ->first();
 
                 if($customer) {
                     $customer->update([

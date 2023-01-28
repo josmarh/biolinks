@@ -11,6 +11,7 @@ const postData = {
     publishedDate: '',
     author: null,
     categories: [],
+    plans: [],
     postPaymentSettings: 'free'
 };
 

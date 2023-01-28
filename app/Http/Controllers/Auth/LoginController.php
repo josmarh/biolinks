@@ -44,11 +44,16 @@ class LoginController extends Controller
             'description' => 'Authentication verified successfully'
         ]));
 
+        $permissions = [];
+        foreach ($user->getAllPermissions() as $permission) {
+            array_push($permissions, $permission->name);
+        }
+
         return response([
             'user' => $user,
             'token' => $token,
             'membership' => $user->getUserRole(),
-            'permissions' => $user->getAllPermissionsAttribute(),
+            'permissions' => $permissions,
         ]);
     }
 }
