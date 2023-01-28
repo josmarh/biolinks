@@ -2,7 +2,8 @@
     "private": true,
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "server": "webpack-dashboard -- webpack-dev-server --inline --port 8080"
     },
     "devDependencies": {
         "@beyonk/google-fonts-webpack-plugin": "^1.7.0",
