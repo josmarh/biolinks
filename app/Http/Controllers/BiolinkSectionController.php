@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BiolinkSectionSetting;
-use App\Models\BioLinkSection;
+use App\Models\BiolinkSection;
 use App\Http\Resources\BiolinkSectionResource;
 use App\Events\BioLinkSectionCreated;
 use App\Services\FileHandler;
@@ -15,7 +15,7 @@ class BiolinkSectionController extends Controller
 
     public function index(Request $request, $id)
     {
-        $section = BioLinkSection::select('bl_biolink_sections.id','bl_biolink_sections.link_id','bl_biolink_sections.section_id','bl_biolink_sections.button_text','bl_biolink_sections.button_text_color','bl_biolink_sections.button_bg_color','bl_biolink_sections.core_section_fields')
+        $section = BiolinkSection::select('bl_biolink_sections.id','bl_biolink_sections.link_id','bl_biolink_sections.section_id','bl_biolink_sections.button_text','bl_biolink_sections.button_text_color','bl_biolink_sections.button_bg_color','bl_biolink_sections.core_section_fields')
             ->where('bl_biolink_sections.link_id', $id)
             ->join('bl_biolink_section_settings as sect','bl_biolink_sections.section_id','=','sect.id')
             ->with('section')
@@ -51,14 +51,14 @@ class BiolinkSectionController extends Controller
 
     public function show($id)
     {
-        $section = BioLinkSection::findOrFail($id);
+        $section = BiolinkSection::findOrFail($id);
 
         return new BiolinkSectionResource($section);
     }
 
     public function update(Request $request, $id)
     {
-        $section = BioLinkSection::findOrFail($id);
+        $section = BiolinkSection::findOrFail($id);
         $settings = BiolinkSectionSetting::find($section->section_id);
         $sectionCustomFields = $request->sectionFields;
 
@@ -94,7 +94,7 @@ class BiolinkSectionController extends Controller
 
     public function delete($id)
     {
-        $section = BioLinkSection::findOrFail($id);
+        $section = BiolinkSection::findOrFail($id);
 
         // delete section, settings
         BiolinkSectionSetting::where('id', $section->section_id)->delete();

@@ -16,6 +16,9 @@ class Order extends Model
         'fulfilled',
         'status', // successful
         'description',
+        'request_message',
+        'product_id',
+        'product_source',
         'link_id',
         'section_id',
         'project_id',
