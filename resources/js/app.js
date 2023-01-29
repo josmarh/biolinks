@@ -26,7 +26,7 @@ import { faRightFromBracket, faLink, faEnvelope,
     faImage, faEllipsis, faGear, faSliders, faCircleXmark, faTurnDown, 
     faUpDownLeftRight, faUpRightFromSquare, faTriangleExclamation, 
     faHandPointRight, faArrowRight, faBolt, faAnglesRight, faSackDollar, 
-    faMoneyBill1Wave, faMugHot, faStore, faLock, faSquareCheck, faCircleCheck, 
+    faMoneyBill1Wave, faMugHot, faStore, faLock, faSquareCheck, faCircleCheck, faPersonChalkboard, faUserCheck, 
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add( faRightFromBracket, faLink, faEnvelope, 
@@ -43,7 +43,7 @@ library.add( faRightFromBracket, faLink, faEnvelope,
     faImage, faEllipsis, faGear, faSliders, faCircleXmark, faTurnDown, 
     faUpDownLeftRight, faUpRightFromSquare, faTriangleExclamation, 
     faHandPointRight, faArrowRight, faBolt, faAnglesRight, faSackDollar, 
-    faMoneyBill1Wave, faMugHot, faStore, faLock, faSquareCheck, faCircleCheck
+    faMoneyBill1Wave, faMugHot, faStore, faLock, faSquareCheck, faCircleCheck, faPersonChalkboard, faUserCheck
     
 )
 

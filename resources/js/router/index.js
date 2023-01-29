@@ -42,6 +42,13 @@ import ProjectSettings from '../views/settings/Index.vue'
 import Orders from '../views/products/Orders.vue'
 import store from '../store'
 
+import DfyBiolinkAgency from '../views/dfy/DfyBiolinkAgency.vue'
+import DfyProfitCampaign from '../views/dfy/DfyProfitCampaign.vue'
+import DfyReputationAgency from '../views/dfy/DfyReputationAgency.vue'
+import DfyAugmentsuite from '../views/dfy/DfyAugmentsuite.vue'
+import DfyAffiliateMaster from '../views/dfy/DfyAffiliateMaster.vue'
+import Tutorials from '../views/Tutorials.vue'
+
 const routes = [
     {
         path: '/',
@@ -65,6 +72,12 @@ const routes = [
             {path: '/dashboard', name: 'Dashboard', component: Dashboard},
             {path: '/account', name: 'Account', component: Account},
             {path: '/reseller/users', name: 'Reseller', component: Reseller},
+            {path: '/dfy/biolink-agency', name: 'DfyBiolinkAgency', component: DfyBiolinkAgency},
+            {path: '/dfy/profit-campaign', name: 'DfyProfitCampaign', component: DfyProfitCampaign},
+            {path: '/dfy/reputation-agency', name: 'DfyReputationAgency', component: DfyReputationAgency},
+            {path: '/dfy/ar-agency', name: 'DfyAugmentsuite', component: DfyAugmentsuite},
+            {path: '/dfy/affiliate-master-class', name: 'DfyAffiliateMaster', component: DfyAffiliateMaster},
+            {path: '/tutorials', name: 'Tutorials', component: Tutorials},
         ]
     },
     {

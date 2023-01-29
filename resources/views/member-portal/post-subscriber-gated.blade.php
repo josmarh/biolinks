@@ -36,7 +36,7 @@
     </div>
 </div>
 @endif
-<div style="background-color: {{$blog->subsscriber_alert_color}}" class="mx-40">
+<div style="background-color: {{$blog->subsscriber_alert_color}}" class="lg:mx-40">
     <div id="toast-interactive" class="w-full p-4 text-center bg-white border rounded-lg shadow-md sm:p-8" 
         role="alert" style="background-color: {{$blog->subsscriber_alert_color}}">
         <div class="flex justify-center items w-full">

@@ -46,6 +46,8 @@ Route::post('/w/{projectName}/signup', [MemberAreaController::class, 'registerMe
 Route::post('/w/{projectName}/logout', [MemberAreaController::class, 'logoutMember'])->name('member-logout');
 Route::put('/w/{projectName}/account', [MemberAreaController::class, 'updateAccount'])->name('member-account-update');
 Route::put('/w/{projectName}/paymethod', [MemberAreaController::class, 'updatePaymethod'])->name('member-paymethod-update');
+Route::post('/w/{projectName}/order-post', [MemberAreaController::class, 'orderPost'])->name('order-post');
+Route::post('/w/{projectName}/order-post-auth', [MemberAreaController::class, 'orderPostWithAuth'])->name('order-post-auth');
 
 Route::post('/link-password/{settingId}', [SPAController::class, 'linkPasswordValidate'])->name('link-password.validate');
 Route::group(['prefix' => 'paypal'], function () {

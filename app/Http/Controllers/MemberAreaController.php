@@ -335,7 +335,7 @@ class MemberAreaController extends Controller
                                 $postCheckCounter = 1;
                             }
                         }
-                        if($planCheckCounter == 1) {
+                        if($postCheckCounter == 1) {
                             return view('member-portal.post', compact('project','blog','post','author'));
                         }
                         return view('member-portal.post-otp-gated', compact('project','blog','post','author'));
@@ -714,7 +714,7 @@ class MemberAreaController extends Controller
 
     public function orderPost(Request $request)
     {
-        
+
     }
 
     public function orderPostWithAuth(Request $request)
