@@ -229,7 +229,38 @@
                     dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                     placeholder="0.00">
                 </div>
-                <div class="mt-2" v-if="postModel.postPaymentSettings=='subscription'">
+                <div class="mt-4" v-if="postModel.postPaymentSettings=='subscription'">
+                    <label for="content-preview" class="block mb-2 text-sm 
+                    font-normal text-gray-900 dark:text-white">
+                        Choose plan that have access to this post
+                    </label>
+                    <div class="mb-6 mt-4" v-if="plans.data.length">
+                        <ul class="w-48 text-sm font-medium text-gray-900 bg-white 
+                        border border-gray-200 rounded-lg dark:bg-gray-700 
+                        dark:border-gray-600 dark:text-white">
+                            <li v-for="item in plans.data" :key="item.id"
+                                class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                                <div class="flex items-center pl-3">
+                                    <input :id="'checkbox-'+item.id" type="checkbox" 
+                                        :value="item.id" v-model="postModel.plans"
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 
+                                        border-gray-300 rounded focus:ring-blue-500 
+                                        dark:focus:ring-blue-600 dark:ring-offset-gray-700 
+                                        dark:focus:ring-offset-gray-700 focus:ring-2 
+                                        dark:bg-gray-600 dark:border-gray-500">
+                                    <label :for="'checkbox-'+item.id" 
+                                        class="w-full py-3 ml-2 text-sm 
+                                        font-medium text-gray-900 
+                                        dark:text-gray-300">
+                                        {{ item.title }}
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mb-6 mt-3 font-medium text-sm" v-else>
+                        <em>No plan available</em>
+                    </div>
                     <label for="content-preview" class="block mb-2 text-sm 
                     font-normal text-gray-900 dark:text-white">
                         Show a preview of this content for non subscribers.
@@ -271,6 +302,7 @@ const route = useRoute();
 const projectInfo = computed(() => project.state.projects)
 const products = computed(() => productStore.state.products)
 const post = computed(() => memberStore.state.post)
+const plans = computed(() => memberStore.state.plans)
 
 let isDisabled = ref(false)
 let openTab = ref(1)
@@ -290,7 +322,7 @@ let postModel = ref({
     postPaymentSettings: 'free',
     otp: '',
     contentPreview: 'no_preview',
-    plans: '',
+    plans: [],
     publishedStatus: 'Draft',
     catCheck: [],
 });
@@ -301,7 +333,7 @@ let catSearch = ref({
 
 watch(post, (newVal, oldVal) => {
     postModel.value = newVal.data
-    postModel.value.catCheck = []
+    postModel.value.catCheck = newVal.data.categories
 })
 
 watch(() => postModel.value.publishedDate, (newVal, oldVal) => {
@@ -351,7 +383,7 @@ function updatePost() {
             postPaymentSettings: postModel.value.postPaymentSettings,
             otp: postModel.value.otp,
             contentPreview: postModel.value.contentPreview,
-            plans: postModel.value.plans,
+            plans: JSON.stringify(postModel.value.plans),
             publishedStatus: postModel.value.publishedStatus
         })
         .then((res) => {
@@ -423,6 +455,7 @@ function dformat(date) {
 onMounted(() => {
     project.dispatch('getProjectInfo', route.params.id)
     memberStore.dispatch('getPost', route.query.pid)
+    memberStore.dispatch('getPlans', route.params.id)
     productStore.dispatch('getProducts', route.params.id)
 })
 </script>

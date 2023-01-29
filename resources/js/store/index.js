@@ -53,8 +53,9 @@ const store = createStore({
         },
         logout({ commit }) {
             return axiosClient.post('/logout')
-                .then(({response}) => {
+                .then(response => {
                     commit('logout')
+                    localStorage.clear();
                     return response;
                 })
         },
@@ -113,9 +114,9 @@ const store = createStore({
             state.user.data = userData.user
             localStorage.setItem('userInfo', JSON.stringify(userData.user));
         },
-        logout: (state, userInfo) => {
-            state.user = null;
-            localStorage.clear();
+        logout: state => {
+            state.user.data = {};
+            state.user.token = null;
         },
         setCountries: (state, data) => {
             state.countries = data;

@@ -52,7 +52,7 @@
                             <input id="top-logo"
                                 type="file"
                                 class="hidden"
-                                accept="image/jpeg, image/png"
+                                accept="image/jpeg, image/png, image/gif"
                                 @change="uploadFile($event, 'logo')"
                             />
                         </label>

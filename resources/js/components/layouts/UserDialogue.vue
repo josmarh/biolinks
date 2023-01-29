@@ -39,6 +39,15 @@
                     </router-link>
                 </MenuItem>
                 <MenuItem v-slot="{active}">
+                    <router-link :to="{name: 'Tutorials'}"
+                        :class="{'bg-gray-100': active}" 
+                        class="block py-2 px-4 text-sm text-gray-700 
+                        cursor-pointer inline-flex w-full">
+                        <font-awesome-icon icon="fa-solid fa-person-chalkboard" class="h-4 w-4 mr-2 mt-0.5" />
+                        Tutorials
+                    </router-link>
+                </MenuItem>
+                <MenuItem v-slot="{active}">
                     <router-link :to="{name: 'Account'}"
                         :class="{'bg-gray-100': active}" 
                         class="block py-2 px-4 text-sm text-gray-700 
@@ -46,6 +55,16 @@
                         <font-awesome-icon icon="fa-solid fa-user" class="h-4 w-4 mr-2 mt-0.5" />
                         Account
                     </router-link>
+                </MenuItem>
+                <MenuItem v-slot="{active}">
+                    <a href="https://supremewebcustomercare.freshdesk.com" target="_blank"
+                        :class="{'bg-gray-100': active}" 
+                        class="block py-2 px-4 text-sm text-gray-700 
+                        cursor-pointer inline-flex w-full">
+                        <font-awesome-icon icon="fa-solid fa-user-check"
+                                class="mr-2" />
+                        Support
+                    </a>
                 </MenuItem>
                 <MenuItem v-slot="{active}">
                     <a @click="logout" 
@@ -68,13 +87,15 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { notify } from 'notiwind'
 import store from '../../store'
 
-const router = useRouter()
+const router = useRouter();
 let userSurffix = store.state.user.data.name.split('')[0];
 
 function logout() {
     store.dispatch('logout')
         .then((res) => {
-            router.push({name: 'Login'});
+            router.push({
+                name: 'Login'
+            });
         })
         .catch((err) => {
             if(err.response) {

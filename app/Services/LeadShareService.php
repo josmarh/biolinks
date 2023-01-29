@@ -7,6 +7,69 @@ use Log;
 
 trait LeadShareService
 {
+    protected function shareWithESP($esp, $email, $name=null)
+    {
+        // mailchimp
+        $mailchimp = json_decode($esp->mailchimp);
+        if($mailchimp->apikey && $mailchimp->listid) {
+            $mailchimp = [
+                'name' => $name,
+                'email' => $email,
+                'mailchimpKey' => $mailchimp->apikey,
+                'mailchimpList' => $mailchimp->listid
+            ];
+            $this->shareWithMailchimp($mailchimp);
+        }
+
+        // getresponse
+        $getresponse = json_decode($esp->getresponse);
+        if($getresponse->apikey && $getresponse->campaignId) {
+            $getresponse = [
+                'name' => $name,
+                'email' => $email,
+                'apiKey' => $getresponse->apikey,
+                'campaignId' => $getresponse->campaignId
+            ];
+            $this->shareWithGetresponse($getresponse);
+        }
+
+        // emailoctopus
+        $emailoctopus = json_decode($esp->emailoctopus);
+        if($emailoctopus->apikey && $emailoctopus->listid) {
+            $emailoctopus = [
+                'name' => $name,
+                'email' => $email,
+                'apiKey' => $emailoctopus->apikey,
+                'listId' => $emailoctopus->listid
+            ];
+            $this->shareWithEmailOctopus($emailoctopus);
+        }
+
+        // converterkit
+        $converterkit = json_decode($esp->converterkit);
+        if($converterkit->apikey && $converterkit->formId) {
+            $converterkit = [
+                'name' => $name,
+                'email' => $email,
+                'apiKey' => $converterkit->apikey,
+                'formId' => $converterkit->formId
+            ];
+            $this->shareWithConverterKit($converterkit);
+        }
+
+        // mailerlite
+        $mailerlite = json_decode($esp->mailerlite);
+        if($mailerlite->apikey && $mailerlite->groupId) {
+            $mailerlite = [
+                'name' => $name,
+                'email' => $email,
+                'apiKey' => $mailerlite->apikey,
+                'groupId' => $mailerlite->groupId
+            ];
+            $this->shareWithMailerLite($mailerlite);
+        }
+    }
+
     protected function shareWithMailchimp($data)
     {
         $explode = explode('-', $data['mailchimpKey']);

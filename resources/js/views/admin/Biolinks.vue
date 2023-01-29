@@ -51,7 +51,7 @@
                             {{item.status}}
                         </td>
                         <td class="px-6 py-4">
-                            {{item.associateProject.name}}
+                            {{item.associateProject ? item.associateProject.name : ''}}
                         </td>
                         <td class="px-6 py-4">
                             {{item.createdAt}}

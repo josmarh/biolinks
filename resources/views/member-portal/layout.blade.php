@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>BioLink</title>
+        <title>{{$blog->title}}</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500&family=Inconsolata&family=Lato&family=Karla&family=Montserrat&display=swap" rel="stylesheet">
@@ -57,7 +57,7 @@
             </a>
             @endif
             @if($settings->showSubLoginBar =='yes')
-            <div class="flex gap-2 md:justify-end justify-center mb-4">
+            <div class="flex gap-4 md:justify-end justify-center mb-4">
                 @if(!auth()->guard('subscriber')->check())
                     <a href="{{route('member-register', strtolower($project->name))}}" 
                     class="text-white bg-blue-500 hover:bg-blue-800 
@@ -78,6 +78,15 @@
                         Login
                     </a>
                 @elseif(auth()->guard('subscriber')->check())
+                    <a href="{{route('member-register', strtolower($project->name))}}" 
+                    class="text-white bg-blue-500 hover:bg-blue-800 
+                    focus:ring-0 focus:ring-blue-300 font-medium 
+                    text-sm px-5 py-3 mb-2 dark:bg-blue-600 
+                    dark:hover:bg-blue-700 focus:outline-none 
+                    dark:focus:ring-blue-800"
+                    style="background-color: {{$blog->button_color}}">
+                        Subscribed
+                    </a>
                     <!-- Profile dropdown -->
                     <button id="dropdownDefaultButton" 
                     data-dropdown-toggle="dropdown" 
@@ -85,7 +94,7 @@
                     focus:ring-0 focus:outline-none focus:ring-blue-300 
                     font-medium rounded-full text-sm px-2.5 py-2.5 text-center 
                     inline-flex items-center dark:bg-blue-600" type="button">
-                    <i class="fa fa-circle-user w-6 h-6"></i>
+                    <i class="fa fa-circle-user w-8 h-6"></i>
                     </button>
                     <!-- Dropdown menu -->
                     <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
@@ -117,10 +126,10 @@
                                     Past Orders
                                 </a>
                             </li> -->
-                            <li >
-                                <form action="{{route('member-logout', $project->name)}}" method="post">
+                            <li>
+                                <form action="{{route('member-logout', strtolower($project->name))}}" method="post">
                                     @csrf
-                                    <button class="block px-4 py-2 hover:bg-gray-100 text-start w-full">
+                                    <button type="submit" class="block px-4 py-2 hover:bg-gray-100 text-start w-full">
                                         Logout
                                     </button>
                                 </form>

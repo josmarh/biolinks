@@ -18,6 +18,8 @@
         style="color: {{$blog->headline_color}}">
             {{ $post->title }}
         </h5>
+        
+        <!-- Images/media files display -->
         @php $images = json_decode($post->images); @endphp
         @php $medias = json_decode($post->media); @endphp
         <div class="mt-6">
@@ -60,6 +62,25 @@
             </div>
             @endif
         </div>
+        
+        <!-- Categories -->
+        @php $categories = json_decode($post->categories); @endphp
+        @if(count($categories) > 0)
+        <div class="">
+            <div class="flex flex-wrap gap-1 mt-4">
+                @foreach($categories as $category)
+                <div class="mt-1">
+                    <div class="flex mb-0.5">
+                        <span class="flex bg-blue-200 text-blue-800 text-sm font-medium 
+                            mr-2 px-2.5 py-1.5 rounded dark:bg-blue-200 dark:text-blue-800">
+                            {{ $category }} &nbsp
+                        </span>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
     </div>
 </div>
 @endsection

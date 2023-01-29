@@ -61,7 +61,7 @@
         </a>
         @endif
         @if($socials->tiktok)
-        <a href="https://tiktok.com/{{$socials->tiktok}}" target="_blank">
+        <a href="https://tiktok.com/{{'@'.$socials->tiktok}}" target="_blank">
             <svg role="img" viewBox="0 0 24 24" class="mt-0.5 w-8 h-8" 
                 xmlns="http://www.w3.org/2000/svg" fill="{{$socials->buttonColor}}">
                 <title>TikTok</title>

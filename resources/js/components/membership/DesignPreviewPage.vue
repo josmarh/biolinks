@@ -123,7 +123,7 @@
                         </a>
                         <div class="p-5">
                             <a href="javascript:void(0)">
-                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                                <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
                                 :style="{color: data.headlineColor}">
                                     {{ item.title }}
                                 </h5>
@@ -142,7 +142,7 @@
                         </a>
                         <div class="p-5">
                             <a href="javascript:void(0)">
-                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                                <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
                                 :style="{color: data.headlineColor}">
                                     Your post title
                                 </h5>
@@ -170,13 +170,13 @@
                         </a>
                         <div class="p-5">
                             <a href="javascript:void(0)">
-                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                                <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
                                 :style="{color: data.headlineColor}">
                                     {{ item.title }}
                                 </h5>
                             </a>
                             <div class="mb-3 font-normal text-gray-700 dark:text-gray-400 truncate"
-                            :style="{color: data.textColor}" v-html="item.post"></div>
+                            :style="{color: data.textColor}" v-html="item.post.substring(0, 30) + '...'"></div>
                         </div>
                     </div>
                 </div>
@@ -189,7 +189,7 @@
                         </a>
                         <div class="p-5">
                             <a href="javascript:void(0)">
-                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                                <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
                                 :style="{color: data.headlineColor}">
                                     Your post title
                                 </h5>

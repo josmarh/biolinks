@@ -34,7 +34,7 @@
                                 price/product options
                             </span>
                             <p class="mt-2 text-sm">
-                                Set pricing, variants, stock, shipping, and download files.
+                                Set pricing and download files.
                             </p>
                         </a>
                     </li>

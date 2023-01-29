@@ -25,7 +25,7 @@
                     md:font-medium md:border-0 md:bg-white 
                     dark:bg-gray-800 md:dark:bg-gray-900 
                     dark:border-gray-700">
-                    <li class="hidden">
+                    <li v-if="permissions.includes('Dashboard')">
                         <router-link :to="{name: 'Dashboard'}" 
                             :class="[$route.name == 'Dashboard'
                             ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
@@ -35,10 +35,57 @@
                             Dashboard
                         </router-link>
                     </li>
-                    <!-- <li>
-                        <a href="#" class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Tools</a>
-                    </li> -->
-                    <li class="hidden">
+                    <li v-if="permissions.includes('DFY Bio Link Agency Menu')">
+                        <router-link :to="{name: 'DfyBiolinkAgency'}" 
+                            :class="[$route.name == 'DfyBiolinkAgency'
+                            ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
+                            : '',
+                            'block py-2 pl-3 pr-4 md:p-0 dark:text-white']" 
+                            aria-current="page">
+                            BioLink Agency
+                        </router-link>
+                    </li>
+                    <li v-if="permissions.includes('DFY Profit Campaigns Menu')">
+                        <router-link :to="{name: 'DfyProfitCampaign'}" 
+                            :class="[$route.name == 'DfyProfitCampaign'
+                            ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
+                            : '',
+                            'block py-2 pl-3 pr-4 md:p-0 dark:text-white']" 
+                            aria-current="page">
+                            DFY Profit Campaigns
+                        </router-link>
+                    </li>
+                    <li v-if="permissions.includes('DFY Reputation Management Agency Menu')">
+                        <router-link :to="{name: 'DfyReputationAgency'}" 
+                            :class="[$route.name == 'DfyReputationAgency'
+                            ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
+                            : '',
+                            'block py-2 pl-3 pr-4 md:p-0 dark:text-white']" 
+                            aria-current="page">
+                            Reputation Agency
+                        </router-link>
+                    </li>
+                    <li v-if="permissions.includes('DFY Augmented Reality Agency Menu')">
+                        <router-link :to="{name: 'DfyAugmentsuite'}" 
+                            :class="[$route.name == 'DfyAugmentsuite'
+                            ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
+                            : '',
+                            'block py-2 pl-3 pr-4 md:p-0 dark:text-white']" 
+                            aria-current="page">
+                            AR Agency
+                        </router-link>
+                    </li>
+                    <li v-if="permissions.includes('Affiliate Marketing Masterclass Menu')">
+                        <router-link :to="{name: 'DfyAffiliateMaster'}" 
+                            :class="[$route.name == 'DfyAffiliateMaster'
+                            ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
+                            : '',
+                            'block py-2 pl-3 pr-4 md:p-0 dark:text-white']" 
+                            aria-current="page">
+                            Affiliate MasterClass
+                        </router-link>
+                    </li>
+                    <li v-if="permissions.includes('Admin Menu')">
                         <router-link :to="{name: 'Users'}" 
                             :class="[$route.name == 'Users'
                             ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
@@ -48,7 +95,7 @@
                             Admin
                         </router-link>
                     </li>
-                    <li class="hidden">
+                    <li v-if="permissions.includes('Reseller Menu')">
                         <router-link :to="{name: 'Reseller'}" 
                             :class="[$route.name == 'Reseller'
                             ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700' 
@@ -66,8 +113,12 @@
 </template>
 
 <script setup>
+import {computed} from 'vue'
 import UserDialogue from './UserDialogue.vue'
 import AppLogo from '../AppLogo.vue'
+import store from '../../store'
+
+const permissions = computed(() => store.state.user.permissions)
 </script>
 
 <style>

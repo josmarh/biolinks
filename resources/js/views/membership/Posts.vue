@@ -90,6 +90,7 @@ function newPost() {
             publishedDate: postData.publishedDate,
             author: postData.author,
             categories: JSON.stringify(postData.categories),
+            plans: JSON.stringify(postData.plans),
             postPaymentSettings: postData.postPaymentSettings,
             publishedStatus: 'Draft'
         })
