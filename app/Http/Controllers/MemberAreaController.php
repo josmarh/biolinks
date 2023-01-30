@@ -25,6 +25,10 @@ use Log;
 
 class MemberAreaController extends Controller
 {
+    protected $plan_name;
+    const PLAN_SUCCESS_MESSAGE = 'You have successfully subscribe to this plan. Thank you.';
+    const PAID_POST_SUCCESS_MESSAGE = 'You have successfully paid for this blog post. Thank you.';
+
     public function index($projectName, $routeName)
     {
         $project = Project::where('name', $projectName)->first();
@@ -677,7 +681,7 @@ class MemberAreaController extends Controller
                 ]);
             }
             
-            $message = $payment['message'] . ' You have successfully subscribe to plan '. $data['plan_name'].', thank you.';
+            $message = $payment['message'] . ' You have successfully subscribe to this plan '. $data['plan_name'].', thank you.';
 
             // send mail for completed purchased
             $order = [
@@ -714,11 +718,362 @@ class MemberAreaController extends Controller
 
     public function orderPost(Request $request)
     {
+        $data = $request->validate([
+            'product_payType' => 'required',
+            'product_amount' => 'required',
+            'email' => 'required|email|string|unique:bl_subscribers,email',
+            'password' => 'required',
+            'product_id' => 'required',
+            'product_source' => 'required',
+        ]);
+        $data['amount'] = $data['product_amount'];
 
+        // create customer account
+        $customer = Subscriber::create([
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'active' => 1,
+        ]);
+
+        if($data['product_payType'] == 'card') {
+            $request->validate([
+                'cardNumber' => 'required',
+                'cvv'       => 'required',
+                'month'     => 'required',
+                'year'      =>  'required',
+            ]);
+            $data['cardNumber'] = $request->cardNumber;
+            $data['cvv'] = $request->cvv;
+            $data['month'] = $request->month;
+            $data['year'] = $request->year;
+
+        }
+
+        $productType = 'Blog Post';
+        $data['description'] = $request->description . ' ('.$productType.')';
+        $project = Project::where('name', $request->project_name)->with('user')->first();
+        $getPaymentProviderKey = PaymentIntegration::where('project_id', $project->custom_id)->first();
+
+        if($data['product_payType'] == 'card') {
+            if(!$getPaymentProviderKey->stripe_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+ 
+            $stripe = new StripePayment($getPaymentProviderKey->stripe_secret);
+
+            $payment = $stripe->payment($data);
+        }else {
+            if(!$getPaymentProviderKey->paypal_client && !$getPaymentProviderKey->paypal_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+
+            $paypal = new PaypalPayment($getPaymentProviderKey->paypal_client, $getPaymentProviderKey->paypal_secret);
+
+            $forPaypal = [
+                'sectionid'     => $request->sectionId,
+                'linkid'        => $request->linkId,
+                'projectid'     => $project->custom_id,
+                'description'   => $request->description,
+                'projectlinkid' => $request->projectlinkid,
+                'paymentFor'    => $productType,
+                'userEmail'     => $data['email'],
+                'productId'     => $data['product_id'],
+                'productSource' => $data['product_source'],
+                'requestMessage'=> null,
+                'paymentFrom'   => 'member-area',
+                'projectName'   => strtolower($request->project_name), 
+                'blogPath'      => $request->blog_path,
+                'projectOwner'  => $project->user->name,
+                'successMessage' => self::PAID_POST_SUCCESS_MESSAGE
+            ];
+
+            // save card details
+            CustomerPaymentMethod::create([
+                'user_id' => $customer->id
+            ]);
+
+            Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(10));
+
+            $payment = $paypal->pay($data);
+
+            return back()->with('error', $payment);
+        }
+
+        if($payment['message'] == 'Payment completed.') {            
+            // add to orders
+            $order = Order::create([
+                'email'         => $data['email'],
+                'order_type'    => $productType,
+                'fulfilled'     => 'Digital',
+                'status'        => 'success', 
+                'description'   => $request->description,
+                'link_id'       => $request->linkId,
+                'section_id'    => $request->sectionId,
+                'project_id'    => $project->custom_id,
+                'total'         => $data['amount'],
+                'product_id'    => $data['product_id'],
+                'product_source' => $data['product_source'],
+            ]);
+            // add to transaction
+            Transaction::create([
+                'link_id'       => $request->linkId,
+                'project_id'    => $project->custom_id,
+                'section_id'    => $request->sectionId,
+                'order_id'      => $order->id,
+                'order_type'    => $productType, // donation, product, request
+                'fulfilled'     => 'Digital',
+                'status'        => 'success', // successful
+                'description'   => $request->description, // title of sale link
+                'amount'        => $data['amount'],
+                'transaction_type' => 'Sale', // Sale, refund
+                'payment_type'  => 'card', // card || paypal
+                'pg_tranx_id'   => $payment['balance_transaction'],
+                'payment_id'    => $payment['id'],
+            ]);
+
+            // save card details
+            CustomerPaymentMethod::create([
+                'user_id' => $customer->id,
+                'card_number' => $data['cardNumber'],
+                'card_month' => $data['month'],
+                'card_year' => $data['year'],
+                'card_cvv' => $data['cvv']
+            ]);
+
+            // add to customer leads
+            CustomerLead::create([
+                'email' => $data['email'],
+                'name' => '',
+                'status' => 'Paying Customer',
+                'orders' => 1,
+                'lifetime_value' => $data['amount'],
+                'project_id' => $project->custom_id
+            ]);
+
+            $message = $payment['message'] . self::PAID_POST_SUCCESS_MESSAGE;
+
+            // send mail for completed purchased
+            $order = [
+                'email' => $request->email,
+                'productType' => $data['product_source'],
+                'productName' => $request->description,
+                'price' => $data['amount'],
+                'projectName' => strtolower($request->project_name),
+                'projectOwner' => $project->user->name
+            ];
+            dispatch(new OrderJob($order))->delay(3);
+
+        }else if($payment['message'] == 'Payment failed.') {
+            Transaction::create([
+                'link_id'       => $request->linkId,
+                'project_id'    => $project->custom_id,
+                'section_id'    => $request->sectionId,
+                'order_type'    => $productType, // donation, product, request
+                'fulfilled'     => 'Digital',
+                'status'        => 'failed', // successful
+                'description'   => $request->description, // title of sale link
+                'amount'        => $data['amount'],
+                'transaction_type' => 'Sale', // Sale, refund
+                'payment_type'  => 'card', // card || paypal
+                'pg_tranx_id'   => $payment['balance_transaction'],
+                'payment_id'    => $payment['id'],
+            ]);
+
+            return back()->with('error', $payment['message']);
+        }
+
+        if(Auth::guard('subscriber')->attempt(['email' => $data['email'], 'password' => $data['password']])) {
+            return back()->with('success', $message);
+        }
+
+        return back()->with('success', $message);
     }
 
     public function orderPostWithAuth(Request $request)
     {
-        
+        $data = $request->validate([
+            'product_payType' => 'required',
+            'product_amount' => 'required',
+            'product_id' => 'required',
+            'product_source' => 'required',
+        ]);
+        $data['amount'] = $data['product_amount'];
+
+        if(!Auth::guard('subscriber')->check()) {
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required'
+            ]);
+            $data['email'] = $request->email;
+            $data['password'] = $request->password;
+            
+            if(!Auth::guard('subscriber')->attempt(['email' => $data['email'], 'password' => $data['password']])) {
+                return back()->withInput($request->only('email', 'remember'))->with('error', 'Login failed');
+            }
+        }
+
+        $productType = 'Blog Post';
+        $data['email'] = Auth::guard('subscriber')->user()->email;
+        $data['description'] = $request->description . ' ('.$productType.')';
+        $project = Project::where('name', $request->project_name)->with('user')->first();
+        $getPaymentProviderKey = PaymentIntegration::where('project_id', $project->custom_id)->first();
+
+        if($data['product_payType'] == 'card') {
+            if(!$getPaymentProviderKey->stripe_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+ 
+            $stripe = new StripePayment($getPaymentProviderKey->stripe_secret);
+
+            if(!$request->cardNumber) {
+                $customer = Subscriber::where('email', $data['email'])->first();
+                $isPaySet = CustomerPaymentMethod::where('user_id', $customer->id)->first();
+
+                if(!$isPaySet->card_number || !$isPaySet->card_month || !$isPaySet->card_year || !$isPaySet->card_cvv) {
+
+                    return back()->with('error', 'No card saved. Please add card details.');
+                }else {
+                    $data['cardNumber'] = $isPaySet->card_number;
+                    $data['cvv'] = $isPaySet->card_cvv;
+                    $data['month'] = $isPaySet->card_month;
+                    $data['year'] = $isPaySet->card_year;
+
+                    $payment = $stripe->payment($data);
+                }
+            }else {
+                // if $request comes with card 
+                $data['cardNumber'] = $request->cardNumber;
+                $data['cvv'] = $request->cvv;
+                $data['month'] = $request->month;
+                $data['year'] = $request->year;
+
+                // save card details
+                $user = auth()->guard('subscriber')->user();
+                CustomerPaymentMethod::where('user_id', $user->id)
+                    ->update(['card_number' => $data['cardNumber'],
+                        'card_month' => $data['month'],
+                        'card_year' => $data['year'],
+                        'card_cvv' => $data['cvv']
+                    ]);
+
+                $payment = $stripe->payment($data);
+            }
+        }else {
+            if(!$getPaymentProviderKey->paypal_client && !$getPaymentProviderKey->paypal_secret) {
+                return back()->with('error', 'Provider payment gateway is not set.');
+            }
+
+            $paypal = new PaypalPayment($getPaymentProviderKey->paypal_client, $getPaymentProviderKey->paypal_secret);
+            
+            $forPaypal = [
+                'sectionid'     => $request->sectionId,
+                'linkid'        => $request->linkId,
+                'projectid'     => $project->custom_id,
+                'description'   => $request->description,
+                'projectlinkid' => $request->projectlinkid,
+                'paymentFor'    => $productType,
+                'userEmail'     => $data['email'],
+                'requestMessage' => null,
+                'productId'     => $data['product_id'],
+                'productSource' => $data['product_source'],
+                'paymentFrom'   => 'member-area',
+                'projectName'   => strtolower($request->project_name), 
+                'blogPath'      => $request->blog_path,
+                'projectOwner' => $project->user->name,
+                'successMessage' => self::PAID_POST_SUCCESS_MESSAGE
+            ];
+
+            Cache::put(session()->getId(), json_encode($forPaypal), now()->addMinutes(10));
+
+            $payment = $paypal->pay($data);
+
+            return back()->with('error', $payment);
+        }
+
+        if($payment['message'] == 'Payment completed.') {            
+            // add to orders
+            $order = Order::create([
+                'email'         => $data['email'],
+                'order_type'    => $productType,
+                'fulfilled'     => 'Digital',
+                'status'        => 'success', 
+                'description'   => $request->description,
+                'link_id'       => $request->linkId,
+                'section_id'    => $request->sectionId,
+                'project_id'    => $project->custom_id,
+                'total'         => $data['amount'],
+                'product_id'    => $data['product_id'],
+                'product_source' => $data['product_source'],
+            ]);
+            // add to transaction
+            Transaction::create([
+                'link_id' => $request->linkId,
+                'project_id' => $project->custom_id,
+                'section_id' => $request->sectionId,
+                'order_id' => $order->id,
+                'order_type' => $productType, // donation, product, request
+                'fulfilled' => 'Digital',
+                'status' => 'success', // successful
+                'description' => $request->description, // title of sale link
+                'amount' => $data['amount'],
+                'transaction_type' => 'Sale', // Sale, refund
+                'payment_type' => 'card', // card || paypal
+                'pg_tranx_id' => $payment['balance_transaction'],
+                'payment_id' => $payment['id'],
+            ]);
+
+            // update/create to customer leads
+            $customer = CustomerLead::where('email', $data['email'])
+                ->where('project_id', $project->custom_id)
+                ->first();
+            if($customer) {
+                $customer->update([
+                    'orders' => $customer->orders + 1,
+                    'lifetime_value' => $customer->lifetime_value + $data['amount'],
+                ]);
+            }else {
+                CustomerLead::create([
+                    'email' => $data['email'],
+                    'name' => '',
+                    'status' => 'Paying Customer',
+                    'orders' => 1,
+                    'lifetime_value' => $data['amount'],
+                    'project_id' => $project->custom_id
+                ]);
+            }
+
+            $message = self::PAID_POST_SUCCESS_MESSAGE;
+
+            // send mail for completed purchased
+            $order = [
+                'email' => $data['email'],
+                'productType' => $data['product_source'],
+                'productName' => $request->description,
+                'price' => $data['amount'],
+                'projectName' => strtolower($project->name),
+                'projectOwner' => $project->user->name
+            ];
+            dispatch(new OrderJob($order))->delay(3);
+
+        }else if($payment['message'] == 'Payment failed.') {
+            Transaction::create([
+                'link_id' => $$request->linkId,
+                'project_id' => $project->custom_id,
+                'section_id' => $request->sectionId,
+                'order_type' => $productType, // donation, product, request
+                'fulfilled' => 'Digital',
+                'status' => 'failed', // successful
+                'description' => $request->description, // title of sale link
+                'amount' => $data['amount'],
+                'transaction_type' => 'Sale', // Sale, refund
+                'payment_type' => 'card', // card || paypal
+                'pg_tranx_id' => $payment['balance_transaction'],
+                'payment_id' => $payment['id'],
+            ]);
+            
+            return back()->with('error', $payment['message']);
+        }
+
+        return back()->with('success', $message);
     }
 }

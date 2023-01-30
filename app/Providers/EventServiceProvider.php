@@ -10,10 +10,14 @@ use Illuminate\Support\Facades\Event;
 use App\Models\ProjectLink;
 use App\Models\BiolinkSectionSetting;
 use App\Models\Project;
+use App\Models\CustomerLead;
+use App\Models\Subscriber;
 
 use App\Observers\ProjectLinkObserver;
 use App\Observers\BiolinkSectionSettingObserver;
 use App\Observers\ProjectObserver;
+use App\Observers\CustomerLeadObserver;
+use App\Observers\SubscriberObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -51,6 +55,8 @@ class EventServiceProvider extends ServiceProvider
         ProjectLink::observe(ProjectLinkObserver::class);
         BiolinkSectionSetting::observe(BiolinkSectionSettingObserver::class);
         Project::observe(ProjectObserver::class);
+        CustomerLead::observe(CustomerLeadObserver::class);
+        Subscriber::observe(SubscriberObserver::class);
     }
 
     /**

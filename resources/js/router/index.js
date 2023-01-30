@@ -48,6 +48,8 @@ import DfyReputationAgency from '../views/dfy/DfyReputationAgency.vue'
 import DfyAugmentsuite from '../views/dfy/DfyAugmentsuite.vue'
 import DfyAffiliateMaster from '../views/dfy/DfyAffiliateMaster.vue'
 import Tutorials from '../views/Tutorials.vue'
+import FindLeads from '../views/leads/findleads.vue'
+import MyLeads from '../views/leads/myleads.vue'
 
 const routes = [
     {
@@ -78,6 +80,8 @@ const routes = [
             {path: '/dfy/ar-agency', name: 'DfyAugmentsuite', component: DfyAugmentsuite},
             {path: '/dfy/affiliate-master-class', name: 'DfyAffiliateMaster', component: DfyAffiliateMaster},
             {path: '/tutorials', name: 'Tutorials', component: Tutorials},
+            {path: '/findleads', name: 'FindLeads', component: FindLeads},
+            {path: '/myleads', name: 'MyLeads', component: MyLeads},
         ]
     },
     {
