@@ -112,9 +112,13 @@ class ProductController extends Controller
         }
 
         foreach($files as $file) {
-            if(str_contains($file, 'base64')) {
-                $relativePath = $this->saveFile('product-files', $file);
-                array_push($newFileList, $relativePath);
+            if(str_contains($file->file, 'base64')) {
+                $relativePath = $this->saveFile('product-files', $file->file);
+                array_push($newFileList, (object)[
+                    'name' => $file->name, 
+                    'file' => $relativePath,
+                    'type' => $file->type,
+                ]);
             }else {
                 array_push($newFileList, $file);
             }

@@ -174,18 +174,22 @@ class MemberAreaController extends Controller
         // get products, plans
         $product = []; 
         $plan = [];
+        $post = [];
         foreach($orders as $order) {
             if($order->product_source == 'simple_product') {
                 array_push($product, $order->product_id);
             }elseif($order->product_source == 'member_product') {
                 array_push($plan, $order->product_id);
+            }else if($order->product_source == 'member_post') {
+                array_push($post, $order->product_id);
             }
         }
 
-        $plans = [];
         if(count($product)>0) {
             $product = Product::whereIn('id', $product)->get();
         }
+        
+        $plans = [];
         if(count($plan)>0) {
             $plan = Plan::whereIn('id', $plan)->get();
             foreach ($plan as $membership) {
@@ -200,7 +204,21 @@ class MemberAreaController extends Controller
             }
         }
 
-        return view('member-portal.library', compact('project','blog','plans','product'));
+        $posts = [];
+        if(count($post)>0) {
+            $post = Post::whereIn('id', $post)->get();
+            foreach($post as $paidPost) {
+                $project = Project::where('custom_id', $paidPost->project_id)->first();
+                array_push($posts, (object)[
+                    'projectName' => strtolower($project->name),
+                    'slug' => $paidPost->slug,
+                    'postTitle' => $paidPost->title,
+                    'thumbnail' => count(json_decode($paidPost->images)) > 0 ? json_decode($paidPost->images)[0] : null
+                ]);
+            }
+        }
+
+        return view('member-portal.library', compact('project','blog','plans','product','posts'));
     }
 
     public function account($projectName)
@@ -273,15 +291,23 @@ class MemberAreaController extends Controller
     public function post($projectName, $slug)
     {
         $project = Project::where('name', $projectName)->first();
-        $blog = MembershipBlog::where('project_id', $project->custom_id)->first();
+
+        if(!$project) {
+            return view('errors.404');
+        }
+
         $post = Post::where('project_id', $project->custom_id)
             ->where('slug', $slug)
             ->first();
-        $author = Subscriber::find($post->author);
 
         if(!$post) {
             return view('errors.404');
         }
+
+        $blog = MembershipBlog::where('project_id', $project->custom_id)->first();
+        $author = Subscriber::find($post->author);
+        $productsId = json_decode($post->products);
+        $products = Product::whereIn('id', $productsId)->where('published_status','Published')->get();
 
         // validate publish date and gated post
         if(!$post->published_date 
@@ -289,7 +315,7 @@ class MemberAreaController extends Controller
         && date('Y-m-d') >= \Carbon\Carbon::create($post->published_date)->toDateString()) {
             if($post->payment_setting == 'free') {
 
-                return view('member-portal.post', compact('project','blog','post','author'));
+                return view('member-portal.post', compact('project','blog','post','author','products'));
 
             }else if($post->payment_setting == 'subscription') {
                 if(Auth::guard('subscriber')->check()) {
@@ -313,7 +339,7 @@ class MemberAreaController extends Controller
                             }
                         }
                         if($planCheckCounter == 1) {
-                            return view('member-portal.post', compact('project','blog','post','author'));
+                            return view('member-portal.post', compact('project','blog','post','author','products'));
                         }
                         return view('member-portal.post-subscriber-gated', compact('project','blog','post','author'));
                     }
@@ -340,7 +366,7 @@ class MemberAreaController extends Controller
                             }
                         }
                         if($postCheckCounter == 1) {
-                            return view('member-portal.post', compact('project','blog','post','author'));
+                            return view('member-portal.post', compact('project','blog','post','author','products'));
                         }
                         return view('member-portal.post-otp-gated', compact('project','blog','post','author'));
                     }
@@ -1075,5 +1101,17 @@ class MemberAreaController extends Controller
         }
 
         return back()->with('success', $message);
+    }
+
+    public function productFileDownload(Request $request)
+    {
+        $myFile = public_path($request->file);
+
+        $headers = ['Content-Type: ' . $request->type];
+
+        $newName = explode('/',$request->file)[1];
+
+
+        return response()->download($myFile, $newName, $headers);
     }
 }

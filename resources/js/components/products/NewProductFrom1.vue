@@ -87,10 +87,10 @@
                                 <template #item="{element, index}">
                                     <div >
                                         <div class="flex items-center">
-                                            <img v-if="!element.includes('default')"
+                                            <img v-if="!element.includes('product-images')"
                                                 :src="element" class="w-36 h-32 object-cover image"/>
                                             <img v-else 
-                                                :src="`${host}${element}`" 
+                                                :src="`${helper.applink}${element}`" 
                                                 class="w-36 h-32 object-cover image"/>
                                         </div>
                                         <button type="button" @click="removeLogo(index)"
@@ -217,6 +217,7 @@ import MoreOptions from './MoreOptions.vue'
 import Editor from '@tinymce/tinymce-vue'
 import draggable from 'vuedraggable'
 import productStore from '../../store/product-store'
+import helper from '../../helpers'
 
 const props = defineProps({
     data: Object
@@ -225,7 +226,7 @@ const emit = defineEmits(['updateModel'])
 const route = useRoute();
 const searchCatData = computed(() => productStore.state.searchCategory)
 
-let host = window.location.protocol+'//'+window.location.host
+let host = window.location.protocol+'//'+window.location.host;
 let model = ref(props.data)
 let catSearch = ref({
     projId: route.params.id,

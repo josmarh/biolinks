@@ -48,6 +48,7 @@ Route::put('/w/{projectName}/account', [MemberAreaController::class, 'updateAcco
 Route::put('/w/{projectName}/paymethod', [MemberAreaController::class, 'updatePaymethod'])->name('member-paymethod-update');
 Route::post('/w/{projectName}/order-post', [MemberAreaController::class, 'orderPost'])->name('order-post');
 Route::post('/w/{projectName}/order-post-auth', [MemberAreaController::class, 'orderPostWithAuth'])->name('order-post-auth');
+Route::post('/w/download-product', [MemberAreaController::class, 'productFileDownload'])->name('download.product');
 
 Route::post('/link-password/{settingId}', [SPAController::class, 'linkPasswordValidate'])->name('link-password.validate');
 Route::group(['prefix' => 'paypal'], function () {

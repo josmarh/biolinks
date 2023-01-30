@@ -57,9 +57,13 @@ let files = ref({
     type: 'files'
 })
 
+watch(() => props.data, (newVal, oldVal) => {
+    files.value.files = newVal
+})
+
 watch(files, (newVal, oldVal) => {
     emit('updateProduct', files.value)
-})
+}, {deep:true})
 
 function uploadFile(ev) {
     const file = ev.target.files;
@@ -83,8 +87,9 @@ function setFiles(file) {
 
                 files.value.files.push({
                     file: fileUrl,
-                    name: fileName
-                })
+                    name: fileName,
+                    type: fileType
+                });
             }
             reader.readAsDataURL(f);
         }

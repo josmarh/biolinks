@@ -117,7 +117,7 @@ class PostController extends Controller
         foreach($images as $img) {
             if(str_contains($img, 'base64')) {
                 $relativePath = $this->saveFile('post-images', $img);
-                array_push($newImgList, $img);
+                array_push($newImgList, $relativePath);
             }else {
                 array_push($newImgList, $img);
             }

@@ -66,7 +66,9 @@ class ProjectController extends Controller
     {
         $project = Project::where('custom_id', $projectId)->first();
 
-        $project->delete();
+        if($project) {
+            $project->delete();
+        }
 
         return response([
             'message' => 'Project deleted.',

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Models\Project;
 use App\Models\ProjectTeam;
 use App\Models\User;
-use App\Models\customerLead;
+use App\Models\CustomerLead;
 use App\Http\Resources\ProjectTeamResource;
 use App\Http\Resources\CustomerLeadResource;
 use Carbon\Carbon;
@@ -59,7 +59,7 @@ class ProjectTeamController extends Controller
 
     public function customerLeads($projectId)
     {
-        $customers = customerLead::where('project_id', $projectId)->paginate(15);
+        $customers = CustomerLead::where('project_id', $projectId)->paginate(15);
 
         return CustomerLeadResource::collection($customers);
     }
@@ -67,7 +67,7 @@ class ProjectTeamController extends Controller
     public function exportCustomerLeads(Request $request)
     {
         $leadIds = $request->dataExport;
-        $leads = customerLead::whereIn('id', $leadIds)->get();
+        $leads = CustomerLead::whereIn('id', $leadIds)->get();
 
         $fileName   = Carbon::now().'.csv';
         $headers = array(

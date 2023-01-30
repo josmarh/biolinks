@@ -2,7 +2,11 @@
 /public/build
 /public/hot
 /public/storage
-/public/biolink-uploads/*
+/public/biolink-uploads
+/public/post-images
+/public/post-media
+/public/product-files
+/public/product-images
 /storage/*.key
 /vendor
 .env

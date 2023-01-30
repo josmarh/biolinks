@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\File;
+use Exception;
 use Log;
 
 trait FileHandler
@@ -11,7 +12,15 @@ trait FileHandler
     {
         if (preg_match('/^data:image\/(\w+);base64,/', $file, $type)
             || preg_match('/^data:video\/(\w+);base64,/', $file, $type)
-            || preg_match('/^data:audio\/(\w+);base64,/', $file, $type)) {
+            || preg_match('/^data:audio\/(\w+);base64,/', $file, $type)
+            || preg_match('/^data:application\/(\w+);base64,/', $file, $type)
+            || preg_match('/^data:text\/(\w+);base64,/', $file, $type)
+            || preg_match('/^data:multipart\/(\w+);base64,/', $file, $type)
+            || preg_match('/^data:xgl\/(\w+);base64,/', $file, $type)
+            || preg_match('/^data:model\/(\w+);base64,/', $file, $type)
+            || preg_match('/^data:x-world\/(\w+);base64,/', $file, $type)
+            || preg_match('/^data:x-music\/(\w+);base64,/', $file, $type)
+            || preg_match('/^data:message\/(\w+);base64,/', $file, $type)) {
                 // take out the base64 encoded text without mimetype
                 $file = substr($file, strpos($file, ',') +1);
                 // get file extension 
