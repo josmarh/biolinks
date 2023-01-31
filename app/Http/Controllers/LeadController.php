@@ -44,7 +44,9 @@ class LeadController extends Controller
         //     'raduis' => 'integer|max:50000',
         // ]);
 
-        $api_key = Auth::user()->api_key ?? '';
+        $api_key = Auth::user()->key ?? '';
+
+
         if ($api_key == '') {
             return response()->json([
                                         'status' => -1,
@@ -60,23 +62,33 @@ class LeadController extends Controller
 
         $googlePlaces = new PlacesApi($api_key);
 
-        $response = $googlePlaces->textSearch($request->q, $params);
 
-        if (!isset($response['next_page_token'])) {
-            return response()->json([
-                                        'status' => -1,
-                                        'message' => "No results found for your search"
-                                    ], 200);
-        }
+
+        // $response = $googlePlaces->textSearch($request->q, $params);
+
+        // return response()->json([
+        //     'ee' => $response['next_page_token'] 
+        // ]);
+
+        return response()->json([
+            'google playces'=> $googlePlaces
+        ]);
+
+        // if (!isset($response['next_page_token'])) {
+        //     return response()->json([
+        //                                 'status' => -1,
+        //                                 'message' => "No results found for your search"
+        //                             ], 200);
+        // }
 
         // $Search = Search::create([
-        //                              'q' => $request->q,
-        //                              'latitude' => $request->latitude,
-        //                              'longitude' => $request->longitude,
-        //                              'raduis' => $request->raduis,
-        //                              'next_page_token' => $response['next_page_token'],
-        //                              'user_id' => Auth::user()->id
-        //                          ]);
+                        //      'q' => $request->q,
+                        //      'latitude' => $request->latitude,
+                        //      'longitude' => $request->longitude,
+                        //      'raduis' => $request->raduis,
+                        //      'next_page_token' => $response['next_page_token'],
+                        //      'user_id' => Auth::user()->id
+                        //  ]);
 
         // $results = $this->handleResultsSearach($Search, $api_key, $response);
 

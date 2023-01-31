@@ -98,9 +98,8 @@ const leads = createStore({
 
         searchCustomerLeads({ commit } , payload) {
 
-            return axiosClient.post(`/prospects/search`)
+            return axiosClient.post(`/prospects/search`,payload)
                 .then((data => {
-                    console.log(data);
                     return data;
                 }));
         },

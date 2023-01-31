@@ -99,13 +99,12 @@ const store = createStore({
                 })
         },
         updateKey({ commit } , key) {
-
-            
             return axiosClient.put(`/key/update`, key)
                 .then(({data}) => {
-                    console.log(data)
+                    localStorage.setItem('key' , key.key);
+                    this.state.user.data.key = key.key
                     return data;
-        })
+        });
     }
     },
     mutations: {
@@ -117,6 +116,7 @@ const store = createStore({
             localStorage.setItem('TOKEN', userData.token);
             localStorage.setItem('can', userData.permissions);
             localStorage.setItem('membership', userData.membership[0]);
+            localStorage.setItem('key' , userData.user.key);
         },
         updateProfile: (state, userData) => {
             state.user.data = userData.user
