@@ -49,6 +49,7 @@ class ProjectController extends Controller
 
         return new ProjectResource($project);
     }
+    
 
     public function update(Request $request, $projectId)
     {

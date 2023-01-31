@@ -42,6 +42,8 @@ import ProjectSettings from '../views/settings/Index.vue'
 import Orders from '../views/products/Orders.vue'
 import store from '../store'
 
+import FindLeads from '../views/leads/findleads.vue'
+
 const routes = [
     {
         path: '/',
@@ -64,6 +66,7 @@ const routes = [
         children: [
             {path: '/dashboard', name: 'Dashboard', component: Dashboard},
             {path: '/account', name: 'Account', component: Account},
+            {path: '/findleads', name: 'FindLeads', component: FindLeads},
         ]
     },
     {

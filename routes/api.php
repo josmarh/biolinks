@@ -35,6 +35,7 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProspectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -116,6 +117,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/report/leads/total/{linkId}', [ReportController::class, 'totalLeads']);
     Route::get('/report/page-view/{linkId}', [ReportController::class, 'pageView']);
     Route::post('/report/export-leads', [ReportController::class, 'exportLeads']);
+    Route::post('/leads/{projectId}', [ReportController::class, 'exportLeads']);
 
     Route::put('/account/update', [ProfileController::class, 'updateAccount']);
     Route::put('/password/update', [ProfileController::class, 'updatePassword']);
@@ -133,6 +135,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::delete('/{projectId}/member', [ProjectTeamController::class, 'removeMember']);
         Route::get('/{projectId}/customers', [ProjectTeamController::class, 'customerLeads']);
         Route::post('/{projectId}/customer-export', [ProjectTeamController::class, 'exportCustomerLeads']);
+        Route::post('/{projectName}/{city}', [ProspectController::class, 'search']);
     });
 
     // Links

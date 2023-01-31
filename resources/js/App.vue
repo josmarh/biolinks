@@ -7,6 +7,7 @@
 <script setup>
 import ErrorNotify from './components/flash-notification/Error.vue';
 import SuccessNotify from './components/flash-notification/Success.vue';
+import Notifications from 'notiwind'
 </script>
 
 <style>

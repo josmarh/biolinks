@@ -92,21 +92,21 @@ let model = ref({
     name: props.projectInfo.name,
     data: props.data,
     memberUserId: null,
-})
+});
 let modal = ref({
     showInvitation: false
-})
+});
 let setup = ref({
     showdel: false
-})
+});
 
 watch(() => props.data, (newVal, oldVal) => {
     model.value.data = newVal
-})
+});
 
 function sendInvitationForm() {
     modal.value.showInvitation = !modal.value.showInvitation
-}
+};
 
 function deleteModal(item) {
     model.value.memberUserId = item.memberUserId;

@@ -1,10 +1,9 @@
-import axios from "axios";
 import { createStore } from "vuex";
 import axiosClient from "../axios";
 
-const project = createStore({
+const leads = createStore({
     state: {
-        projects: {
+        leads: {
             data: []
         },
         projectTeams: {
@@ -82,6 +81,7 @@ const project = createStore({
                     return data;
                 })
         },
+        
         exportCustomerLeads({ }, leads) {
             return axiosClient.post(`/project/${leads.projectId}/customer-export`, leads)
                 .then(({data}) => {
@@ -99,8 +99,9 @@ const project = createStore({
         searchCustomerLeads({ commit } , payload) {
             return axiosClient.get(`/project/${payload.projectName}/${payload.city}/`)
                 .then((data => {
-                    commit('setCustomerLeads',data)
-                    return data;
+                    commit('setCustomerLeads',data);
+                    console.log(data);
+                    return 'hello';
                 }));
         }
     },
@@ -118,4 +119,4 @@ const project = createStore({
     modules: {}
 });
 
-export default project;
+export default leads;
