@@ -35,7 +35,7 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProspectController;
+use App\Http\Controllers\LeadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -121,8 +121,11 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::put('/account/update', [ProfileController::class, 'updateAccount']);
     Route::put('/password/update', [ProfileController::class, 'updatePassword']);
+    Route::put('/key/update', [ProfileController::class, 'updateKey']);
     Route::get('/user-logs/{email}', [ProfileController::class, 'loginHistory']);
     Route::post('/logout', [LogoutController::class, 'logout']);
+
+
 
     Route::get('/projects', [ProjectController::class, 'index']);
     Route::group(['prefix' => 'project'], function () {
@@ -135,7 +138,6 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::delete('/{projectId}/member', [ProjectTeamController::class, 'removeMember']);
         Route::get('/{projectId}/customers', [ProjectTeamController::class, 'customerLeads']);
         Route::post('/{projectId}/customer-export', [ProjectTeamController::class, 'exportCustomerLeads']);
-        Route::post('/{projectName}/{city}', [ProspectController::class, 'search']);
     });
 
     // Links
@@ -174,6 +176,8 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::put('/{id}', [RoleController::class, 'update']);
         Route::delete('/{id}', [RoleController::class, 'delete']);
     });
+
+    Route::post('/prospects/search', [ LeadController::class, 'search']);
 
     Route::get('/permissions', [PermissionController::class, 'index']);
     Route::group(['prefix' => 'permission'], function () {

@@ -98,6 +98,15 @@ const store = createStore({
                     return data;
                 })
         },
+        updateKey({ commit } , key) {
+
+            
+            return axiosClient.put(`/key/update`, key)
+                .then(({data}) => {
+                    console.log(data)
+                    return data;
+        })
+    }
     },
     mutations: {
         setUser: (state, userData) => {

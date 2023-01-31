@@ -43,6 +43,7 @@
             <div class="mt-4">
                 <div v-if="currentTab==='account'">
                     <profile-info :data="model" :btn-disable="isDisabled" @update="updateInfo"/>
+                    <api-settings :data="model" :btn-disable="isDisabled" @update="updateApiKey"/>
                     <profile-password :data="model" :btn-disable="isDisabled2" @update="updateInfo"/>
                 </div>
                 <div v-if="currentTab==='logs'">
@@ -57,10 +58,10 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { notify } from 'notiwind';
-import AuthLayout from '../../components/layouts/AuthLayout.vue';
 import ProfileInfo from '../../components/account-settings/ProfileInfo.vue';
 import ProfilePassword from '../../components/account-settings/ProfilePassword.vue';
 import ProfileLogs from '../../components/account-settings/ProfileLogs.vue';
+import ApiSettings from '../../components/account-settings/ApiSettings.vue';
 import store from '../../store'
 
 const userLogs = computed(() => store.state.loginHistory)
@@ -73,8 +74,9 @@ let model = ref({
     old_password: '',
     password: '',
     password_confirmation: '',
-    membership: store.state.user.membership
-})
+    membership: store.state.user.membership,
+    key : ''
+});
 
 function selectTab(tab) {
     currentTab.value = tab;
@@ -93,12 +95,14 @@ function updateInfo(data, from) {
     }
 }
 
+
 function updateUserInfo() {
     isDisabled.value = true
     store
         .dispatch('updateAccount', {
             name: model.value.name,
-            email: model.value.email
+            email: model.value.email,
+            
         })
         .then((res) => {
             isDisabled.value = false
@@ -122,7 +126,7 @@ function updateUserInfo() {
                         group: "error",
                         title: "Error",
                         text: errMasg
-                    }, 4000)
+                    }, 4000);
                 }
             }
         })
@@ -165,6 +169,32 @@ function updatePassword() {
                 }
             }
         })
+}
+
+function updateApiKey() {
+    console.log(model.value)
+    store
+        .dispatch('updateKey', {
+            key: model.value.key
+        }).then((res) => {
+            console.log(res.status)
+            if (res.status === 1)
+            notify({
+                group: "success",
+                title: "Success",
+                text: res.message
+            }, 4000)
+
+            else {
+                notify({
+                group: "error",
+                title: "error",
+                text: res.message
+            }, 4000)
+            }
+        })
+
+        
 }
 
 function getLoginHistory() {

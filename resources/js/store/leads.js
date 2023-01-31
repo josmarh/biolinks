@@ -97,13 +97,13 @@ const leads = createStore({
         },
 
         searchCustomerLeads({ commit } , payload) {
-            return axiosClient.get(`/project/${payload.projectName}/${payload.city}/`)
+
+            return axiosClient.post(`/prospects/search`)
                 .then((data => {
-                    commit('setCustomerLeads',data);
                     console.log(data);
-                    return 'hello';
+                    return data;
                 }));
-        }
+        },
     },
     mutations: {
         setProjects: (state, data) => {

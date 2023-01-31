@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "76ea19afc1722dddd34f03a9d66a4bbc",
+    "content-hash": "ee3523e17b1616e38f11d6d584b49784",
     "packages": [
         {
             "name": "brick/math",
@@ -3597,6 +3597,73 @@
                 }
             ],
             "time": "2023-01-12T18:13:24+00:00"
+        },
+        {
+            "name": "skagarwal/google-places-api",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SachinAgarwal1337/google-places-api.git",
+                "reference": "5a72ef8c8a1a6a6bd5bd16b9b65b4a8657f01d26"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SachinAgarwal1337/google-places-api/zipball/5a72ef8c8a1a6a6bd5bd16b9b65b4a8657f01d26",
+                "reference": "5a72ef8c8a1a6a6bd5bd16b9b65b4a8657f01d26",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.5.7|^7.4.4",
+                "illuminate/container": "^6.0|^7.0|^8.0|^9.0",
+                "illuminate/support": "^6.0|^7.0|^8.0|^9.0",
+                "php": "^7.2.5|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0|^9.3",
+                "skagarwal/reflection": "~1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "SKAgarwal\\GoogleApi\\ServiceProvider"
+                    ],
+                    "aliases": {
+                        "GooglePlaces": "SKAgarwal\\GoogleApi\\Facade"
+                    }
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "SKAgarwal\\GoogleApi\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sachin Agarwal",
+                    "email": "sachinkumaragarwal05@gmail.com"
+                }
+            ],
+            "description": "Google Places Api",
+            "keywords": [
+                "Google Places Api",
+                "google",
+                "google api",
+                "google places",
+                "places"
+            ],
+            "support": {
+                "issues": "https://github.com/SachinAgarwal1337/google-places-api/issues",
+                "source": "https://github.com/SachinAgarwal1337/google-places-api/tree/2.0.1"
+            },
+            "time": "2016-02-05T00:00:00+00:00"
         },
         {
             "name": "spatie/laravel-permission",
@@ -8727,8 +8794,5 @@
         "php": "^8.0.2"
     },
     "platform-dev": [],
-    "platform-overrides": {
-        "php": "7.4.21"
-    },
     "plugin-api-version": "2.3.0"
 }

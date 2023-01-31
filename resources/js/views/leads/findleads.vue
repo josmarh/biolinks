@@ -353,7 +353,7 @@ export default {
       //     text: "Please you must select a place !",
       //   });
       // };
-      
+
       this.sSpinner = !this.animate;
 
       try {
@@ -361,7 +361,6 @@ export default {
           projectName : this.search.q,
           city : this.search.name
         }).then(res => {
-          console.log(res)
           notify({
                 group: "success",
                 title: "Success",

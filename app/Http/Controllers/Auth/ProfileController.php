@@ -10,6 +10,8 @@ use App\Http\Resources\LoginHistoryResource;
 
 class ProfileController extends Controller
 {
+    public $successStatus = 200;
+
     public function updateAccount(Request $request)
     {
         $user = $request->user();
@@ -43,8 +45,31 @@ class ProfileController extends Controller
         $user->update(['password' => bcrypt($request->new_password)]);
 
         return response([
-            'message' => 'Password Updated.'
+            'message' => 'Password Updated.',
+            'status' => 1
         ]);         
+    }
+
+    public function updateKey(Request $request) {
+
+        $user = $request->user();
+
+        $request->validate([
+            'key' => ['required'],
+        ]);
+
+        $user->update(['key' => $request->key]);
+
+        $user->key = $request->key;
+
+        $user->save();
+
+        return response([
+            'message' => 'Key Updated.',
+            'key' => $request->key,
+            'status' => 1
+        ]);   
+
     }
 
     public function loginHistory($email)

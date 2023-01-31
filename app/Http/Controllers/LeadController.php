@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MailRequest;
 use App\Http\Requests\ProspectRequest;
 use App\Prospect;
 use App\Search;
-use App\Services\API\ProspectService;
+use App\Services\ProspectService;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Response;
 use SKAgarwal\GoogleApi\PlacesApi;
 use App\SearchResults;
 
-class ProspectController extends Controller
+class LeadController extends Controller
 {
     private $prospectService;
 
@@ -37,44 +37,37 @@ class ProspectController extends Controller
 
     public function search(Request $request)
     {
-        $this->validate($request, [
-            'q' => 'required',
-            'latitude' => 'required',
-            'longitude' => 'required',
-            'raduis' => 'integer|max:50000',
-        ]);
+        // $this->validate($request, [
+        //     'q' => 'required',
+        //     'latitude' => 'required',
+        //     'longitude' => 'required',
+        //     'raduis' => 'integer|max:50000',
+        // ]);
 
-        return response() -> json([
-            'data' => array(
-                "results" => 'hello',
-                "next_page_token" => 'next_page_token'
-            )
-        ]);
+        $api_key = Auth::user()->api_key ?? '';
+        if ($api_key == '') {
+            return response()->json([
+                                        'status' => -1,
+                                        'message' => "Missing google api key"
+                                    ], 200);
+        }
 
-        // $api_key = Auth::user()->api_key ?? '';
-        // if ($api_key == '') {
-        //     return response()->json([
-        //                                 'status' => -1,
-        //                                 'message' => "Missing google api key"
-        //                             ], 200);
-        // }
+        $params = array();
+        $params['location'] = $request->latitude . ',' . $request->longitude;
+        if ($request->raduis != 0) {
+            $params['raduis'] = $request->raduis;
+        }
 
-        // $params = array();
-        // $params['location'] = $request->latitude . ',' . $request->longitude;
-        // if ($request->raduis != 0) {
-        //     $params['raduis'] = $request->raduis;
-        // }
+        $googlePlaces = new PlacesApi($api_key);
 
-        // $googlePlaces = new PlacesApi($api_key);
+        $response = $googlePlaces->textSearch($request->q, $params);
 
-        // $response = $googlePlaces->textSearch($request->q, $params);
-
-        // if (!isset($response['next_page_token'])) {
-        //     return response()->json([
-        //                                 'status' => -1,
-        //                                 'message' => "No results found for your search"
-        //                             ], 200);
-        // }
+        if (!isset($response['next_page_token'])) {
+            return response()->json([
+                                        'status' => -1,
+                                        'message' => "No results found for your search"
+                                    ], 200);
+        }
 
         // $Search = Search::create([
         //                              'q' => $request->q,
@@ -88,12 +81,12 @@ class ProspectController extends Controller
         // $results = $this->handleResultsSearach($Search, $api_key, $response);
 
         // return response()->json([
-                                    'status' => 1,
-                                    'data' => array(
-                                        "results" => $results,
-                                        "next_page_token" => $response['next_page_token']
-                                    )
-                                ], 200);
+                                //     'status' => 1,
+                                //     'data' => array(
+                                //         "results" => $results,
+                                //         "next_page_token" => $response['next_page_token']
+                                //     )
+                                // ], 200);
     }
 
     public function handleResultsSearach($Search, $key, $response)
