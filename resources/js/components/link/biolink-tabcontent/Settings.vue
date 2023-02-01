@@ -386,6 +386,22 @@
                 <link-accordion title="Fonts">
                     <font :data="modelSettings" @update-settings="updateSetting" />
                 </link-accordion>
+
+                <!-- showMemberNavbar -->
+                <div class="flex items-center mb-4 mt-6">
+                    <input id="show-member-checkbox" 
+                    type="checkbox" @change="memberNavCheck"
+                    class="w-4 h-4 text-blue-600 bg-gray-100 
+                    border-gray-300 rounded focus:ring-blue-500 
+                    dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                    focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    :checked="modelSettings.showMemberNavbar == 'yes' ? true : false">
+                    <label for="show-member-checkbox" 
+                    class="ml-2 text-sm font-medium 
+                    text-gray-900 dark:text-gray-300">
+                        Show Membership Login | Signup Navbar
+                    </label>
+                </div>
                 
                 <button type="submit" 
                     class="w-full text-white bg-blue-700 
@@ -446,6 +462,7 @@ let modelSettings = ref({
     utmParams: props.dataSettings.utm,
     socials: props.dataSettings.socials,
     fonts: props.dataSettings.font,
+    showMemberNavbar: props.dataSettings.showMemberNavbar
 });
 
 let textPicker = ref({
@@ -563,6 +580,13 @@ function determineDragAndDropCapableImage() {
     && 'FileReader' in window;
 }
 
+function memberNavCheck(ev) {
+    let checked = ev.target.checked;
+    if(checked)
+        modelSettings.value.showMemberNavbar = 'yes'
+    else
+        modelSettings.value.showMemberNavbar = 'no'
+}
 
 function updateBiolinkSetting() {
     isDisabled.value = true;

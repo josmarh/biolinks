@@ -30,6 +30,7 @@ class BiolinkSettingResource extends JsonResource
             'utm' => json_decode($this->utm),
             'socials' => json_decode($this->socials),
             'font' => $this->font,
+            'showMemberNavbar' => $this->show_member_navbar
         ];
     }
 }

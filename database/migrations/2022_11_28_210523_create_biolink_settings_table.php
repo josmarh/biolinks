@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('font', 15);
             $table->text('section')->nullable();
             $table->text('custom')->nullable();
+            $table->enum('show_member_navbar',['yes','no'])->default('no');
             $table->timestamps();
             $table->index(['link_id']);
         });

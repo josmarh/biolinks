@@ -66,6 +66,7 @@ class BiolinkSettingController extends Controller
             'utm' => json_encode($settings->utmParams),
             'socials' => json_encode($settings->socials),
             'font' => $settings->fonts,
+            'show_member_navbar' => $settings->showMemberNavbar
         ]);
 
         $projectLink = $request->link;

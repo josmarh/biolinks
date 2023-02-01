@@ -133,6 +133,7 @@ function getBiolinkSettings() {
             modelSettings.value.utmParams = res.data.utm
             modelSettings.value.socials = res.data.socials
             modelSettings.value.fonts = res.data.font
+            modelSettings.value.showMemberNavbar = res.data.showMemberNavbar
 
             getBiolinkCustomSettings();
         })

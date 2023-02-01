@@ -59,6 +59,7 @@
 
     </head>
     <body class="antialiased">
+        @if($settings->show_member_navbar == 'yes')
         <nav class="bg-gray-800">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex h-10 items-center justify-center">
@@ -110,6 +111,7 @@
                 </div>
             </div>
         </nav>
+        @endif
         @if($settings->background_type == 'preset')
         <div class="bg-white p-4 overflow-y-auto min-h-screen"
             style="{{$jdecoded['pageBckg']->presetbckg}}">

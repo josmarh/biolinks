@@ -43,6 +43,7 @@
             <div class="mt-4">
                 <div v-if="currentTab==='account'">
                     <profile-info :data="model" :btn-disable="isDisabled" @update="updateInfo"/>
+                    <ApiKey :data="model" :btn-disable="isDisabled3" @update="updateInfo"/>
                     <profile-password :data="model" :btn-disable="isDisabled2" @update="updateInfo"/>
                 </div>
                 <div v-if="currentTab==='logs'">
@@ -61,11 +62,13 @@ import AuthLayout from '../../components/layouts/AuthLayout.vue';
 import ProfileInfo from '../../components/account-settings/ProfileInfo.vue';
 import ProfilePassword from '../../components/account-settings/ProfilePassword.vue';
 import ProfileLogs from '../../components/account-settings/ProfileLogs.vue';
+import ApiKey from '../../components/account-settings/ApiKey.vue';
 import store from '../../store'
 
 const userLogs = computed(() => store.state.loginHistory)
 const isDisabled = ref(false)
 const isDisabled2 = ref(false)
+const isDisabled3 = ref(false)
 const currentTab = ref('account');
 let model = ref({
     name: store.state.user.data.name,
@@ -73,7 +76,8 @@ let model = ref({
     old_password: '',
     password: '',
     password_confirmation: '',
-    membership: store.state.user.membership
+    membership: store.state.user.membership,
+    apiKey: store.state.user.data.api_key ? store.state.user.data.api_key : ''
 })
 
 function selectTab(tab) {
@@ -85,6 +89,9 @@ function updateInfo(data, from) {
         model.value.name = data.name;
         model.value.email = data.email;
         updateUserInfo();
+    }else if(from == 'apikey') {
+        model.value.apiKey = data.apiKey;
+        updateApiKey();
     }else {
         model.value.old_password = data.old_password
         model.value.password = data.password
@@ -149,6 +156,40 @@ function updatePassword() {
         })
         .catch((err) => {
             isDisabled2.value = false
+            if(err.response) {
+                if (err.response.data) {
+                    let errMasg;
+                    if (err.response.data.hasOwnProperty("message")) {
+                        errMasg = err.response.data.message
+                    } else {
+                        errMasg = err.response.data.error
+                    }
+                    notify({
+                        group: "error",
+                        title: "Error",
+                        text: errMasg
+                    }, 4000)
+                }
+            }
+        })
+}
+
+function updateApiKey() {
+    isDisabled3.value = true
+    store
+        .dispatch('updateKey', {
+            key: model.value.apiKey
+        })
+        .then((res) => {
+            isDisabled3.value = false
+            notify({
+                group: "success",
+                title: "Success",
+                text: res.message
+            }, 4000)
+        })
+        .catch((err) => {
+            isDisabled3.value = false
             if(err.response) {
                 if (err.response.data) {
                     let errMasg;

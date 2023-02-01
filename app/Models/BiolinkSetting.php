@@ -26,6 +26,7 @@ class BiolinkSetting extends Model
         'utm',
         'socials',
         'font',
+        'show_member_navbar'
     ];
 
     public function link()

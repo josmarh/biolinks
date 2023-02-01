@@ -50,6 +50,7 @@ const biolinkDefaultSettings = {
         clubhouse: ''
     },
     fonts: 'lato',
+    showMemberNavbar: 'no'
 };
 
 export default biolinkDefaultSettings;

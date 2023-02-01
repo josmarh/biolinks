@@ -42,14 +42,15 @@ import ProjectSettings from '../views/settings/Index.vue'
 import Orders from '../views/products/Orders.vue'
 import store from '../store'
 
+import FindLeads from '../views/leads/findleads.vue'
+import MyLeads from '../views/leads/myleads.vue'
+
 import DfyBiolinkAgency from '../views/dfy/DfyBiolinkAgency.vue'
 import DfyProfitCampaign from '../views/dfy/DfyProfitCampaign.vue'
 import DfyReputationAgency from '../views/dfy/DfyReputationAgency.vue'
 import DfyAugmentsuite from '../views/dfy/DfyAugmentsuite.vue'
 import DfyAffiliateMaster from '../views/dfy/DfyAffiliateMaster.vue'
 import Tutorials from '../views/Tutorials.vue'
-import FindLeads from '../views/leads/findleads.vue'
-import MyLeads from '../views/leads/myleads.vue'
 
 const routes = [
     {

@@ -1,66 +1,67 @@
-<template>
-  <div class="container-fluid">
+<template class ="h-screen w-screen">
+  <div class="flex flex-col items-center justify-between h-full">
     <!-- Page Heading -->
     <div class="text-center" style="margin-bottom: 2rem">
-      <h1 class="h3 mb-0 text-gray-800">Find Prospects</h1>
+      <h1 class="text-3xl font-bold mb-0 text-gray-800">Find Prospects</h1>
     </div>
-    <div v-show="showForm" ref="formsearch">
-      <div class="col-md-5 col-sm-8 mx-auto my-auto searchBox">
-        <div class="text-center">
-          <div class="row form-group">
-            <div class="col-6">
+    <div v-show="showForm" ref="formsearch w-full flex flex-col items-center">
+      <div class="w-full mx-auto my-auto searchBox">
+        <div class="w-full text-center flex flex-col items-center space-y-3 ">
+          <div class="flex space-x-3 w-full items-center">
+            <div class="">
               <input
                 v-model="search.q"
-                class="form-control"
+                class="text-gray-500 border-gray-300 w-full shadow focus:border-gray-600 duration-300 rounded-md outline-none "
                 placeholder="Enter your keyword/Niche"
                 type="text"
-                
               />
             </div>
             <div class="col-6">
               <input
                 id="autocomplete"
                 ref="autocomplete"
-                class="form-control"
+                class="text-gray-500 border-gray-300 shadow focus:border-gray-600 duration-300 rounded-md outline-none "
                 placeholder="Enter the location (City)"
                 type="text"
                 v-model="search.name"
               />
             </div>
           </div>
-          <button
-            class="btn btn-primary"
-            type="submit"
-            @click.prevent="doSearch"
-            :disabled="loading"
-          >
-            <span v-html="searchBoxTxt"></span>
-            <div
-              :hidden="!sSpinner"
-              class="spinner-grow text-light spinner-grow-sm"
-              role="status"
-              style="top: -3px; position: relative"
+          <div class="flex space-x-3 items-center">
+            <button
+              class="outline-none bg-blue-500 text-white rounded px-3 py-2 font-bold cursor-pointer hover:bg-blue-700 duration-300"
+              type="submit"
+              @click.prevent="doSearch"
+              :disabled="loading"
             >
-              <span class="sr-only">Loading...</span>
-            </div>
-          </button>
-          <button
-            class="btn resetSearch"
-            data-toggle="popover"
-            title="Reset Search"
-            type="submit"
-            @click="resetSearch"
-          >
-            <span class="x">[x]</span>&nbsp;<span class="txt"
-              >close & new search</span
+              <span v-html="searchBoxTxt"></span>
+              <div
+                :hidden="!sSpinner"
+                class="spinner-grow text-light spinner-grow-sm"
+                role="status"
+                style="top: -3px; position: relative"
+              >
+                <span class="sr-only">Loading...</span>
+              </div>
+            </button>
+            <button
+              class="outline-none bg-red-500 text-white rounded px-3 py-2 font-bold cursor-pointer hover:bg-red-700 duration-300 text-sm"
+              data-toggle="popover"
+              title="Reset Search"
+              type="submit"
+              @click="resetSearch"
             >
-          </button>
+              <span class="x">[x]</span>&nbsp;<span class="txt"
+                >close & new search</span
+              >
+            </button>
+          </div>
         </div>
       </div>
       <div v-show="showBusinnessTable" :class="animate" class="animHold">
-        <table ref="prospectsTable" class="table table-striped">
+        <table ref="prospectsTable" class=" flex flex-col table table-striped">
           <thead class="thead-light">
-            <tr>
+            <tr class="flex items-center" >
               <th scope="col">Business name</th>
               <th scope="col">Website url</th>
               <th scope="col">Country/City</th>
@@ -69,7 +70,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(prospect, index) in prospects" :key="index">
+            <tr v-for="(prospect, index) in prospects">
               <td>{{ prospect.name }}</td>
               <td>
                 <a :href="prospect.url" target="_blank">{{
@@ -140,14 +141,13 @@
           src="data:image/svg+xml,%3Csvg enable-background='new 0 0 36 36' height='512' viewBox='0 0 36 36' width='512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m1.003 14.311c3.253 6.104 2.324 11.981 3.891 14.923s6.551 8.218 20.083 1.008 11.09-16.579 9.365-19.815c-8.072-15.151-39.1-6.927-33.339 3.884z' fill='%23efefef'/%3E%3Ccircle cx='12.5' cy='12.5' fill='%23806FF6' r='5.75'/%3E%3Cpath d='m9 12.5c0-2.79 1.988-5.115 4.625-5.638-.364-.073-.74-.112-1.125-.112-3.176 0-5.75 2.574-5.75 5.75s2.574 5.75 5.75 5.75c.385 0 .761-.039 1.125-.112-2.637-.523-4.625-2.848-4.625-5.638z' fill='%23bd92f4'/%3E%3Cg fill='%23a4afc1'%3E%3Cpath d='m26.496 3.907h1v2h-1z' transform='matrix(.707 -.707 .707 .707 4.431 20.519)'/%3E%3Cpath d='m30.562 7.974h1v2h-1z' transform='matrix(.707 -.707 .707 .707 2.753 24.593)'/%3E%3Cpath d='m25.819 8.474h2v1h-2z' transform='matrix(.707 -.707 .707 .707 1.51 21.593)'/%3E%3Cpath d='m29.885 4.408h2v1h-2z' transform='matrix(.707 -.707 .707 .707 5.576 23.277)'/%3E%3C/g%3E%3Cpath d='m12.5 19c-3.584 0-6.5-2.916-6.5-6.5s2.916-6.5 6.5-6.5 6.5 2.916 6.5 6.5-2.916 6.5-6.5 6.5zm0-11.5c-2.757 0-5 2.243-5 5s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5z'/%3E%3Cpath d='m23.28 29.78-1.06-1.06 1.836-1.836c.487-.487.487-1.28 0-1.768l-7.843-7.844 1.061-1.061 7.843 7.844c1.072 1.072 1.072 2.816 0 3.889z'/%3E%3Cpath d='m18.077 22.875h4.596v1.5h-4.596z' transform='matrix(.707 -.707 .707 .707 -10.738 21.327)'/%3E%3C/svg%3E"
         />
         <h3>Google API</h3>
-        <router-link to="/profile">
+        <router-link to="/account">
           <b style="text-decoration: underline">please set your API key. </b>
         </router-link>
       </div>
     </div>
     <!-- Start Modal -->
-    <div class="centerx con-exemple-prompt">
-      <!--  -->
+    <div class="centerx con-exemple-prompt flex flex-col items-center h-full rounded shadow my-10 w-full justify-self-center text-center">
       <vs-prompt
         :active.sync="activePrompt"
         :title="prospectDetailTitle"
@@ -158,34 +158,34 @@
         button-cancel="border"
         @close="close"
       >
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item ng-star-inserted">
+        <ul class="list-group items-center w-full  text-center px-5 list-group-flush flex space-x-10">
+          <li class="flex flex-col items-center list-group-item ng-star-inserted">
             <div class="row">
-              <div class="col-4"><b>Url</b></div>
+              <div class="text-gray-700 font-meduim"><b>Url</b></div>
               <div class="col-8">
-                <a
+                <a class="cursor-pointer"
                   :href="this.currentProspect.url"
-                  style="color: #262c49; text-decoration: underline;word-break: break-all;"
+                  style="color: #262c49;text-decoration: underline;word-break: break-all;"
                   >{{ this.currentProspect.url }}</a
                 >
               </div>
             </div>
           </li>
-          <li class="list-group-item ng-star-inserted">
+          <li class="flex flex-col items-center list-group-item ng-star-inserted">
             <div class="row">
-              <div class="col-4"><b>Phone</b></div>
+              <div class="col-4 text-gray-700 font-meduim"><b>Phone</b></div>
               <div class="col-8">{{ this.currentProspect.phone }}</div>
             </div>
           </li>
-          <li class="list-group-item ng-star-inserted">
+          <li class="flex flex-col items-center list-group-item ng-star-inserted">
             <div class="row">
-              <div class="col-4"><b>Adress</b></div>
+              <div class="col-4 text-gray-700 font-meduim"><b>Adress</b></div>
               <div class="col-8">{{ this.currentProspect.addresse }}</div>
             </div>
           </li>
-          <li class="list-group-item ng-star-inserted">
+          <li class="flex flex-col items-center list-group-item ng-star-inserted">
             <div class="row">
-              <div class="col-4"><b>Categories</b></div>
+              <div class="col-4 text-gray-700 font-meduim"><b>Categories</b></div>
               <div class="col-8">
                 <span
                   class="badge badge-primary mr-1 ng-star-inserted"
@@ -193,40 +193,46 @@
                     this.currentProspect.types
                   )"
                   :key="index"
-                  >{{ categorie }}</span
+                  > {{ categorie }}</span
                 >
               </div>
             </div>
           </li>
-          <li class="list-group-item ng-star-inserted">
-            <div class="row">
-              <div class="col-4"><b>Rating</b></div>
+          <li class="flex flex-col items-center list-group-item ng-star-inserted">
+            <div class="row space-x-1 flex">
+              <div class="col-4 text-gray-700 font-meduim"><b>Rating</b></div>
               <div class="col-8">
                 (<b>{{ this.currentProspect.ratings }}</b
                 >)&nbsp;
               </div>
             </div>
           </li>
-          <li class="list-group-item ng-star-inserted">
+          <li class="flex flex-col items-center list-group-item ng-star-inserted">
             <div class="row">
-              <div class="col-4"><b>Country</b></div>
+              <div class="col-4 text-gray-700 font-meduim"><b>Country</b></div>
               <div class="col-8">{{ this.currentProspect.country }}</div>
             </div>
           </li>
-          <li class="list-group-item ng-star-inserted">
+          <li class="flex flex-col items-center list-group-item ng-star-inserted">
             <div class="row">
-              <div class="col-4"><b>City</b></div>
+              <div class="col-4 text-gray-700 font-meduim"><b>City</b></div>
               <div class="col-8">{{ this.currentProspect.city }}</div>
             </div>
           </li>
         </ul>
       </vs-prompt>
     </div>
+
+ 
   </div>
 </template>
 
 <script>
 //import * as VueGoogleMaps from "vue2-google-maps" // Import package
+import { notify } from 'notiwind';
+import leads from '../../store/leads';
+import store from '../../store';
+
 
 export default {
   data() {
@@ -301,17 +307,20 @@ export default {
   methods: {
     async initGoogleApi() {
       try {
-        const resp = await this.$store.dispatch("fetchUser", {
-          role: this.$route.role,
-        });
-        this.showForm = resp.user.api_key !== "";
+
+        const resp = await store.state.user.data;
+
+        this.showForm = resp.api_key !== null;
+
+        console.log(this.showForm);
+
         this.$loadScript(
-          `https://maps.googleapis.com/maps/api/js?v=3&key=${resp.user.api_key}&libraries=places`
+          `https://maps.googleapis.com/maps/api/js?v=3&key=${resp.api_key}&libraries=places`
         )
           .then(() => {
             console.log("ok");
             this.getPlaceAutocomplete();
-            // this.showForm = true;
+            this.showForm = true;
           })
           .catch((e) => {
             console.error(e);
@@ -319,34 +328,61 @@ export default {
           });
       } catch (e) {
         console.error(e);
-        this.showForm = false;
+        // this.showForm = false;
       }
     },
     async doSearch(e) {
+
       e.preventDefault();
       this.loading = true;
-      this.$vs.loading();
+      // this.loading();
       if (this.prospects && this.animate === true) return;
       if (this.search.q === "") {
-        this.$vs.notify({
-          color: "danger",
-          title: "Error",
-          text: "Please you must search by keyword !",
-        });
-      }
+        notify({
+                group: "error",
+                title: "Error",
+                text: 'Please you must search by keyword !'
+            }, 4000);
+
+            return;
+      };
+
       if (this.search.latitude === "" || this.search.longitude === "") {
-        this.$vs.notify({
-          color: "danger",
+        notify({
+          group: "error",
           title: "Error",
           text: "Please you must select a place !",
         });
-      }
+      };
+
       this.sSpinner = !this.animate;
+    
       try {
-        const { data } = await this.$http.post(
-          "/api/prospects/search",
-          this.search
-        );
+        leads.dispatch('searchCustomerLeads',
+         this.search
+        ).then(res => {
+          console.log( 'hello :'+ res)
+          if(res.status === 1){
+            notify({
+                group: "success",
+                title: "Success",
+                text: "res.message"
+            }, 4000)
+          } else {
+           notify({
+            group: "error",
+            title: "Error",
+            text: "Please check keyword!",
+            },4000)
+          }
+        })
+
+
+        // const { data } = await this.$http.post(
+        //   "/api/prospects/search",
+        //   this.search
+        // );
+
         if (data.status === 1) {
           this.showBusinnessTable = true;
           if (this.prospects) {
@@ -365,8 +401,8 @@ export default {
           this.loading = false;
         }
         if (data.status === -1) {
-          this.$vs.notify({
-            color: "danger",
+          notify({
+            group: "danger",
             title: "Error",
             text: "Please check !",
           });
@@ -377,7 +413,7 @@ export default {
       } catch (e) {
         console.error(e);
         this.loading = false;
-        this.$vs.notify({
+        notify({
           color: "danger",
           title: "Error",
           text: `Please check ${e.message}!`,
@@ -452,7 +488,7 @@ export default {
         }
       } catch (e) {
         console.error(e);
-        this.$vs.notify({
+        notify({
           color: "danger",
           title: "Error",
           text: "Please check again!",

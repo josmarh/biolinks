@@ -45,6 +45,13 @@ const store = createStore({
                 return data;
             })
         },
+        updateKey({ commit }, key) {
+            return axiosClient.put(`/api-key/update`, key)
+            .then(({data}) => {
+                commit('updateProfile', data)
+                return data;
+            })
+        },
         updatePassword({ }, userPass) {
             return axiosClient.put(`/password/update`, userPass)
                 .then(({data}) => {
