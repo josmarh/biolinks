@@ -55,6 +55,12 @@ const resellerStore = createStore({
                     return data;
                 })
         },
+        register({ }, payload) {
+            return axiosClient.post(`/reseller/register`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setUsers: (state, data) => {

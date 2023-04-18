@@ -36,6 +36,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\AuthResellerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -217,6 +218,7 @@ Route::middleware('auth:sanctum')->group(function() {
 });
 
 Route::post('/register', [RegisterController::class, 'register']);
+Route::post('/reseller/register', [AuthResellerController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/forgot-password', [ForgotPasswordController::class, 'forgotPassword']);
 Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword']);

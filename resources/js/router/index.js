@@ -51,6 +51,7 @@ import DfyReputationAgency from '../views/dfy/DfyReputationAgency.vue'
 import DfyAugmentsuite from '../views/dfy/DfyAugmentsuite.vue'
 import DfyAffiliateMaster from '../views/dfy/DfyAffiliateMaster.vue'
 import Tutorials from '../views/Tutorials.vue'
+import ResellerRegister  from '../views/auth/Reseller.vue'
 
 const routes = [
     {
@@ -64,6 +65,7 @@ const routes = [
             {path: '/register/:id', name: 'MemberRegister', component: MemberRegister},
             {path: '/forgot-password', name: 'ForgotPassword', component: ForgotPassword},
             {path: '/reset-password/:email', name: 'ResetPassword', component: ResetPassword},
+            {path: '/reseller/signup', name: 'ResellerRegister', component: ResellerRegister },
         ]
     },
     {
