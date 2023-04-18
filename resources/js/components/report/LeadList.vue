@@ -139,7 +139,7 @@ let leadsToExport = ref([])
 
 watch(datePicker, (newVal, oldVal) => {
     reportStore.dispatch('getLeadsReport', {
-        id: route.params.id, 
+        id: route.params.linkId, 
         from: dformat(newVal[0]),
         to: dformat(newVal[1])
     })

@@ -121,7 +121,7 @@ function deleteSection() {
                 text: res.message
             }, 4000);
             showDel.value = false
-            biolinksection.dispatch('getSections', route.params.id);
+            biolinksection.dispatch('getSections', route.params.linkId);
         })
         .catch((err) => {
             let errMsg;

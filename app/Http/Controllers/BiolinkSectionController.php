@@ -78,6 +78,19 @@ class BiolinkSectionController extends Controller
             $sectionCustomFields = json_encode($sectionFields);
         }
 
+        if($settings->section_name == 'Product/Membership' 
+        || $settings->section_name == 'Fan Request'
+        || $settings->section_name == 'Donation') {
+            $sectionFields = json_decode($sectionCustomFields);
+            $existingImage = json_decode($section->core_section_fields);
+
+            if(str_contains($sectionFields->thumbnail, 'base64')) {
+                $sectionFields->thumbnail = $this->saveFile('biolink-uploads', $sectionFields->thumbnail);
+                $this->deleteFile($existingImage->thumbnail);
+            }
+            $sectionCustomFields = json_encode($sectionFields);
+        }
+
         $section->update([
             'button_text' => $request->buttonText,
             'button_text_color' => $request->buttonTextColor,

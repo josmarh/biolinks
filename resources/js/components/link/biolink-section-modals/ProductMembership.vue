@@ -44,6 +44,7 @@ let model = ref({
     buttonTextColor: '#000000',
     buttonBckgColor: '#FFFFFF',
     sectionFields: JSON.stringify({
+        thumbnail: null,
         title: 'Purchase my product',
         description: '',
         productType: 'simple_product',

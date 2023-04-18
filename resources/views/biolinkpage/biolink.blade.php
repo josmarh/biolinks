@@ -67,7 +67,7 @@
                     <div class="flex justify-between">
                         <div class="flex ">
                             @if(isset($sectionField->thumbnail))
-                            <img :src="{{asset($sectionField->thumbnail)}}"
+                            <img src="{{asset($sectionField->thumbnail)}}"
                             class="ml-4 w-14 h-14 mx-auto rounded-full"/>
                             @else
                             <span class="ml-4 mt-2 mb-2 bg-orange-500 rounded p-3 text-white">
@@ -126,7 +126,7 @@
                     <div class="flex justify-between">
                         <div class="flex">
                             @if(isset($sectionField->thumbnail))
-                            <img :src="{{asset($sectionField->thumbnail)}}"
+                            <img src="{{asset($sectionField->thumbnail)}}"
                             class="ml-4 w-14 h-14 mx-auto rounded-full"/>
                             @else
                             <span class="ml-4 mt-2 mb-2 bg-green-500 rounded p-3 text-white">
@@ -170,7 +170,7 @@
                     <div class="flex justify-between">
                         <div class="flex">
                             @if(isset($sectionField->thumbnail))
-                            <img :src="{{asset($sectionField->thumbnail)}}"
+                            <img src="{{asset($sectionField->thumbnail)}}"
                             class="ml-4 w-14 h-14 mx-auto rounded-full"/>
                             @else
                             <span class="ml-4 mt-2 mb-2 bg-orange-500 rounded p-3 text-white">
