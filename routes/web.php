@@ -6,6 +6,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MemberAreaController;
 use App\Http\Controllers\JVZooIPNController;
 use App\Http\Controllers\MemberForgotPasswordController;
+use App\Http\Controllers\WplusIPNController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,7 @@ Route::get('/w/{projectName}/reset-password/{token}', [MemberForgotPasswordContr
 Route::post('/w/{projectName}/reset-password', [MemberForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
 Route::post('/ipn/jvzoo', [JVZooIPNController::class, 'JVZoo'])->name('jvzoo');
+Route::post('/ipn/client/wplus', [WplusIPNController::class, 'WPlus'])->name('wplus');
 Route::get('/w/{linkId}', [SPAController::class, 'biolinkPage'])->name('biolink-webpage');
 Route::post('/w/{linkId}/link/logout', [SPAController::class, 'logoutMember'])->name('member-link-logout');
 Route::post('/w/{linkId}/link/login', [SPAController::class, 'loginMember'])->name('member-link-login');
